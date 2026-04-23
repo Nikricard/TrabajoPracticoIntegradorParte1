@@ -1,0 +1,55 @@
+C:\Users\Navegador\Desktop\TrabajoPracticoIntegrador15-4\ABS\bin\Debug\net8.0\ABS.deps.json
+C:\Users\Navegador\Desktop\TrabajoPracticoIntegrador15-4\ABS\bin\Debug\net8.0\ABS.dll
+C:\Users\Navegador\Desktop\TrabajoPracticoIntegrador15-4\ABS\bin\Debug\net8.0\ABS.pdb
+C:\Users\Navegador\Desktop\TrabajoPracticoIntegrador15-4\ABS\obj\Debug\net8.0\ABS.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\Navegador\Desktop\TrabajoPracticoIntegrador15-4\ABS\obj\Debug\net8.0\ABS.AssemblyInfoInputs.cache
+C:\Users\Navegador\Desktop\TrabajoPracticoIntegrador15-4\ABS\obj\Debug\net8.0\ABS.AssemblyInfo.cs
+C:\Users\Navegador\Desktop\TrabajoPracticoIntegrador15-4\ABS\obj\Debug\net8.0\ABS.csproj.CoreCompileInputs.cache
+C:\Users\Navegador\Desktop\TrabajoPracticoIntegrador15-4\ABS\obj\Debug\net8.0\ABS.dll
+C:\Users\Navegador\Desktop\TrabajoPracticoIntegrador15-4\ABS\obj\Debug\net8.0\refint\ABS.dll
+C:\Users\Navegador\Desktop\TrabajoPracticoIntegrador15-4\ABS\obj\Debug\net8.0\ABS.pdb
+C:\Users\Navegador\Desktop\TrabajoPracticoIntegrador15-4\ABS\obj\Debug\net8.0\ref\ABS.dll
+C:\Users\alcal\OneDrive\Escritorio\TrabajoPracticoIntegrador15-4\TrabajoPracticoIntegrador15-4\ABS\bin\Debug\net8.0\ABS.deps.json
+C:\Users\alcal\OneDrive\Escritorio\TrabajoPracticoIntegrador15-4\TrabajoPracticoIntegrador15-4\ABS\bin\Debug\net8.0\ABS.dll
+C:\Users\alcal\OneDrive\Escritorio\TrabajoPracticoIntegrador15-4\TrabajoPracticoIntegrador15-4\ABS\bin\Debug\net8.0\ABS.pdb
+C:\Users\alcal\OneDrive\Escritorio\TrabajoPracticoIntegrador15-4\TrabajoPracticoIntegrador15-4\ABS\obj\Debug\net8.0\ABS.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\alcal\OneDrive\Escritorio\TrabajoPracticoIntegrador15-4\TrabajoPracticoIntegrador15-4\ABS\obj\Debug\net8.0\ABS.AssemblyInfoInputs.cache
+C:\Users\alcal\OneDrive\Escritorio\TrabajoPracticoIntegrador15-4\TrabajoPracticoIntegrador15-4\ABS\obj\Debug\net8.0\ABS.AssemblyInfo.cs
+C:\Users\alcal\OneDrive\Escritorio\TrabajoPracticoIntegrador15-4\TrabajoPracticoIntegrador15-4\ABS\obj\Debug\net8.0\ABS.csproj.CoreCompileInputs.cache
+C:\Users\alcal\OneDrive\Escritorio\TrabajoPracticoIntegrador15-4\TrabajoPracticoIntegrador15-4\ABS\obj\Debug\net8.0\ABS.dll
+C:\Users\alcal\OneDrive\Escritorio\TrabajoPracticoIntegrador15-4\TrabajoPracticoIntegrador15-4\ABS\obj\Debug\net8.0\refint\ABS.dll
+C:\Users\alcal\OneDrive\Escritorio\TrabajoPracticoIntegrador15-4\TrabajoPracticoIntegrador15-4\ABS\obj\Debug\net8.0\ABS.pdb
+C:\Users\alcal\OneDrive\Escritorio\TrabajoPracticoIntegrador15-4\TrabajoPracticoIntegrador15-4\ABS\obj\Debug\net8.0\ref\ABS.dll
+C:\Users\alcal\OneDrive\Escritorio\TrabajoPracticoIntegrador15-4 - copia\TrabajoPracticoIntegrador15-4\ABS\bin\Debug\net8.0\ABS.deps.json
+C:\Users\alcal\OneDrive\Escritorio\TrabajoPracticoIntegrador15-4 - copia\TrabajoPracticoIntegrador15-4\ABS\bin\Debug\net8.0\ABS.dll
+C:\Users\alcal\OneDrive\Escritorio\TrabajoPracticoIntegrador15-4 - copia\TrabajoPracticoIntegrador15-4\ABS\bin\Debug\net8.0\ABS.pdb
+C:\Users\alcal\OneDrive\Escritorio\TrabajoPracticoIntegrador15-4 - copia\TrabajoPracticoIntegrador15-4\ABS\obj\Debug\net8.0\ABS.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\alcal\OneDrive\Escritorio\TrabajoPracticoIntegrador15-4 - copia\TrabajoPracticoIntegrador15-4\ABS\obj\Debug\net8.0\ABS.AssemblyInfoInputs.cache
+C:\Users\alcal\OneDrive\Escritorio\TrabajoPracticoIntegrador15-4 - copia\TrabajoPracticoIntegrador15-4\ABS\obj\Debug\net8.0\ABS.AssemblyInfo.cs
+C:\Users\alcal\OneDrive\Escritorio\TrabajoPracticoIntegrador15-4 - copia\TrabajoPracticoIntegrador15-4\ABS\obj\Debug\net8.0\ABS.csproj.CoreCompileInputs.cache
+C:\Users\alcal\OneDrive\Escritorio\TrabajoPracticoIntegrador15-4 - copia\TrabajoPracticoIntegrador15-4\ABS\obj\Debug\net8.0\ABS.dll
+C:\Users\alcal\OneDrive\Escritorio\TrabajoPracticoIntegrador15-4 - copia\TrabajoPracticoIntegrador15-4\ABS\obj\Debug\net8.0\refint\ABS.dll
+C:\Users\alcal\OneDrive\Escritorio\TrabajoPracticoIntegrador15-4 - copia\TrabajoPracticoIntegrador15-4\ABS\obj\Debug\net8.0\ABS.pdb
+C:\Users\alcal\OneDrive\Escritorio\TrabajoPracticoIntegrador15-4 - copia\TrabajoPracticoIntegrador15-4\ABS\obj\Debug\net8.0\ref\ABS.dll
+C:\Users\alcal\OneDrive\Escritorio\TrabajoPracticoIntegrador15-4 version 1.1 singleton\TrabajoPracticoIntegrador15-4\ABS\bin\Debug\net8.0\ABS.deps.json
+C:\Users\alcal\OneDrive\Escritorio\TrabajoPracticoIntegrador15-4 version 1.1 singleton\TrabajoPracticoIntegrador15-4\ABS\bin\Debug\net8.0\ABS.dll
+C:\Users\alcal\OneDrive\Escritorio\TrabajoPracticoIntegrador15-4 version 1.1 singleton\TrabajoPracticoIntegrador15-4\ABS\bin\Debug\net8.0\ABS.pdb
+C:\Users\alcal\OneDrive\Escritorio\TrabajoPracticoIntegrador15-4 version 1.1 singleton\TrabajoPracticoIntegrador15-4\ABS\obj\Debug\net8.0\ABS.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\alcal\OneDrive\Escritorio\TrabajoPracticoIntegrador15-4 version 1.1 singleton\TrabajoPracticoIntegrador15-4\ABS\obj\Debug\net8.0\ABS.AssemblyInfoInputs.cache
+C:\Users\alcal\OneDrive\Escritorio\TrabajoPracticoIntegrador15-4 version 1.1 singleton\TrabajoPracticoIntegrador15-4\ABS\obj\Debug\net8.0\ABS.AssemblyInfo.cs
+C:\Users\alcal\OneDrive\Escritorio\TrabajoPracticoIntegrador15-4 version 1.1 singleton\TrabajoPracticoIntegrador15-4\ABS\obj\Debug\net8.0\ABS.csproj.CoreCompileInputs.cache
+C:\Users\alcal\OneDrive\Escritorio\TrabajoPracticoIntegrador15-4 version 1.1 singleton\TrabajoPracticoIntegrador15-4\ABS\obj\Debug\net8.0\ABS.dll
+C:\Users\alcal\OneDrive\Escritorio\TrabajoPracticoIntegrador15-4 version 1.1 singleton\TrabajoPracticoIntegrador15-4\ABS\obj\Debug\net8.0\refint\ABS.dll
+C:\Users\alcal\OneDrive\Escritorio\TrabajoPracticoIntegrador15-4 version 1.1 singleton\TrabajoPracticoIntegrador15-4\ABS\obj\Debug\net8.0\ABS.pdb
+C:\Users\alcal\OneDrive\Escritorio\TrabajoPracticoIntegrador15-4 version 1.1 singleton\TrabajoPracticoIntegrador15-4\ABS\obj\Debug\net8.0\ref\ABS.dll
+C:\Users\Navegador\Desktop\TrabajoPracticoIntegrador15-4 version 1.1 singleton\TrabajoPracticoIntegrador15-4 version 1.1 singleton\TrabajoPracticoIntegrador15-4\ABS\bin\Debug\net8.0\ABS.deps.json
+C:\Users\Navegador\Desktop\TrabajoPracticoIntegrador15-4 version 1.1 singleton\TrabajoPracticoIntegrador15-4 version 1.1 singleton\TrabajoPracticoIntegrador15-4\ABS\bin\Debug\net8.0\ABS.dll
+C:\Users\Navegador\Desktop\TrabajoPracticoIntegrador15-4 version 1.1 singleton\TrabajoPracticoIntegrador15-4 version 1.1 singleton\TrabajoPracticoIntegrador15-4\ABS\bin\Debug\net8.0\ABS.pdb
+C:\Users\Navegador\Desktop\TrabajoPracticoIntegrador15-4 version 1.1 singleton\TrabajoPracticoIntegrador15-4 version 1.1 singleton\TrabajoPracticoIntegrador15-4\ABS\obj\Debug\net8.0\ABS.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\Navegador\Desktop\TrabajoPracticoIntegrador15-4 version 1.1 singleton\TrabajoPracticoIntegrador15-4 version 1.1 singleton\TrabajoPracticoIntegrador15-4\ABS\obj\Debug\net8.0\ABS.AssemblyInfoInputs.cache
+C:\Users\Navegador\Desktop\TrabajoPracticoIntegrador15-4 version 1.1 singleton\TrabajoPracticoIntegrador15-4 version 1.1 singleton\TrabajoPracticoIntegrador15-4\ABS\obj\Debug\net8.0\ABS.AssemblyInfo.cs
+C:\Users\Navegador\Desktop\TrabajoPracticoIntegrador15-4 version 1.1 singleton\TrabajoPracticoIntegrador15-4 version 1.1 singleton\TrabajoPracticoIntegrador15-4\ABS\obj\Debug\net8.0\ABS.csproj.CoreCompileInputs.cache
+C:\Users\Navegador\Desktop\TrabajoPracticoIntegrador15-4 version 1.1 singleton\TrabajoPracticoIntegrador15-4 version 1.1 singleton\TrabajoPracticoIntegrador15-4\ABS\obj\Debug\net8.0\ABS.dll
+C:\Users\Navegador\Desktop\TrabajoPracticoIntegrador15-4 version 1.1 singleton\TrabajoPracticoIntegrador15-4 version 1.1 singleton\TrabajoPracticoIntegrador15-4\ABS\obj\Debug\net8.0\refint\ABS.dll
+C:\Users\Navegador\Desktop\TrabajoPracticoIntegrador15-4 version 1.1 singleton\TrabajoPracticoIntegrador15-4 version 1.1 singleton\TrabajoPracticoIntegrador15-4\ABS\obj\Debug\net8.0\ABS.pdb
+C:\Users\Navegador\Desktop\TrabajoPracticoIntegrador15-4 version 1.1 singleton\TrabajoPracticoIntegrador15-4 version 1.1 singleton\TrabajoPracticoIntegrador15-4\ABS\obj\Debug\net8.0\ref\ABS.dll
