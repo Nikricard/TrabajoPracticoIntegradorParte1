@@ -1,8 +1,12 @@
 {
   "version": 2,
-  "dgSpecHash": "EXEnD5hyUlM=",
+  "dgSpecHash": "6dA4mNN2h2s=",
   "success": true,
-  "projectFilePath": "C:\\Users\\Navegador\\Desktop\\TrabajoPracticoIntegrador Primera Entrega Nicolás Alcalá\\TrabajoPracticoIntegrador15-4 version 1.1 singleton\\TrabajoPracticoIntegrador15-4\\ABS\\ABS.csproj",
-  "expectedPackageFiles": [],
+  "projectFilePath": "C:\\Users\\alcal\\OneDrive\\Escritorio\\Nueva carpeta\\ABS\\ABS.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\alcal\\.nuget\\packages\\microsoft.windowsdesktop.app.ref\\8.0.26\\microsoft.windowsdesktop.app.ref.8.0.26.nupkg.sha512",
+    "C:\\Users\\alcal\\.nuget\\packages\\microsoft.netcore.app.ref\\8.0.26\\microsoft.netcore.app.ref.8.0.26.nupkg.sha512",
+    "C:\\Users\\alcal\\.nuget\\packages\\microsoft.aspnetcore.app.ref\\8.0.26\\microsoft.aspnetcore.app.ref.8.0.26.nupkg.sha512"
+  ],
   "logs": []
 }

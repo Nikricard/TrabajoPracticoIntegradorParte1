@@ -1,23 +1,23 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\Navegador\\Desktop\\TrabajoPracticoIntegrador Primera Entrega Nicolás Alcalá\\TrabajoPracticoIntegrador15-4 version 1.1 singleton\\TrabajoPracticoIntegrador15-4\\DAL\\DAL.csproj": {}
+    "C:\\Users\\alcal\\OneDrive\\Escritorio\\Nueva carpeta\\DAL\\DAL.csproj": {}
   },
   "projects": {
-    "C:\\Users\\Navegador\\Desktop\\TrabajoPracticoIntegrador Primera Entrega Nicolás Alcalá\\TrabajoPracticoIntegrador15-4 version 1.1 singleton\\TrabajoPracticoIntegrador15-4\\BE\\BE.csproj": {
+    "C:\\Users\\alcal\\OneDrive\\Escritorio\\Nueva carpeta\\BE\\BE.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\Navegador\\Desktop\\TrabajoPracticoIntegrador Primera Entrega Nicolás Alcalá\\TrabajoPracticoIntegrador15-4 version 1.1 singleton\\TrabajoPracticoIntegrador15-4\\BE\\BE.csproj",
+        "projectUniqueName": "C:\\Users\\alcal\\OneDrive\\Escritorio\\Nueva carpeta\\BE\\BE.csproj",
         "projectName": "BE",
-        "projectPath": "C:\\Users\\Navegador\\Desktop\\TrabajoPracticoIntegrador Primera Entrega Nicolás Alcalá\\TrabajoPracticoIntegrador15-4 version 1.1 singleton\\TrabajoPracticoIntegrador15-4\\BE\\BE.csproj",
-        "packagesPath": "C:\\Users\\Navegador\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\Navegador\\Desktop\\TrabajoPracticoIntegrador Primera Entrega Nicolás Alcalá\\TrabajoPracticoIntegrador15-4 version 1.1 singleton\\TrabajoPracticoIntegrador15-4\\BE\\obj\\",
+        "projectPath": "C:\\Users\\alcal\\OneDrive\\Escritorio\\Nueva carpeta\\BE\\BE.csproj",
+        "packagesPath": "C:\\Users\\alcal\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\alcal\\OneDrive\\Escritorio\\Nueva carpeta\\BE\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
-          "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
+          "D:\\Visual Studio Violeta\\Shared\\NuGetPackages"
         ],
         "configFilePaths": [
-          "C:\\Users\\Navegador\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\alcal\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
@@ -26,8 +26,6 @@
         ],
         "sources": {
           "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
-          "C:\\Program Files\\dotnet\\library-packs": {},
-          "C:\\Users\\Navegador\\SQLClient": {},
           "https://api.nuget.org/v3/index.json": {}
         },
         "frameworks": {
@@ -46,7 +44,7 @@
           "auditLevel": "low",
           "auditMode": "direct"
         },
-        "SdkAnalysisLevel": "9.0.200"
+        "SdkAnalysisLevel": "9.0.300"
       },
       "frameworks": {
         "net8.0": {
@@ -62,29 +60,43 @@
           ],
           "assetTargetFallback": true,
           "warn": true,
+          "downloadDependencies": [
+            {
+              "name": "Microsoft.AspNetCore.App.Ref",
+              "version": "[8.0.26, 8.0.26]"
+            },
+            {
+              "name": "Microsoft.NETCore.App.Ref",
+              "version": "[8.0.26, 8.0.26]"
+            },
+            {
+              "name": "Microsoft.WindowsDesktop.App.Ref",
+              "version": "[8.0.26, 8.0.26]"
+            }
+          ],
           "frameworkReferences": {
             "Microsoft.NETCore.App": {
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.200/PortableRuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.313/PortableRuntimeIdentifierGraph.json"
         }
       }
     },
-    "C:\\Users\\Navegador\\Desktop\\TrabajoPracticoIntegrador Primera Entrega Nicolás Alcalá\\TrabajoPracticoIntegrador15-4 version 1.1 singleton\\TrabajoPracticoIntegrador15-4\\DAL\\DAL.csproj": {
+    "C:\\Users\\alcal\\OneDrive\\Escritorio\\Nueva carpeta\\DAL\\DAL.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\Navegador\\Desktop\\TrabajoPracticoIntegrador Primera Entrega Nicolás Alcalá\\TrabajoPracticoIntegrador15-4 version 1.1 singleton\\TrabajoPracticoIntegrador15-4\\DAL\\DAL.csproj",
+        "projectUniqueName": "C:\\Users\\alcal\\OneDrive\\Escritorio\\Nueva carpeta\\DAL\\DAL.csproj",
         "projectName": "DAL",
-        "projectPath": "C:\\Users\\Navegador\\Desktop\\TrabajoPracticoIntegrador Primera Entrega Nicolás Alcalá\\TrabajoPracticoIntegrador15-4 version 1.1 singleton\\TrabajoPracticoIntegrador15-4\\DAL\\DAL.csproj",
-        "packagesPath": "C:\\Users\\Navegador\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\Navegador\\Desktop\\TrabajoPracticoIntegrador Primera Entrega Nicolás Alcalá\\TrabajoPracticoIntegrador15-4 version 1.1 singleton\\TrabajoPracticoIntegrador15-4\\DAL\\obj\\",
+        "projectPath": "C:\\Users\\alcal\\OneDrive\\Escritorio\\Nueva carpeta\\DAL\\DAL.csproj",
+        "packagesPath": "C:\\Users\\alcal\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\alcal\\OneDrive\\Escritorio\\Nueva carpeta\\DAL\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
-          "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
+          "D:\\Visual Studio Violeta\\Shared\\NuGetPackages"
         ],
         "configFilePaths": [
-          "C:\\Users\\Navegador\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\alcal\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
@@ -93,19 +105,17 @@
         ],
         "sources": {
           "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
-          "C:\\Program Files\\dotnet\\library-packs": {},
-          "C:\\Users\\Navegador\\SQLClient": {},
           "https://api.nuget.org/v3/index.json": {}
         },
         "frameworks": {
           "net8.0": {
             "targetAlias": "net8.0",
             "projectReferences": {
-              "C:\\Users\\Navegador\\Desktop\\TrabajoPracticoIntegrador Primera Entrega Nicolás Alcalá\\TrabajoPracticoIntegrador15-4 version 1.1 singleton\\TrabajoPracticoIntegrador15-4\\BE\\BE.csproj": {
-                "projectPath": "C:\\Users\\Navegador\\Desktop\\TrabajoPracticoIntegrador Primera Entrega Nicolás Alcalá\\TrabajoPracticoIntegrador15-4 version 1.1 singleton\\TrabajoPracticoIntegrador15-4\\BE\\BE.csproj"
+              "C:\\Users\\alcal\\OneDrive\\Escritorio\\Nueva carpeta\\BE\\BE.csproj": {
+                "projectPath": "C:\\Users\\alcal\\OneDrive\\Escritorio\\Nueva carpeta\\BE\\BE.csproj"
               },
-              "C:\\Users\\Navegador\\Desktop\\TrabajoPracticoIntegrador Primera Entrega Nicolás Alcalá\\TrabajoPracticoIntegrador15-4 version 1.1 singleton\\TrabajoPracticoIntegrador15-4\\SE\\SE.csproj": {
-                "projectPath": "C:\\Users\\Navegador\\Desktop\\TrabajoPracticoIntegrador Primera Entrega Nicolás Alcalá\\TrabajoPracticoIntegrador15-4 version 1.1 singleton\\TrabajoPracticoIntegrador15-4\\SE\\SE.csproj"
+              "C:\\Users\\alcal\\OneDrive\\Escritorio\\Nueva carpeta\\SE\\SE.csproj": {
+                "projectPath": "C:\\Users\\alcal\\OneDrive\\Escritorio\\Nueva carpeta\\SE\\SE.csproj"
               }
             }
           }
@@ -120,7 +130,7 @@
           "auditLevel": "low",
           "auditMode": "direct"
         },
-        "SdkAnalysisLevel": "9.0.200"
+        "SdkAnalysisLevel": "9.0.300"
       },
       "frameworks": {
         "net8.0": {
@@ -142,29 +152,43 @@
           ],
           "assetTargetFallback": true,
           "warn": true,
+          "downloadDependencies": [
+            {
+              "name": "Microsoft.AspNetCore.App.Ref",
+              "version": "[8.0.26, 8.0.26]"
+            },
+            {
+              "name": "Microsoft.NETCore.App.Ref",
+              "version": "[8.0.26, 8.0.26]"
+            },
+            {
+              "name": "Microsoft.WindowsDesktop.App.Ref",
+              "version": "[8.0.26, 8.0.26]"
+            }
+          ],
           "frameworkReferences": {
             "Microsoft.NETCore.App": {
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.200/PortableRuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.313/PortableRuntimeIdentifierGraph.json"
         }
       }
     },
-    "C:\\Users\\Navegador\\Desktop\\TrabajoPracticoIntegrador Primera Entrega Nicolás Alcalá\\TrabajoPracticoIntegrador15-4 version 1.1 singleton\\TrabajoPracticoIntegrador15-4\\SE\\SE.csproj": {
+    "C:\\Users\\alcal\\OneDrive\\Escritorio\\Nueva carpeta\\SE\\SE.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\Navegador\\Desktop\\TrabajoPracticoIntegrador Primera Entrega Nicolás Alcalá\\TrabajoPracticoIntegrador15-4 version 1.1 singleton\\TrabajoPracticoIntegrador15-4\\SE\\SE.csproj",
+        "projectUniqueName": "C:\\Users\\alcal\\OneDrive\\Escritorio\\Nueva carpeta\\SE\\SE.csproj",
         "projectName": "SE",
-        "projectPath": "C:\\Users\\Navegador\\Desktop\\TrabajoPracticoIntegrador Primera Entrega Nicolás Alcalá\\TrabajoPracticoIntegrador15-4 version 1.1 singleton\\TrabajoPracticoIntegrador15-4\\SE\\SE.csproj",
-        "packagesPath": "C:\\Users\\Navegador\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\Navegador\\Desktop\\TrabajoPracticoIntegrador Primera Entrega Nicolás Alcalá\\TrabajoPracticoIntegrador15-4 version 1.1 singleton\\TrabajoPracticoIntegrador15-4\\SE\\obj\\",
+        "projectPath": "C:\\Users\\alcal\\OneDrive\\Escritorio\\Nueva carpeta\\SE\\SE.csproj",
+        "packagesPath": "C:\\Users\\alcal\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\alcal\\OneDrive\\Escritorio\\Nueva carpeta\\SE\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
-          "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
+          "D:\\Visual Studio Violeta\\Shared\\NuGetPackages"
         ],
         "configFilePaths": [
-          "C:\\Users\\Navegador\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\alcal\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
@@ -173,8 +197,6 @@
         ],
         "sources": {
           "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
-          "C:\\Program Files\\dotnet\\library-packs": {},
-          "C:\\Users\\Navegador\\SQLClient": {},
           "https://api.nuget.org/v3/index.json": {}
         },
         "frameworks": {
@@ -193,7 +215,7 @@
           "auditLevel": "low",
           "auditMode": "direct"
         },
-        "SdkAnalysisLevel": "9.0.200"
+        "SdkAnalysisLevel": "9.0.300"
       },
       "frameworks": {
         "net8.0": {
@@ -209,12 +231,26 @@
           ],
           "assetTargetFallback": true,
           "warn": true,
+          "downloadDependencies": [
+            {
+              "name": "Microsoft.AspNetCore.App.Ref",
+              "version": "[8.0.26, 8.0.26]"
+            },
+            {
+              "name": "Microsoft.NETCore.App.Ref",
+              "version": "[8.0.26, 8.0.26]"
+            },
+            {
+              "name": "Microsoft.WindowsDesktop.App.Ref",
+              "version": "[8.0.26, 8.0.26]"
+            }
+          ],
           "frameworkReferences": {
             "Microsoft.NETCore.App": {
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.200/PortableRuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.313/PortableRuntimeIdentifierGraph.json"
         }
       }
     }

@@ -3,6 +3,7 @@ using DAL;
 using System.Text;
 using System.Security.Cryptography;
 using BLL_;
+using SE;
 namespace BLL
 {
     public class UsuarioBLL
@@ -38,15 +39,6 @@ namespace BLL
             usuarioDAL = new UsuarioDAL(); //inicializamos la instancia en el constructor
         }
 
-        private string HashContrasena(string contraseña)    //metodo para hashear la contraseña usando System.Security.Cryptography
-        {
-            using (var sha256 = SHA256.Create())
-            {
-                byte[] bytes = sha256.ComputeHash(Encoding.UTF8.GetBytes(contraseña));
-                return Convert.ToHexString(bytes).ToLower(); // devuelve 64 chars hexa
-            }
-        }
-
         public Usuario Add(Usuario usuario,string contraseñaPlana)
         {
             try
@@ -71,7 +63,7 @@ namespace BLL
                 {//verificacion para que el usuario ingrese una contraseña
                     throw new Exception("El usuario debe tener una contraseña");
                 }
-                usuario.Contraseña = HashContrasena(contraseñaPlana); // hasheamos antes de persistir
+                usuario.Contraseña = Encriptado.HashContrasena(contraseñaPlana); // hasheamos antes de persistir
                 usuario = usuarioDAL.Add(usuario); //enviamos el usuario en la lista a la DAL
 
                 return usuario; //planeamos retornar el usuario ingresado a la DAL para que lo persista en la base
@@ -119,7 +111,7 @@ namespace BLL
                 throw new Exception("Nombre y contraseña son obligatorios");
             }
             //guardamos la contraseña hasheada en el atributo del usuario para enviarla a la DAL
-            string hash = HashContrasena(contraseñaPlana);
+            string hash = Encriptado.HashContrasena(contraseñaPlana);
             Usuario? usuario = usuarioDAL.Login(nombre, hash);
 
             if (usuario == null)
