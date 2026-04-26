@@ -14,11 +14,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\alcal\\OneDrive\\Escritorio\\Nueva carpeta\\BE\\BE.csproj",
+      "projectUniqueName": "C:\\Users\\alcal\\OneDrive\\Escritorio\\EntregasTrabajoPractico\\Primera Entrega\\v1.2\\Correcciones\\Tp Integrador v1.2 + github\\TrabajoPracticoIntegradorParte1\\BE\\BE.csproj",
       "projectName": "BE",
-      "projectPath": "C:\\Users\\alcal\\OneDrive\\Escritorio\\Nueva carpeta\\BE\\BE.csproj",
+      "projectPath": "C:\\Users\\alcal\\OneDrive\\Escritorio\\EntregasTrabajoPractico\\Primera Entrega\\v1.2\\Correcciones\\Tp Integrador v1.2 + github\\TrabajoPracticoIntegradorParte1\\BE\\BE.csproj",
       "packagesPath": "C:\\Users\\alcal\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\alcal\\OneDrive\\Escritorio\\Nueva carpeta\\BE\\obj\\",
+      "outputPath": "C:\\Users\\alcal\\OneDrive\\Escritorio\\EntregasTrabajoPractico\\Primera Entrega\\v1.2\\Correcciones\\Tp Integrador v1.2 + github\\TrabajoPracticoIntegradorParte1\\BE\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "D:\\Visual Studio Violeta\\Shared\\NuGetPackages"

@@ -245,11 +245,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\alcal\\OneDrive\\Escritorio\\Nueva carpeta\\BLL}\\BLL.csproj",
+      "projectUniqueName": "C:\\Users\\alcal\\OneDrive\\Escritorio\\EntregasTrabajoPractico\\Primera Entrega\\v1.2\\Correcciones\\Tp Integrador v1.2 + github\\TrabajoPracticoIntegradorParte1\\BLL}\\BLL.csproj",
       "projectName": "BLL",
-      "projectPath": "C:\\Users\\alcal\\OneDrive\\Escritorio\\Nueva carpeta\\BLL}\\BLL.csproj",
+      "projectPath": "C:\\Users\\alcal\\OneDrive\\Escritorio\\EntregasTrabajoPractico\\Primera Entrega\\v1.2\\Correcciones\\Tp Integrador v1.2 + github\\TrabajoPracticoIntegradorParte1\\BLL}\\BLL.csproj",
       "packagesPath": "C:\\Users\\alcal\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\alcal\\OneDrive\\Escritorio\\Nueva carpeta\\BLL}\\obj\\",
+      "outputPath": "C:\\Users\\alcal\\OneDrive\\Escritorio\\EntregasTrabajoPractico\\Primera Entrega\\v1.2\\Correcciones\\Tp Integrador v1.2 + github\\TrabajoPracticoIntegradorParte1\\BLL}\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "D:\\Visual Studio Violeta\\Shared\\NuGetPackages"
@@ -270,14 +270,14 @@
         "net8.0": {
           "targetAlias": "net8.0",
           "projectReferences": {
-            "C:\\Users\\alcal\\OneDrive\\Escritorio\\Nueva carpeta\\ABS\\ABS.csproj": {
-              "projectPath": "C:\\Users\\alcal\\OneDrive\\Escritorio\\Nueva carpeta\\ABS\\ABS.csproj"
+            "C:\\Users\\alcal\\OneDrive\\Escritorio\\EntregasTrabajoPractico\\Primera Entrega\\v1.2\\Correcciones\\Tp Integrador v1.2 + github\\TrabajoPracticoIntegradorParte1\\ABS\\ABS.csproj": {
+              "projectPath": "C:\\Users\\alcal\\OneDrive\\Escritorio\\EntregasTrabajoPractico\\Primera Entrega\\v1.2\\Correcciones\\Tp Integrador v1.2 + github\\TrabajoPracticoIntegradorParte1\\ABS\\ABS.csproj"
             },
-            "C:\\Users\\alcal\\OneDrive\\Escritorio\\Nueva carpeta\\BE\\BE.csproj": {
-              "projectPath": "C:\\Users\\alcal\\OneDrive\\Escritorio\\Nueva carpeta\\BE\\BE.csproj"
+            "C:\\Users\\alcal\\OneDrive\\Escritorio\\EntregasTrabajoPractico\\Primera Entrega\\v1.2\\Correcciones\\Tp Integrador v1.2 + github\\TrabajoPracticoIntegradorParte1\\BE\\BE.csproj": {
+              "projectPath": "C:\\Users\\alcal\\OneDrive\\Escritorio\\EntregasTrabajoPractico\\Primera Entrega\\v1.2\\Correcciones\\Tp Integrador v1.2 + github\\TrabajoPracticoIntegradorParte1\\BE\\BE.csproj"
             },
-            "C:\\Users\\alcal\\OneDrive\\Escritorio\\Nueva carpeta\\DAL\\DAL.csproj": {
-              "projectPath": "C:\\Users\\alcal\\OneDrive\\Escritorio\\Nueva carpeta\\DAL\\DAL.csproj"
+            "C:\\Users\\alcal\\OneDrive\\Escritorio\\EntregasTrabajoPractico\\Primera Entrega\\v1.2\\Correcciones\\Tp Integrador v1.2 + github\\TrabajoPracticoIntegradorParte1\\DAL\\DAL.csproj": {
+              "projectPath": "C:\\Users\\alcal\\OneDrive\\Escritorio\\EntregasTrabajoPractico\\Primera Entrega\\v1.2\\Correcciones\\Tp Integrador v1.2 + github\\TrabajoPracticoIntegradorParte1\\DAL\\DAL.csproj"
             }
           }
         }

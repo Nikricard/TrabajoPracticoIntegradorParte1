@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "HzWxeRIjUnE=",
+  "dgSpecHash": "2UgIh4tuP10=",
   "success": true,
-  "projectFilePath": "C:\\Users\\alcal\\OneDrive\\Escritorio\\Nueva carpeta\\SE\\SE.csproj",
+  "projectFilePath": "C:\\Users\\alcal\\OneDrive\\Escritorio\\EntregasTrabajoPractico\\Primera Entrega\\v1.2\\Correcciones\\Tp Integrador v1.2 + github\\TrabajoPracticoIntegradorParte1\\SE\\SE.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\alcal\\.nuget\\packages\\microsoft.windowsdesktop.app.ref\\8.0.26\\microsoft.windowsdesktop.app.ref.8.0.26.nupkg.sha512",
     "C:\\Users\\alcal\\.nuget\\packages\\microsoft.netcore.app.ref\\8.0.26\\microsoft.netcore.app.ref.8.0.26.nupkg.sha512",

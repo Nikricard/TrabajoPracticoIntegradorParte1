@@ -48,15 +48,9 @@ namespace BLL
                     throw new Exception("El usuario no puede ser nulo");
                 }   //verificamos que el usuario no sea nulo
 
-                if (string.IsNullOrEmpty(usuario.Nombre))
-                {
-                    throw new Exception("El usuario debe tener un nombre");
-                }//verificamos que el usuario tenga un nombre
-
-                if (int.TryParse(usuario.Nombre, out int resultadoNumero))
-                {
-                    // en caso de que el usuario escriba numeros en vez de su nombre
-                    throw new Exception("El nombre de usuario no puede ser un número");
+                if (!usuario.EsValido(out string mensaje))
+                {//ahora la BE hace sus propias validaciones
+                    throw new Exception(mensaje);
                 }
 
                 if (string.IsNullOrEmpty(contraseñaPlana))
@@ -84,16 +78,11 @@ namespace BLL
                     throw new Exception("El usuario no puede ser nulo");
                 }   //verificamos que el usuario no sea null
 
-                if (int.TryParse(usuario.Nombre, out int resultadoNumero))
-                {
-                    // en caso de que el usuario escriba números en vez de nombre
-                    throw new Exception("El nombre de usuario no puede ser un número");
+                if (!usuario.EsValido(out string mensaje))
+                {//ahora la BE hace sus propias validaciones
+                    throw new Exception(mensaje);
                 }
 
-                if (string.IsNullOrEmpty(usuario.Nombre))
-                {
-                    throw new Exception("El usuario debe tener un nombre");
-                }//verificamos que el usuario tenga un nombre
                 usuario = usuarioDAL.Modify(usuario); //enviamos el usuario en la lista a la DAL
                 return usuario; //planeamos retornar el usuario ingresado a la DAL para que lo persista en la base
             }
@@ -130,10 +119,11 @@ namespace BLL
                 {
                     throw new Exception("El usuario no puede ser nulo");
                 }   //verificamos que el usuario no sea null
-                if (string.IsNullOrEmpty(usuario.Nombre))
-                {
-                    throw new Exception("El usuario debe tener un nombre");
-                }//verificamos que el usuario tenga un nombre
+
+                if (!usuario.EsValido(out string mensaje))
+                {//ahora la BE hace sus propias validaciones
+                    throw new Exception(mensaje);
+                }
 
                 usuario = usuarioDAL.Delete(usuario); //enviamos el usuario en la lista a la DAL
                 return usuario; //retornamos el usuario ingresado a la DAL para que lo borre de la base
