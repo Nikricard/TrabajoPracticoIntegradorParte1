@@ -44,6 +44,7 @@
             label1.Name = "label1";
             label1.Size = new Size(51, 15);
             label1.TabIndex = 0;
+            label1.Tag = "lblNombre";
             label1.Text = "Nombre";
             // 
             // label2
@@ -53,6 +54,7 @@
             label2.Name = "label2";
             label2.Size = new Size(67, 15);
             label2.TabIndex = 1;
+            label2.Tag = "lblContrasena";
             label2.Text = "Contraseña";
             // 
             // txtNombre
@@ -76,6 +78,7 @@
             btnIngresar.Name = "btnIngresar";
             btnIngresar.Size = new Size(75, 23);
             btnIngresar.TabIndex = 4;
+            btnIngresar.Tag = "btnIngresar";
             btnIngresar.Text = "Ingresar";
             btnIngresar.UseVisualStyleBackColor = true;
             btnIngresar.Click += btnIngresar_Click;
@@ -86,6 +89,7 @@
             btnSalir.Name = "btnSalir";
             btnSalir.Size = new Size(75, 23);
             btnSalir.TabIndex = 5;
+            btnSalir.Tag = "btnSalir";
             btnSalir.Text = "Salir";
             btnSalir.UseVisualStyleBackColor = true;
             btnSalir.Click += btnSalir_Click;
@@ -96,6 +100,7 @@
             btnRegistrar.Name = "btnRegistrar";
             btnRegistrar.Size = new Size(75, 23);
             btnRegistrar.TabIndex = 6;
+            btnRegistrar.Tag = "btnRegistrar";
             btnRegistrar.Text = "Registrar";
             btnRegistrar.UseVisualStyleBackColor = true;
             btnRegistrar.Click += btnRegistrar_Click;
@@ -115,6 +120,7 @@
             FormBorderStyle = FormBorderStyle.Fixed3D;
             Name = "frmLogin";
             Text = "frmLogin";
+            Load += frmLogin_Load;
             ResumeLayout(false);
             PerformLayout();
         }

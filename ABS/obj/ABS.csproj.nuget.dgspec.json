@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\alcal\\OneDrive\\Escritorio\\EntregasTrabajoPractico\\Primera Entrega\\v1.2\\Correcciones\\Tp Integrador v1.2 + github\\TrabajoPracticoIntegradorParte1\\ABS\\ABS.csproj": {}
+    "C:\\Users\\alcal\\OneDrive\\Escritorio\\TpGitHub\\TrabajoPracticoIntegradorParte1\\ABS\\ABS.csproj": {}
   },
   "projects": {
-    "C:\\Users\\alcal\\OneDrive\\Escritorio\\EntregasTrabajoPractico\\Primera Entrega\\v1.2\\Correcciones\\Tp Integrador v1.2 + github\\TrabajoPracticoIntegradorParte1\\ABS\\ABS.csproj": {
+    "C:\\Users\\alcal\\OneDrive\\Escritorio\\TpGitHub\\TrabajoPracticoIntegradorParte1\\ABS\\ABS.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\alcal\\OneDrive\\Escritorio\\EntregasTrabajoPractico\\Primera Entrega\\v1.2\\Correcciones\\Tp Integrador v1.2 + github\\TrabajoPracticoIntegradorParte1\\ABS\\ABS.csproj",
+        "projectUniqueName": "C:\\Users\\alcal\\OneDrive\\Escritorio\\TpGitHub\\TrabajoPracticoIntegradorParte1\\ABS\\ABS.csproj",
         "projectName": "ABS",
-        "projectPath": "C:\\Users\\alcal\\OneDrive\\Escritorio\\EntregasTrabajoPractico\\Primera Entrega\\v1.2\\Correcciones\\Tp Integrador v1.2 + github\\TrabajoPracticoIntegradorParte1\\ABS\\ABS.csproj",
+        "projectPath": "C:\\Users\\alcal\\OneDrive\\Escritorio\\TpGitHub\\TrabajoPracticoIntegradorParte1\\ABS\\ABS.csproj",
         "packagesPath": "C:\\Users\\alcal\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\alcal\\OneDrive\\Escritorio\\EntregasTrabajoPractico\\Primera Entrega\\v1.2\\Correcciones\\Tp Integrador v1.2 + github\\TrabajoPracticoIntegradorParte1\\ABS\\obj\\",
+        "outputPath": "C:\\Users\\alcal\\OneDrive\\Escritorio\\TpGitHub\\TrabajoPracticoIntegradorParte1\\ABS\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "D:\\Visual Studio Violeta\\Shared\\NuGetPackages"

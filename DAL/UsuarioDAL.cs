@@ -9,7 +9,7 @@ namespace DAL
     {
         public Usuario Add(Usuario usuario)
         {
-            var connectionString = "Server=.;Database=Usuarios;Integrated Security=True";
+            var connectionString = "Server=DESKTOP-FD6Q6GG\\SQLEXPRESS;Database=Usuarios;Integrated Security=True";
             //string conexion
             using (var con = new SqlConnection(connectionString)) //establecemos conexion
             {
@@ -60,7 +60,7 @@ namespace DAL
 
         public Usuario Modify(Usuario usuario)
         {
-            var connectionString = "Server=.;Database=Usuarios;Integrated Security=True";
+            var connectionString = "Server=DESKTOP-FD6Q6GG\\SQLEXPRESS;Database=Usuarios;Integrated Security=True";
             SqlConnection connection = new SqlConnection(connectionString);
             connection.Open();
             using (var transaction = connection.BeginTransaction())
@@ -95,7 +95,7 @@ namespace DAL
 
         public Usuario Delete(Usuario usuario)
         {
-            var connectionString = "Server=.;Database=Usuarios;Integrated Security=True";
+            var connectionString = "Server=DESKTOP-FD6Q6GG\\SQLEXPRESS;Database=Usuarios;Integrated Security=True";
             SqlConnection connection = new SqlConnection(connectionString);
             connection.Open();
             using (var transaction = connection.BeginTransaction())
@@ -129,7 +129,7 @@ namespace DAL
 
         public Usuario? Login(string nombre, string contrasenaHash)
         {
-            var connectionString = "Server=.;Database=Usuarios;Integrated Security=True";
+            var connectionString = "Server=DESKTOP-FD6Q6GG\\SQLEXPRESS;Database=Usuarios;Integrated Security=True";
 
             using (var connection = new SqlConnection(connectionString))
             {
@@ -161,7 +161,7 @@ namespace DAL
 
         public List<Usuario> GetAll()
         {
-            var connectionString = "Server=.;Database=Usuarios;Integrated Security=True";
+            var connectionString = "Server=DESKTOP-FD6Q6GG\\SQLEXPRESS;Database=Usuarios;Integrated Security=True";
             SqlConnection connection = new SqlConnection(connectionString);
             List<Usuario> usuarios = new List<Usuario>();
             try

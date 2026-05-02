@@ -11,6 +11,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\ABS\ABS.csproj" />
     <ProjectReference Include="..\BE\BE.csproj" />
     <ProjectReference Include="..\SE\SE.csproj" />
   </ItemGroup>

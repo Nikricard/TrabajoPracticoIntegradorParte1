@@ -2,11 +2,16 @@ using BLL;
 using BE;
 using System;
 using System.Windows.Forms;
+using BLL_;
 
 namespace TrabajoPracticoIntegrador15_4
 {
-    public partial class frmModificar : Form
+    public partial class frmModificar : Form, IObservadorIdioma
     {
+        private readonly GestorIdioma gestor = GestorIdioma.Instancia;
+        public void ActualizarIdioma(Idioma idioma)
+        => TraductorUI.Traducir(this.Controls, idioma);
+
         public frmModificar()
         {
             InitializeComponent();
@@ -15,6 +20,11 @@ namespace TrabajoPracticoIntegrador15_4
         private void frmModificar_Load(object sender, EventArgs e)
         {
             ActualizarGrid();
+
+            gestor.Suscribir(this);    // 2. Suscribirse
+            if (gestor.IdiomaActivo != null)
+                ActualizarIdioma(gestor.IdiomaActivo);  // 3. Aplicar idioma actual
+
         }
 
         private void btnModificar_Click(object sender, EventArgs e)
@@ -69,6 +79,7 @@ namespace TrabajoPracticoIntegrador15_4
 
         private void btnSalir_Click(object sender, EventArgs e)
         {
+            gestor.Desuscribir(this);  // 4. Desuscribirse al cerrar
             Close();
         }
     }

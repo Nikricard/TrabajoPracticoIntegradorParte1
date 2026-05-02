@@ -55,6 +55,7 @@
             label1.Name = "label1";
             label1.Size = new Size(18, 15);
             label1.TabIndex = 1;
+            label1.Tag = "lblId";
             label1.Text = "ID";
             // 
             // label2
@@ -64,6 +65,7 @@
             label2.Name = "label2";
             label2.Size = new Size(51, 15);
             label2.TabIndex = 2;
+            label2.Tag = "lblNombre";
             label2.Text = "Nombre";
             // 
             // txtId
@@ -87,6 +89,7 @@
             btnModificar.Name = "btnModificar";
             btnModificar.Size = new Size(75, 23);
             btnModificar.TabIndex = 5;
+            btnModificar.Tag = "btnModificar";
             btnModificar.Text = "Modificar";
             btnModificar.UseVisualStyleBackColor = true;
             btnModificar.Click += btnModificar_Click;
@@ -97,6 +100,7 @@
             btnSalir.Name = "btnSalir";
             btnSalir.Size = new Size(75, 23);
             btnSalir.TabIndex = 6;
+            btnSalir.Tag = "btnSalir";
             btnSalir.Text = "Salir";
             btnSalir.UseVisualStyleBackColor = true;
             btnSalir.Click += btnSalir_Click;

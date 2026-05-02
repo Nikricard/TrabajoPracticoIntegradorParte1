@@ -1,12 +1,17 @@
 using BE;
 using BLL;
+using BLL_;
 using System;
 using System.Windows.Forms;
 
 namespace TrabajoPracticoIntegrador15_4
 {
-    public partial class frmLogin : Form
+    public partial class frmLogin : Form, IObservadorIdioma
     {
+        private readonly GestorIdioma gestor = GestorIdioma.Instancia;
+        public void ActualizarIdioma(Idioma idioma)
+        => TraductorUI.Traducir(this.Controls, idioma);
+
         public frmLogin()
         {
             InitializeComponent();
@@ -47,6 +52,7 @@ namespace TrabajoPracticoIntegrador15_4
 
         private void btnSalir_Click(object sender, EventArgs e)
         {
+            gestor.Desuscribir(this);  // 4. Desuscribirse al cerrar
             Close();
             Application.Exit();
         }
@@ -76,6 +82,13 @@ namespace TrabajoPracticoIntegrador15_4
         {
             txtNombre.Text = string.Empty;
             txtContraseña.Text = string.Empty;
+        }
+
+        private void frmLogin_Load(object sender, EventArgs e)
+        {
+            gestor.Suscribir(this);    // 2. Suscribirse
+            if (gestor.IdiomaActivo != null)
+                ActualizarIdioma(gestor.IdiomaActivo);  // 3. Aplicar idioma actua
         }
     }
 }

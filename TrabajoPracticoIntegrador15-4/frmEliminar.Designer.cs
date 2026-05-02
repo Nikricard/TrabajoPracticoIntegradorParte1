@@ -44,6 +44,7 @@
             btnSalir.Name = "btnSalir";
             btnSalir.Size = new Size(75, 23);
             btnSalir.TabIndex = 13;
+            btnSalir.Tag = "btnSalir";
             btnSalir.Text = "Salir";
             btnSalir.UseVisualStyleBackColor = true;
             btnSalir.Click += btnSalir_Click;
@@ -54,6 +55,7 @@
             btnEliminar.Name = "btnEliminar";
             btnEliminar.Size = new Size(75, 23);
             btnEliminar.TabIndex = 12;
+            btnEliminar.Tag = "btnEliminar";
             btnEliminar.Text = "Eliminar";
             btnEliminar.UseVisualStyleBackColor = true;
             btnEliminar.Click += btnEliminar_Click;
@@ -81,6 +83,7 @@
             label2.Name = "label2";
             label2.Size = new Size(51, 15);
             label2.TabIndex = 9;
+            label2.Tag = "lblNombre";
             label2.Text = "Nombre";
             // 
             // label1
@@ -90,6 +93,7 @@
             label1.Name = "label1";
             label1.Size = new Size(18, 15);
             label1.TabIndex = 8;
+            label1.Tag = "lblId";
             label1.Text = "ID";
             // 
             // dgvUsuarios
