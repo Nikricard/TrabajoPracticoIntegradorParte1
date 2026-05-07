@@ -9,7 +9,9 @@ namespace DAL
     public class IdiomaDAL
     {
         private readonly string cs =
-            "Server=.;Database=Usuarios;Integrated Security=True";
+            "Server=DESKTOP-FD6Q6GG\\SQLEXPRESS;Database=Usuarios;Integrated Security=True";
+        //Server facultad = .
+        //Server casa = DESKTOP-FD6Q6GG\SQLEXPRESS
 
         // Devuelve todos los idiomas con sus traducciones cargadas.
         public List<Idioma> GetAllIdiomas()

@@ -89,3 +89,7 @@ C:\Users\Navegador\Desktop\TrabajoPractico\TrabajoPracticoIntegradorParte1\ABS\o
 C:\Users\Navegador\Desktop\TrabajoPractico\TrabajoPracticoIntegradorParte1\ABS\obj\Debug\net8.0\refint\ABS.dll
 C:\Users\Navegador\Desktop\TrabajoPractico\TrabajoPracticoIntegradorParte1\ABS\obj\Debug\net8.0\ABS.pdb
 C:\Users\Navegador\Desktop\TrabajoPractico\TrabajoPracticoIntegradorParte1\ABS\obj\Debug\net8.0\ref\ABS.dll
+C:\Users\alcal\OneDrive\Escritorio\TpGitHub\TrabajoPracticoIntegradorParte1\ABS\bin\Debug\net8.0\BE.dll
+C:\Users\alcal\OneDrive\Escritorio\TpGitHub\TrabajoPracticoIntegradorParte1\ABS\bin\Debug\net8.0\BE.pdb
+C:\Users\alcal\OneDrive\Escritorio\TpGitHub\TrabajoPracticoIntegradorParte1\ABS\obj\Debug\net8.0\ABS.csproj.AssemblyReference.cache
+C:\Users\alcal\OneDrive\Escritorio\TpGitHub\TrabajoPracticoIntegradorParte1\ABS\obj\Debug\net8.0\ABS.csproj.Up2Date

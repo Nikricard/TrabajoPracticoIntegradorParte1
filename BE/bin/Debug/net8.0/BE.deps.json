@@ -7,30 +7,14 @@
   "targets": {
     ".NETCoreApp,Version=v8.0": {
       "BE/1.0.0": {
-        "dependencies": {
-          "ABS": "1.0.0"
-        },
         "runtime": {
           "BE.dll": {}
-        }
-      },
-      "ABS/1.0.0": {
-        "runtime": {
-          "ABS.dll": {
-            "assemblyVersion": "1.0.0.0",
-            "fileVersion": "1.0.0.0"
-          }
         }
       }
     }
   },
   "libraries": {
     "BE/1.0.0": {
-      "type": "project",
-      "serviceable": false,
-      "sha512": ""
-    },
-    "ABS/1.0.0": {
       "type": "project",
       "serviceable": false,
       "sha512": ""

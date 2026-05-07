@@ -1,4 +1,5 @@
-﻿using System;
+﻿using BE;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -6,8 +7,9 @@ using System.Threading.Tasks;
 
 namespace ABS
 {
-    public interface IObservador
+    //Interfaz Observer
+    public interface IObservadorIdioma
     {
-        //void Actualizar(IIdioma idiomaObservado);
+        void ActualizarIdioma(Idioma idioma);
     }
 }

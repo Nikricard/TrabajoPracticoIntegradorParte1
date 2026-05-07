@@ -1,16 +1,11 @@
 using BE;
 using DAL;
+using ABS;
 using System;
 using System.Collections.Generic;
 
 namespace BLL_
 {
-    //Interfaz Observer
-    public interface IObservadorIdioma
-    {
-        void ActualizarIdioma(Idioma idioma);
-    }
-
     //Gestor Idioma
     public class GestorIdioma
     {

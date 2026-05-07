@@ -76,6 +76,9 @@
         }
       },
       "ABS/1.0.0": {
+        "dependencies": {
+          "BE": "1.0.0"
+        },
         "runtime": {
           "ABS.dll": {
             "assemblyVersion": "1.0.0.0",
@@ -84,9 +87,6 @@
         }
       },
       "BE/1.0.0": {
-        "dependencies": {
-          "ABS": "1.0.0"
-        },
         "runtime": {
           "BE.dll": {
             "assemblyVersion": "1.0.0.0",
