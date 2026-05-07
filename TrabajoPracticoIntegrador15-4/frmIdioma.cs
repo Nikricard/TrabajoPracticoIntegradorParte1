@@ -24,7 +24,6 @@ namespace TrabajoPracticoIntegrador15_4
             InitializeComponent();
         }
 
-        // ── Observer ─────────────────────────────────────────
         public void ActualizarIdioma(Idioma idioma)
         {
             // Este formulario también se traduce si cambia el idioma
@@ -32,7 +31,7 @@ namespace TrabajoPracticoIntegrador15_4
                 if (c.Tag != null)
                     c.Text = idioma.Traducir(c.Tag.ToString());
         }
-        // ── Load / Close ─────────────────────────────────────
+
         private void frmIdioma_Load(object sender, EventArgs e)
         {
             gestor.Suscribir(this);

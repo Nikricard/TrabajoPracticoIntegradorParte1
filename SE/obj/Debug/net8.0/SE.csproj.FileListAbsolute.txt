@@ -77,3 +77,15 @@ C:\Users\alcal\OneDrive\Escritorio\TpGitHub\TrabajoPracticoIntegradorParte1\SE\o
 C:\Users\alcal\OneDrive\Escritorio\TpGitHub\TrabajoPracticoIntegradorParte1\SE\obj\Debug\net8.0\refint\SE.dll
 C:\Users\alcal\OneDrive\Escritorio\TpGitHub\TrabajoPracticoIntegradorParte1\SE\obj\Debug\net8.0\SE.pdb
 C:\Users\alcal\OneDrive\Escritorio\TpGitHub\TrabajoPracticoIntegradorParte1\SE\obj\Debug\net8.0\ref\SE.dll
+C:\Users\Navegador\Desktop\TrabajoPractico\TrabajoPracticoIntegradorParte1\SE\bin\Debug\net8.0\SE.deps.json
+C:\Users\Navegador\Desktop\TrabajoPractico\TrabajoPracticoIntegradorParte1\SE\bin\Debug\net8.0\SE.dll
+C:\Users\Navegador\Desktop\TrabajoPractico\TrabajoPracticoIntegradorParte1\SE\bin\Debug\net8.0\SE.pdb
+C:\Users\Navegador\Desktop\TrabajoPractico\TrabajoPracticoIntegradorParte1\SE\obj\Debug\net8.0\SE.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\Navegador\Desktop\TrabajoPractico\TrabajoPracticoIntegradorParte1\SE\obj\Debug\net8.0\SE.AssemblyInfoInputs.cache
+C:\Users\Navegador\Desktop\TrabajoPractico\TrabajoPracticoIntegradorParte1\SE\obj\Debug\net8.0\SE.AssemblyInfo.cs
+C:\Users\Navegador\Desktop\TrabajoPractico\TrabajoPracticoIntegradorParte1\SE\obj\Debug\net8.0\SE.csproj.CoreCompileInputs.cache
+C:\Users\Navegador\Desktop\TrabajoPractico\TrabajoPracticoIntegradorParte1\SE\obj\Debug\net8.0\SE.sourcelink.json
+C:\Users\Navegador\Desktop\TrabajoPractico\TrabajoPracticoIntegradorParte1\SE\obj\Debug\net8.0\SE.dll
+C:\Users\Navegador\Desktop\TrabajoPractico\TrabajoPracticoIntegradorParte1\SE\obj\Debug\net8.0\refint\SE.dll
+C:\Users\Navegador\Desktop\TrabajoPractico\TrabajoPracticoIntegradorParte1\SE\obj\Debug\net8.0\SE.pdb
+C:\Users\Navegador\Desktop\TrabajoPractico\TrabajoPracticoIntegradorParte1\SE\obj\Debug\net8.0\ref\SE.dll

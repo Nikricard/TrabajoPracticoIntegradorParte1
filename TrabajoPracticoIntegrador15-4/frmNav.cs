@@ -39,18 +39,11 @@ namespace TrabajoPracticoIntegrador15_4
         }
 
         
-
-        // ── Observer ─────────────────────────────────────────
-        /// <summary>
-        /// GestorIdioma llama a este método cuando el idioma cambia.
-        /// Actualiza controles normales e ítems del MenuStrip.
-        /// </summary>
+        // GestorIdioma llama a este método cuando el idioma cambia.
+        // Actualiza controles normales e ítems del MenuStrip.
         public void ActualizarIdioma(Idioma idioma)
                 => TraductorUI.Traducir(this.Controls, idioma);
 
-        // ── Load / Close ─────────────────────────────────────
-
-        // ── Menú de idiomas ───────────────────────────────────
         private void CargarMenuIdiomas()
         {
             IdiomaMenuItem.DropDownItems.Clear();
@@ -65,8 +58,7 @@ namespace TrabajoPracticoIntegrador15_4
                     gestor.CambiarIdioma((Idioma)((ToolStripMenuItem)s).Tag);
                 };
                 IdiomaMenuItem.DropDownItems.Add(item);
-                item.Text = idioma.Nombre;
-                //MessageBox.Show($"Id: {idioma.IdIdioma} | Nombre: '{idioma.Nombre}'");
+                item.Text = idioma.Nombre;                
             }
 
             IdiomaMenuItem.DropDownItems.Add(new ToolStripSeparator());
@@ -83,8 +75,6 @@ namespace TrabajoPracticoIntegrador15_4
             };
             IdiomaMenuItem.DropDownItems.Add(agregar);
         }
-
-
 
         private void registrarToolStripMenuItem_Click(object sender, EventArgs e)
         {

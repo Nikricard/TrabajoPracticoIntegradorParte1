@@ -52,7 +52,7 @@ namespace TrabajoPracticoIntegrador15_4
 
         private void btnSalir_Click(object sender, EventArgs e)
         {
-            gestor.Desuscribir(this);  // 4. Desuscribirse al cerrar
+            gestor.Desuscribir(this);  
             Close();
             Application.Exit();
         }
@@ -86,9 +86,9 @@ namespace TrabajoPracticoIntegrador15_4
 
         private void frmLogin_Load(object sender, EventArgs e)
         {
-            gestor.Suscribir(this);    // 2. Suscribirse
+            gestor.Suscribir(this);    
             if (gestor.IdiomaActivo != null)
-                ActualizarIdioma(gestor.IdiomaActivo);  // 3. Aplicar idioma actua
+                ActualizarIdioma(gestor.IdiomaActivo);  // Aplica idioma actua
         }
     }
 }

@@ -1,12 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "hUjv3MGShI8=",
+  "dgSpecHash": "4sOI0DTA/Bc=",
   "success": true,
-  "projectFilePath": "C:\\Users\\alcal\\OneDrive\\Escritorio\\TpGitHub\\TrabajoPracticoIntegradorParte1\\ABS\\ABS.csproj",
-  "expectedPackageFiles": [
-    "C:\\Users\\alcal\\.nuget\\packages\\microsoft.windowsdesktop.app.ref\\8.0.26\\microsoft.windowsdesktop.app.ref.8.0.26.nupkg.sha512",
-    "C:\\Users\\alcal\\.nuget\\packages\\microsoft.netcore.app.ref\\8.0.26\\microsoft.netcore.app.ref.8.0.26.nupkg.sha512",
-    "C:\\Users\\alcal\\.nuget\\packages\\microsoft.aspnetcore.app.ref\\8.0.26\\microsoft.aspnetcore.app.ref.8.0.26.nupkg.sha512"
-  ],
+  "projectFilePath": "C:\\Users\\Navegador\\Desktop\\TrabajoPractico\\TrabajoPracticoIntegradorParte1\\ABS\\ABS.csproj",
+  "expectedPackageFiles": [],
   "logs": []
 }

@@ -9,10 +9,7 @@ namespace TrabajoPracticoIntegrador15_4
 {
     public static class TraductorUI
     {
-        /// <summary>
-        /// Traduce todos los controles de un formulario que tengan Tag asignado.
-        /// También traduce ítems de MenuStrip si el formulario tiene uno.
-        /// </summary>
+        // Esta clase siver para traducir todos los controles de un formulario que tengan Tag asignado.
         public static void Traducir(Control.ControlCollection controles, Idioma idioma)
         {
             foreach (Control c in controles)
@@ -20,7 +17,7 @@ namespace TrabajoPracticoIntegrador15_4
                 if (c.Tag != null)
                     c.Text = idioma.Traducir(c.Tag.ToString());
 
-                // Si tiene controles hijos (panels, groupbox, etc), los recorre también
+                // Si tiene controles hijos los recorre también
                 if (c.Controls.Count > 0)
                     Traducir(c.Controls, idioma);
 

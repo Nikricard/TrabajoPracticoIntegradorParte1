@@ -10,7 +10,6 @@ namespace TrabajoPracticoIntegrador15_4
     {
         private readonly GestorIdioma gestor = GestorIdioma.Instancia;
 
-        // 1. Implementar el método del Observer — una sola línea
         public void ActualizarIdioma(Idioma idioma)
             => TraductorUI.Traducir(this.Controls, idioma);
 
@@ -43,15 +42,15 @@ namespace TrabajoPracticoIntegrador15_4
 
         private void btnSalir_Click(object sender, EventArgs e)
         {
-            gestor.Desuscribir(this);  // 4. Desuscribirse al cerrar
+            gestor.Desuscribir(this);  
             Close();
         }
 
         private void frmRegistrar_Load(object sender, EventArgs e)
         {
-            gestor.Suscribir(this);    // 2. Suscribirse
+            gestor.Suscribir(this);    
             if (gestor.IdiomaActivo != null)
-                ActualizarIdioma(gestor.IdiomaActivo);  // 3. Aplicar idioma actual
+                ActualizarIdioma(gestor.IdiomaActivo);  //Aplica idioma actual
         }
 
         public void Limpiar()

@@ -31,24 +31,19 @@ namespace TrabajoPracticoIntegrador15_4
             //llamada al metodo GetAll usando la instancia del UsuarioBLL
             //y establecemos la lista devuelta como datasource
             
-            gestor.Suscribir(this);    // 2. Suscribirse
+            gestor.Suscribir(this);    
             if (gestor.IdiomaActivo != null)
-                ActualizarIdioma(gestor.IdiomaActivo);  // 3. Aplicar idioma actual
+                ActualizarIdioma(gestor.IdiomaActivo);  // Aplica idioma actual
         }
 
         private void dgvUsuarios_SelectionChanged(object sender, EventArgs e)
         {
-            /*if (dgvUsuarios.SelectedRows.Count == 1)
-            {
-                Usuario usuario = (Usuario)dgvUsuarios.SelectedRows[0].DataBoundItem;
-
-                //txtNombre.Text = usuario.Nombre;
-            }*/
+            
         }
 
         private void btnSalir_Click(object sender, EventArgs e)
         {
-            gestor.Desuscribir(this);  // 4. Desuscribirse al cerrar
+            gestor.Desuscribir(this);  
             Close();
         }
     }

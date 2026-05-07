@@ -7,11 +7,13 @@ namespace DAL
 {
     public class UsuarioDAL
     {
+        private readonly string cs =
+            "Server=.;Database=Usuarios;Integrated Security=True";
+
         public Usuario Add(Usuario usuario)
         {
-            var connectionString = "Server=DESKTOP-FD6Q6GG\\SQLEXPRESS;Database=Usuarios;Integrated Security=True";
             //string conexion
-            using (var con = new SqlConnection(connectionString)) //establecemos conexion
+            using (var con = new SqlConnection(cs)) //establecemos conexion
             {
                 con.Open();
                 //abrimos
@@ -60,8 +62,7 @@ namespace DAL
 
         public Usuario Modify(Usuario usuario)
         {
-            var connectionString = "Server=DESKTOP-FD6Q6GG\\SQLEXPRESS;Database=Usuarios;Integrated Security=True";
-            SqlConnection connection = new SqlConnection(connectionString);
+            SqlConnection connection = new SqlConnection(cs);
             connection.Open();
             using (var transaction = connection.BeginTransaction())
             {
@@ -95,8 +96,7 @@ namespace DAL
 
         public Usuario Delete(Usuario usuario)
         {
-            var connectionString = "Server=DESKTOP-FD6Q6GG\\SQLEXPRESS;Database=Usuarios;Integrated Security=True";
-            SqlConnection connection = new SqlConnection(connectionString);
+            SqlConnection connection = new SqlConnection(cs);
             connection.Open();
             using (var transaction = connection.BeginTransaction())
             {
@@ -129,9 +129,8 @@ namespace DAL
 
         public Usuario? Login(string nombre, string contrasenaHash)
         {
-            var connectionString = "Server=DESKTOP-FD6Q6GG\\SQLEXPRESS;Database=Usuarios;Integrated Security=True";
 
-            using (var connection = new SqlConnection(connectionString))
+            using (var connection = new SqlConnection(cs))  
             {
                 connection.Open();
 
@@ -161,8 +160,7 @@ namespace DAL
 
         public List<Usuario> GetAll()
         {
-            var connectionString = "Server=DESKTOP-FD6Q6GG\\SQLEXPRESS;Database=Usuarios;Integrated Security=True";
-            SqlConnection connection = new SqlConnection(connectionString);
+            SqlConnection connection = new SqlConnection(cs);
             List<Usuario> usuarios = new List<Usuario>();
             try
             {

@@ -21,9 +21,9 @@ namespace TrabajoPracticoIntegrador15_4
         {
             ActualizarGrid();
 
-            gestor.Suscribir(this);    // 2. Suscribirse
+            gestor.Suscribir(this);    
             if (gestor.IdiomaActivo != null)
-                ActualizarIdioma(gestor.IdiomaActivo);  // 3. Aplicar idioma actual
+                ActualizarIdioma(gestor.IdiomaActivo);  // Aplica idioma actual
 
         }
 
@@ -36,13 +36,6 @@ namespace TrabajoPracticoIntegrador15_4
                     Nombre = txtNombre.Text,
                     Id = int.Parse(txtId.Text)
                 };
-
-                /*if (UsuarioBLL.Instancia.UsuarioActivo?.Nombre == usuario.Nombre)
-                {
-                    UsuarioBLL.Instancia.UsuarioActivo.Nombre = usuario.Nombre;
-                }*/
-                //si funcionara, actualizaria el nombre que se muestra en el frmNav
-                //en caso de que modifiquemos ese
 
                 UsuarioBLL.Instancia.Modify(usuario);
                 //enviamos el usuario para que lo trabaje la BLL en Modify
@@ -79,7 +72,7 @@ namespace TrabajoPracticoIntegrador15_4
 
         private void btnSalir_Click(object sender, EventArgs e)
         {
-            gestor.Desuscribir(this);  // 4. Desuscribirse al cerrar
+            gestor.Desuscribir(this); 
             Close();
         }
     }

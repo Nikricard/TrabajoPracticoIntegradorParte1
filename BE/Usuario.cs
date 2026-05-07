@@ -9,8 +9,8 @@
 
         public bool EsValido(out string mensaje)
         {
-            /// Valida que el usuario tenga un formato correcto.
-            /// Verifica que el nombre no sea nulo, vacío ni un número puro.
+            // Valida que el usuario tenga un formato correcto.
+            // Verifica que el nombre no sea nulo, vacío ni un número puro.
 
             if (string.IsNullOrEmpty(Nombre))
             {

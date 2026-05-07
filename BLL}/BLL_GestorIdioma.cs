@@ -1,7 +1,3 @@
-// ════════════════════════════════════════════════════════
-// BLL_ — GestorIdioma.cs   (reemplaza al anterior)
-// Patrón Observer (Subject) + Singleton
-// ════════════════════════════════════════════════════════
 using BE;
 using DAL;
 using System;
@@ -9,17 +5,16 @@ using System.Collections.Generic;
 
 namespace BLL_
 {
-    // ── Interfaz Observer ─────────────────────────────────
-    // Simple y directa: solo lo necesario para el patrón
+    //Interfaz Observer
     public interface IObservadorIdioma
     {
         void ActualizarIdioma(Idioma idioma);
     }
 
-    // ── GestorIdioma (Subject) ────────────────────────────
+    //Gestor Idioma
     public class GestorIdioma
     {
-        // Singleton
+        // Uso Singleton
         private static GestorIdioma _instancia;
         public static GestorIdioma Instancia
         {
@@ -41,18 +36,20 @@ namespace BLL_
         private readonly List<IObservadorIdioma> _observadores
             = new List<IObservadorIdioma>();
 
-        /// <summary>Idioma activo en el sistema.</summary>
+        //El idioma activo en el sistema
         public Idioma IdiomaActivo { get; private set; }
 
-        /// <summary>Lista de idiomas disponibles (cargada desde la DB).</summary>
+        //lista de idiomas cargados desde la db
         public List<Idioma> IdiomasDisponibles { get; private set; }
 
-        // ── Observer ──────────────────────────────────────
+        //patron observer
 
         public void Suscribir(IObservadorIdioma obs)
         {
             if (!_observadores.Contains(obs))
+            {
                 _observadores.Add(obs);
+            }
         }
 
         public void Desuscribir(IObservadorIdioma obs)
@@ -63,33 +60,43 @@ namespace BLL_
         private void Notificar()
         {
             foreach (var obs in _observadores)
+            {
                 obs.ActualizarIdioma(IdiomaActivo);
+            }
         }
 
-        // ── Idioma ────────────────────────────────────────
-
-        /// <summary>Carga o recarga los idiomas desde la base de datos.</summary>
+        //carga de los idiomas desde la base de datos
         public void CargarIdiomas()
         {
             IdiomasDisponibles = _dal.GetAllIdiomas();
 
             // Si no hay activo, usar el marcado como defecto
             if (IdiomaActivo == null)
-                IdiomaActivo = IdiomasDisponibles.Find(i => i.Defecto)
-                               ?? (IdiomasDisponibles.Count > 0
-                                   ? IdiomasDisponibles[0] : null);
+            {
+                IdiomaActivo = IdiomasDisponibles.Find(i => i.Defecto);
+
+                if (IdiomaActivo == null)
+                {
+                    if (IdiomasDisponibles.Count > 0)
+                    {
+                        IdiomaActivo = IdiomasDisponibles[0];
+                    }
+                    else
+                    {
+                        IdiomaActivo = null;
+                    }
+                }
+            }
         }
 
-        /// <summary>
-        /// Cambia el idioma activo y notifica a todos los formularios registrados.
-        /// </summary>
+        // Cambia el idioma activo y notifica a todos los formularios registrados.
         public void CambiarIdioma(Idioma idioma)
         {
             IdiomaActivo = idioma;
             Notificar();
         }
 
-        /// <summary>Agrega un idioma nuevo y recarga la lista.</summary>
+        //Agrega un idioma nuevo y recarga la lista.
         public Idioma AgregarIdioma(string nombre, bool defecto,
             List<(string clave, string valor)> traducciones)
         {
@@ -109,31 +116,44 @@ namespace BLL_
             return IdiomasDisponibles.Find(i => i.IdIdioma == idIdioma);
         }
 
-        /// <summary>Elimina un idioma y recarga la lista.</summary>
+        //Elimina un idioma y recarga la lista
         public void EliminarIdioma(int idIdioma)
         {
             _dal.DeleteIdioma(idIdioma);
             CargarIdiomas();
 
             // Si se eliminó el activo, cambiar al primero disponible
-            if (IdiomaActivo?.IdIdioma == idIdioma)
+            if (IdiomaActivo != null && IdiomaActivo.IdIdioma == idIdioma)
             {
-                IdiomaActivo = IdiomasDisponibles.Count > 0
-                    ? IdiomasDisponibles[0] : null;
-                if (IdiomaActivo != null) Notificar();
+                if (IdiomasDisponibles.Count > 0)
+                {
+                    IdiomaActivo = IdiomasDisponibles[0];
+                }
+                else
+                {
+                    IdiomaActivo = null;
+                }
+
+                if (IdiomaActivo != null)
+                {
+                    Notificar();
+                }
             }
         }
 
-        /// <summary>Guarda o actualiza una traducción individual.</summary>
+        //Guarda o actualiza una traducción individual
         public void GuardarTraduccion(int idIdioma, string clave, string valor)
         {
             int idPalabra = _dal.AddPalabra(clave);
             _dal.SaveTraduccion(idIdioma, idPalabra, valor);
             CargarIdiomas(); // refresca el diccionario en memoria
-            if (IdiomaActivo?.IdIdioma == idIdioma) Notificar();
+            if (IdiomaActivo?.IdIdioma == idIdioma)
+            {
+                Notificar();
+            }
         }
 
-        /// <summary>Devuelve todas las palabras (claves) disponibles.</summary>
+        //Devuelve todas las palabras disponibles
         public List<Palabra> GetPalabras() => _dal.GetAllPalabras();
     }
 }

@@ -1,7 +1,3 @@
-// ════════════════════════════════════════════════════════
-// BE — Entidades de Idioma
-// Archivo: Idioma.cs  (agregar al proyecto BE)
-// ════════════════════════════════════════════════════════
 namespace BE
 {
     public class Idioma
@@ -10,14 +6,11 @@ namespace BE
         public string Nombre   { get; set; }
         public bool   Defecto  { get; set; }
 
-        // Diccionario en memoria: clave (Tag del control) → traducción
+        // Diccionario en memoria: Tag del control --> traducción
         public Dictionary<string, string> Traducciones { get; set; }
             = new Dictionary<string, string>();
 
-        /// <summary>
-        /// Busca la traducción de una clave.
-        /// Si no existe devuelve la clave misma para no romper la UI.
-        /// </summary>
+        // Busca la traducción de una clave.
         public string Traducir(string clave)
         {
             if (string.IsNullOrEmpty(clave)) return clave;
@@ -25,13 +18,20 @@ namespace BE
         }
         public override string ToString()
         {
-            return Nombre ?? "Idioma sin nombre";
+            if (Nombre != null)
+            {
+                return Nombre;
+            }
+            else
+            {
+                return "Idioma sin nombre";
+            }
         }
     }
 
     public class Palabra
     {
         public int    IdPalabra { get; set; }
-        public string Texto     { get; set; }   // la clave, ej: "btnIngresar"
+        public string Texto     { get; set; }   // El tag de control, ej: "btnIngresar"
     }
 }
