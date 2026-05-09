@@ -36,6 +36,7 @@
             eliminarToolStripMenuItem = new ToolStripMenuItem();
             listarToolStripMenuItem = new ToolStripMenuItem();
             IdiomaMenuItem = new ToolStripMenuItem();
+            bitacoraToolStripMenuItem = new ToolStripMenuItem();
             salirToolStripMenuItem = new ToolStripMenuItem();
             label1 = new Label();
             lblUser = new Label();
@@ -45,7 +46,7 @@
             // 
             // menuStrip2
             // 
-            menuStrip2.Items.AddRange(new ToolStripItem[] { registrarToolStripMenuItem, listarToolStripMenuItem, IdiomaMenuItem, salirToolStripMenuItem });
+            menuStrip2.Items.AddRange(new ToolStripItem[] { registrarToolStripMenuItem, listarToolStripMenuItem, IdiomaMenuItem, bitacoraToolStripMenuItem, salirToolStripMenuItem });
             menuStrip2.Location = new Point(0, 0);
             menuStrip2.Name = "menuStrip2";
             menuStrip2.Size = new Size(800, 24);
@@ -64,7 +65,7 @@
             // registrarToolStripMenuItem1
             // 
             registrarToolStripMenuItem1.Name = "registrarToolStripMenuItem1";
-            registrarToolStripMenuItem1.Size = new Size(180, 22);
+            registrarToolStripMenuItem1.Size = new Size(125, 22);
             registrarToolStripMenuItem1.Tag = "btnRegistrar";
             registrarToolStripMenuItem1.Text = "Registrar";
             registrarToolStripMenuItem1.Click += registrarToolStripMenuItem1_Click;
@@ -72,7 +73,7 @@
             // modificarToolStripMenuItem
             // 
             modificarToolStripMenuItem.Name = "modificarToolStripMenuItem";
-            modificarToolStripMenuItem.Size = new Size(180, 22);
+            modificarToolStripMenuItem.Size = new Size(125, 22);
             modificarToolStripMenuItem.Tag = "btnModificar";
             modificarToolStripMenuItem.Text = "Modificar";
             modificarToolStripMenuItem.Click += modificarToolStripMenuItem_Click;
@@ -80,7 +81,7 @@
             // eliminarToolStripMenuItem
             // 
             eliminarToolStripMenuItem.Name = "eliminarToolStripMenuItem";
-            eliminarToolStripMenuItem.Size = new Size(180, 22);
+            eliminarToolStripMenuItem.Size = new Size(125, 22);
             eliminarToolStripMenuItem.Tag = "btnEliminar";
             eliminarToolStripMenuItem.Text = "Eliminar";
             eliminarToolStripMenuItem.Click += eliminarToolStripMenuItem_Click;
@@ -99,6 +100,14 @@
             IdiomaMenuItem.Size = new Size(104, 20);
             IdiomaMenuItem.Tag = "menuIdioma";
             IdiomaMenuItem.Text = "Cambiar Idioma";
+            // 
+            // bitacoraToolStripMenuItem
+            // 
+            bitacoraToolStripMenuItem.Name = "bitacoraToolStripMenuItem";
+            bitacoraToolStripMenuItem.Size = new Size(62, 20);
+            bitacoraToolStripMenuItem.Tag = "menuBitacora";
+            bitacoraToolStripMenuItem.Text = "Bitacora";
+            bitacoraToolStripMenuItem.Click += bitacoraToolStripMenuItem_Click;
             // 
             // salirToolStripMenuItem
             // 
@@ -162,5 +171,6 @@
         private ToolStripMenuItem eliminarToolStripMenuItem;
         private ContextMenuStrip contextMenuStrip1;
         private ToolStripMenuItem IdiomaMenuItem;
+        private ToolStripMenuItem bitacoraToolStripMenuItem;
     }
 }

@@ -13,6 +13,8 @@ namespace TrabajoPracticoIntegrador15_4
         public void ActualizarIdioma(Idioma idioma)
         => TraductorUI.Traducir(this.Controls, idioma);
 
+        private Usuario usuarioAnterior = null;
+
         public frmModificar()
         {
             InitializeComponent();
@@ -32,13 +34,13 @@ namespace TrabajoPracticoIntegrador15_4
         {
             try
             {
-                Usuario usuario = new Usuario()
+                Usuario usuarioNuevo = new Usuario()
                 {//nuevo usuario para guardar atributos dentro
                     Nombre = txtNombre.Text,
                     Id = int.Parse(txtId.Text)
                 };
 
-                UsuarioBLL.Instancia.Modify(usuario);
+                UsuarioBLL.Instancia.Modify(usuarioAnterior, usuarioNuevo);
                 //enviamos el usuario para que lo trabaje la BLL en Modify
                 Limpiar();
                 ActualizarGrid();
@@ -57,6 +59,14 @@ namespace TrabajoPracticoIntegrador15_4
                 Usuario usuario = (Usuario)dgvUsuarios.SelectedRows[0].DataBoundItem;
                 txtId.Text = usuario.Id.ToString();
                 txtNombre.Text = usuario.Nombre;
+
+                usuarioAnterior = new Usuario()
+                {
+                    Id = usuario.Id,
+                    Nombre = usuario.Nombre
+                };
+
+
             }
         }
 

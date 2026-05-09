@@ -59,56 +59,76 @@ namespace BLL
                 }
                 usuario.Contraseña = Encriptado.HashContrasena(contraseñaPlana); // hasheamos antes de persistir
                 usuario = usuarioDAL.Add(usuario); //enviamos el usuario en la lista a la DAL
+                
+                BitacoraBLL.Instancia.RegistrarAddUsuario(usuario);//registramos la acción en la bitácora
 
                 return usuario; //planeamos retornar el usuario ingresado a la DAL para que lo persista en la base
             }
-            catch (Exception)
+            catch (Exception ex)
             {
                 //en caso de haber algun problema, agarramos la ex y frenamos la ejecucion
+                BitacoraBLL.Instancia.RegistrarError("ADD_USUARIO", ex);
                 throw;
             }
         }
 
-        public Usuario Modify(Usuario usuario)
+        public Usuario Modify(Usuario anterior, Usuario nuevo)
         {
             try
             {
-                if (usuario == null)
+                if (nuevo == null)
                 {
                     throw new Exception("El usuario no puede ser nulo");
                 }   //verificamos que el usuario no sea null
 
-                if (!usuario.EsValido(out string mensaje))
+                if (!nuevo.EsValido(out string mensaje))
                 {//ahora la BE hace sus propias validaciones
                     throw new Exception(mensaje);
                 }
 
-                usuario = usuarioDAL.Modify(usuario); //enviamos el usuario en la lista a la DAL
-                return usuario; //planeamos retornar el usuario ingresado a la DAL para que lo persista en la base
+                nuevo = usuarioDAL.Modify(nuevo); //enviamos el usuario en la lista a la DAL
+
+                BitacoraBLL.Instancia.RegistrarModifyUsuario(anterior, nuevo); //registramos la acción en la bitácora, enviando el estado anterior y el nuevo del usuario
+
+                return nuevo; //planeamos retornar el usuario ingresado a la DAL para que lo persista en la base
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                //en caso de haber algun problema, agarramos la ex y frenamos la ejec
+                //en caso de haber algun problema, agarramos la ex y frenamos la ejecucion
+                BitacoraBLL.Instancia.RegistrarError("MODIFY_USUARIO", ex);
                 throw;
             }
         }
 
         public Usuario Login(string nombre, string contraseñaPlana)
         {
-            if (string.IsNullOrEmpty(nombre) || string.IsNullOrEmpty(contraseñaPlana))
+            try
             {
-                throw new Exception("Nombre y contraseña son obligatorios");
-            }
-            //guardamos la contraseña hasheada en el atributo del usuario para enviarla a la DAL
-            string hash = Encriptado.HashContrasena(contraseñaPlana);
-            Usuario? usuario = usuarioDAL.Login(nombre, hash);
+                if (string.IsNullOrEmpty(nombre) || string.IsNullOrEmpty(contraseñaPlana))
+                {
+                    throw new Exception("Nombre y contraseña son obligatorios");
+                }
+                //guardamos la contraseña hasheada en el atributo del usuario para enviarla a la DAL
+                string hash = Encriptado.HashContrasena(contraseñaPlana);
+                Usuario? usuario = usuarioDAL.Login(nombre, hash);
 
-            if (usuario == null)
-            {
-                throw new Exception("Usuario o contraseña incorrectos");
+                if (usuario == null)
+                {
+                    throw new Exception("Usuario o contraseña incorrectos");
+                }
+                UsuarioActivo = usuario; // enviamos la sesión al singleton
+
+                BitacoraBLL.Instancia.RegistrarLogin(nombre); //registramos la acción en la bitácora, enviando el nombre del usuario que hizo login
+
+                return UsuarioActivo; // retornamos el usuario activo para mostrar su nombre en la barra de navegación
             }
-            UsuarioActivo = usuario; // enviamos la sesión al singleton
-            return UsuarioActivo; // retornamos el usuario activo para mostrar su nombre en la barra de navegación
+            catch (Exception ex)
+            {
+                //en caso de haber algun problema, agarramos la ex y frenamos la ejecucion
+                BitacoraBLL.Instancia.RegistrarError("LOGIN", ex);
+                throw;
+            }
+
         }
 
         public Usuario Delete(Usuario usuario)
@@ -126,12 +146,16 @@ namespace BLL
                 }
 
                 usuario = usuarioDAL.Delete(usuario); //enviamos el usuario en la lista a la DAL
+
+                BitacoraBLL.Instancia.RegistrarDeleteUsuario(usuario); //registramos la acción en la bitácora, enviando el estado del usuario que se eliminó
+
                 return usuario; //retornamos el usuario ingresado a la DAL para que lo borre de la base
 
             }
-            catch (Exception)
+            catch (Exception ex)
             {
                 //en caso de haber algun problema, agarramos la ex y frenamos la ejecucion
+                BitacoraBLL.Instancia.RegistrarError("DELETE_USUARIO", ex);
                 throw;
             }
         }
@@ -142,9 +166,10 @@ namespace BLL
             {
                 return usuarioDAL.GetAll();
             }
-            catch (Exception)
+            catch (Exception ex)
             {
                 //en caso de haber algun problema, agarramos la ex y frenamos la ejecucion
+                BitacoraBLL.Instancia.RegistrarError("GETALL_USUARIO", ex);
                 throw;
             }
         }
@@ -152,6 +177,7 @@ namespace BLL
 
         public void Logout()
         {
+            BitacoraBLL.Instancia.RegistrarLogout(UsuarioActivo?.Nombre ?? "");
             UsuarioActivo = null; // limpiamos la sesión
         }
 

@@ -81,3 +81,4 @@ C:\Users\Navegador\Desktop\TrabajoPractico\TrabajoPracticoIntegradorParte1\Traba
 C:\Users\Navegador\Desktop\TrabajoPractico\TrabajoPracticoIntegradorParte1\TrabajoPracticoIntegrador15-4\obj\Debug\net8.0-windows\UI.pdb
 C:\Users\Navegador\Desktop\TrabajoPractico\TrabajoPracticoIntegradorParte1\TrabajoPracticoIntegrador15-4\obj\Debug\net8.0-windows\UI.genruntimeconfig.cache
 C:\Users\Navegador\Desktop\TrabajoPractico\TrabajoPracticoIntegradorParte1\TrabajoPracticoIntegrador15-4\obj\Debug\net8.0-windows\ref\UI.dll
+C:\Users\alcal\OneDrive\Escritorio\TpGitHub\TrabajoPracticoIntegradorParte1\TrabajoPracticoIntegrador15-4\obj\Debug\net8.0-windows\TrabajoPracticoIntegrador15_4.frmBitacora.resources

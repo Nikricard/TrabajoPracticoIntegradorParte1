@@ -23,7 +23,7 @@ namespace TrabajoPracticoIntegrador15_4
         {
             InitializeComponent();
             lblUser.Text = UsuarioBLL.Instancia.UsuarioActivo?.Nombre;
-        }  
+        }
 
         private void frmNav_Load(object sender, EventArgs e)
         {
@@ -38,7 +38,7 @@ namespace TrabajoPracticoIntegrador15_4
 
         }
 
-        
+
         // GestorIdioma llama a este método cuando el idioma cambia.
         // Actualiza controles normales e ítems del MenuStrip.
         public void ActualizarIdioma(Idioma idioma)
@@ -58,7 +58,7 @@ namespace TrabajoPracticoIntegrador15_4
                     gestor.CambiarIdioma((Idioma)((ToolStripMenuItem)s).Tag);
                 };
                 IdiomaMenuItem.DropDownItems.Add(item);
-                item.Text = idioma.Nombre;                
+                item.Text = idioma.Nombre;
             }
 
             IdiomaMenuItem.DropDownItems.Add(new ToolStripSeparator());
@@ -127,6 +127,10 @@ namespace TrabajoPracticoIntegrador15_4
 
         }
 
-        
+        private void bitacoraToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            frmBitacora frmBitacora = new frmBitacora();
+            frmBitacora.ShowDialog();
+        }
     }
 }
