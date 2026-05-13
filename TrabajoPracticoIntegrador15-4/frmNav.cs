@@ -30,6 +30,7 @@ namespace TrabajoPracticoIntegrador15_4
             gestor.Suscribir(this);
             gestor.CargarIdiomas();
             CargarMenuIdiomas();
+            AplicarPermisos();
 
             if (gestor.IdiomaActivo != null)
             {
@@ -38,11 +39,38 @@ namespace TrabajoPracticoIntegrador15_4
 
         }
 
-
         // GestorIdioma llama a este método cuando el idioma cambia.
         // Actualiza controles normales e ítems del MenuStrip.
         public void ActualizarIdioma(Idioma idioma)
                 => TraductorUI.Traducir(this.Controls, idioma);
+
+        private void AplicarPermisos()
+        {
+            var p = PerfilBLL.Instancia;
+
+            // Gestión de usuarios
+            registrarToolStripMenuItem1.Enabled =
+                p.TienePermiso(PerfilBLL.Permisos.CrearUsuario);
+            modificarToolStripMenuItem.Enabled =
+                p.TienePermiso(PerfilBLL.Permisos.ModificarUsuario);
+            eliminarToolStripMenuItem.Enabled =
+                p.TienePermiso(PerfilBLL.Permisos.EliminarUsuario);
+            listarToolStripMenuItem.Enabled =
+                p.TienePermiso(PerfilBLL.Permisos.ListarUsuarios);
+
+            // Bitácora — solo Admin
+            bitacoraToolStripMenuItem.Enabled =
+                p.TienePermiso(PerfilBLL.Permisos.VerBitacora);
+
+            // Perfiles — solo Admin
+            perfilesToolStripMenuItem.Enabled =
+                p.TienePermiso(PerfilBLL.Permisos.GestionarPerfiles);
+
+            // Idiomas
+            IdiomaMenuItem.Enabled =
+                p.TienePermiso(PerfilBLL.Permisos.AgregarIdioma) ||
+                p.TienePermiso(PerfilBLL.Permisos.ListarUsuarios); // todos ven el idioma
+        }
 
         private void CargarMenuIdiomas()
         {
@@ -68,6 +96,9 @@ namespace TrabajoPracticoIntegrador15_4
             agregar.Text = gestor.IdiomaActivo != null
                              ? gestor.IdiomaActivo.Traducir("menuAgregar")
                              : "Gestionar idiomas...";
+
+            agregar.Enabled = PerfilBLL.Instancia.TienePermiso(PerfilBLL.Permisos.AgregarIdioma);
+
             agregar.Click += (s, e) =>
             {
                 new frmIdioma().ShowDialog();
@@ -75,6 +106,9 @@ namespace TrabajoPracticoIntegrador15_4
             };
             IdiomaMenuItem.DropDownItems.Add(agregar);
         }
+
+
+
 
         private void registrarToolStripMenuItem_Click(object sender, EventArgs e)
         {
@@ -131,6 +165,12 @@ namespace TrabajoPracticoIntegrador15_4
         {
             frmBitacora frmBitacora = new frmBitacora();
             frmBitacora.ShowDialog();
+        }
+
+        private void perfilesToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            frmPerfil frmPerfil = new frmPerfil();
+            frmPerfil.ShowDialog();
         }
     }
 }

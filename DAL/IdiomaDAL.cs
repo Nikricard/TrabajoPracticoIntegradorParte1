@@ -21,34 +21,36 @@ namespace DAL
             using (var con = new SqlConnection(cs))
             {
                 con.Open();
-
-                // Trae todos los idiomas
-                var cmd = new SqlCommand("SELECT * FROM Idioma ORDER BY IdIdioma", con);
-                var rdr = cmd.ExecuteReader();
-                while (rdr.Read())
                 {
-                    idiomas.Add(new Idioma
+
+                    // Trae todos los idiomas
+                    var cmd = new SqlCommand("SELECT * FROM Idioma ORDER BY IdIdioma", con);
+                    var rdr = cmd.ExecuteReader();
+                    while (rdr.Read())
                     {
-                        IdIdioma = rdr.GetInt32(0),
-                        Nombre   = rdr.GetString(1),
-                        Defecto  = rdr.GetBoolean(2)
-                    });
-                }
-                rdr.Close();
+                        idiomas.Add(new Idioma
+                        {
+                            IdIdioma = rdr.GetInt32(0),
+                            Nombre = rdr.GetString(1),
+                            Defecto = rdr.GetBoolean(2)
+                        });
+                    }
+                    rdr.Close();
 
-                // Carga traducciones de cada idioma
-                foreach (var idioma in idiomas)
-                {
-                    var cmdT = new SqlCommand(@"SELECT p.Texto, t.Traduccion FROM Traduccion t INNER JOIN Palabra p ON t.IdPalabra = p.IdPalabra WHERE t.IdIdioma = @IdIdioma", con);
-                    cmdT.Parameters.AddWithValue("@IdIdioma", idioma.IdIdioma);
+                    // Carga traducciones de cada idioma
+                    foreach (var idioma in idiomas)
+                    {
+                        var cmdT = new SqlCommand(@"SELECT p.Texto, t.Traduccion FROM Traduccion t INNER JOIN Palabra p ON t.IdPalabra = p.IdPalabra WHERE t.IdIdioma = @IdIdioma", con);
+                        cmdT.Parameters.AddWithValue("@IdIdioma", idioma.IdIdioma);
 
-                    var rdrT = cmdT.ExecuteReader();
-                    while (rdrT.Read())
-                        idioma.Traducciones[rdrT.GetString(0)] = rdrT.GetString(1);
-                    rdrT.Close();
+                        var rdrT = cmdT.ExecuteReader();
+                        while (rdrT.Read())
+                            idioma.Traducciones[rdrT.GetString(0)] = rdrT.GetString(1);
+                        rdrT.Close();
+                    }
                 }
+                return idiomas;
             }
-            return idiomas;
         }
 
         //Inserta un nuevo idioma. Devuelve el IdIdioma asignado.

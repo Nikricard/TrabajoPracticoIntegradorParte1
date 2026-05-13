@@ -55,14 +55,14 @@ namespace DAL
                     FROM Bitacora
                     WHERE 1=1";
 
-                if (desde.HasValue)      sql += " AND Fecha >= @Desde";
-                if (hasta.HasValue)      sql += " AND Fecha <= @Hasta";
-                if (!string.IsNullOrEmpty(usuario))    sql += " AND Usuario LIKE @Usuario";
-                if (!string.IsNullOrEmpty(actividad))  sql += " AND Actividad LIKE @Actividad";
+                if (desde.HasValue)      sql += " AND Fecha >= @Desde"; // si el atributo tiene valor, agregamos la condición al SQL
+                if (hasta.HasValue)      sql += " AND Fecha <= @Hasta"; // si el atributo tiene valor, agregamos la condición al SQL
+                if (!string.IsNullOrEmpty(usuario))    sql += " AND Usuario LIKE @Usuario"; //si el usuario no es null, agregamos
+                if (!string.IsNullOrEmpty(actividad))  sql += " AND Actividad LIKE @Actividad"; 
                 if (!string.IsNullOrEmpty(tipoEvento)) sql += " AND TipoEvento = @TipoEvento";
-                sql += " ORDER BY Fecha DESC";
+                sql += " ORDER BY Fecha DESC"; // ordenamos los resultados por fecha descendente para mostrar los eventos más recientes primero
 
-                var cmd = new SqlCommand(sql, con);
+                var cmd = new SqlCommand(sql, con); // creamos el comando con la cadena SQL generada
                 if (desde.HasValue)      cmd.Parameters.AddWithValue("@Desde",      desde.Value);
                 if (hasta.HasValue)      cmd.Parameters.AddWithValue("@Hasta",      hasta.Value.AddDays(1));
                 if (!string.IsNullOrEmpty(usuario))    cmd.Parameters.AddWithValue("@Usuario",    $"%{usuario}%");
@@ -73,7 +73,8 @@ namespace DAL
                 while (rdr.Read())
                 {
                     lista.Add(new RegistroBitacora // mapeamos cada registro a un objeto RegistroBitacora
-                    {
+                    { // posiciones de las columnas según el SELECT
+                      // las posiciones deben coincidir con la db, sino queda cualquier cosa
                         IdBitacora    = rdr.GetInt32(0),
                         Fecha         = rdr.GetDateTime(1),
                         Usuario       = rdr.GetString(2),

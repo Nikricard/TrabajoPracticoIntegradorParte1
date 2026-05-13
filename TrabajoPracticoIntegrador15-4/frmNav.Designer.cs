@@ -35,6 +35,7 @@
             modificarToolStripMenuItem = new ToolStripMenuItem();
             eliminarToolStripMenuItem = new ToolStripMenuItem();
             listarToolStripMenuItem = new ToolStripMenuItem();
+            perfilesToolStripMenuItem = new ToolStripMenuItem();
             IdiomaMenuItem = new ToolStripMenuItem();
             bitacoraToolStripMenuItem = new ToolStripMenuItem();
             salirToolStripMenuItem = new ToolStripMenuItem();
@@ -46,7 +47,7 @@
             // 
             // menuStrip2
             // 
-            menuStrip2.Items.AddRange(new ToolStripItem[] { registrarToolStripMenuItem, listarToolStripMenuItem, IdiomaMenuItem, bitacoraToolStripMenuItem, salirToolStripMenuItem });
+            menuStrip2.Items.AddRange(new ToolStripItem[] { registrarToolStripMenuItem, listarToolStripMenuItem, perfilesToolStripMenuItem, IdiomaMenuItem, bitacoraToolStripMenuItem, salirToolStripMenuItem });
             menuStrip2.Location = new Point(0, 0);
             menuStrip2.Name = "menuStrip2";
             menuStrip2.Size = new Size(800, 24);
@@ -93,6 +94,14 @@
             listarToolStripMenuItem.Tag = "menuListar";
             listarToolStripMenuItem.Text = "Listar";
             listarToolStripMenuItem.Click += listarToolStripMenuItem_Click;
+            // 
+            // perfilesToolStripMenuItem
+            // 
+            perfilesToolStripMenuItem.Name = "perfilesToolStripMenuItem";
+            perfilesToolStripMenuItem.Size = new Size(57, 20);
+            perfilesToolStripMenuItem.Tag = "menuPerfiles";
+            perfilesToolStripMenuItem.Text = "Perfiles";
+            perfilesToolStripMenuItem.Click += perfilesToolStripMenuItem_Click;
             // 
             // IdiomaMenuItem
             // 
@@ -172,5 +181,6 @@
         private ContextMenuStrip contextMenuStrip1;
         private ToolStripMenuItem IdiomaMenuItem;
         private ToolStripMenuItem bitacoraToolStripMenuItem;
+        private ToolStripMenuItem perfilesToolStripMenuItem;
     }
 }

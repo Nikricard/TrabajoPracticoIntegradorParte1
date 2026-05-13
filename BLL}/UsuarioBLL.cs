@@ -118,8 +118,11 @@ namespace BLL
                 }
                 UsuarioActivo = usuario; // enviamos la sesión al singleton
 
-                BitacoraBLL.Instancia.RegistrarLogin(nombre); //registramos la acción en la bitácora, enviando el nombre del usuario que hizo login
+                //carga el perfil del usuario ingresado desde la bll
+                PerfilBLL.Instancia.CargarPerfilDeUsuario(usuario.Id);
 
+                BitacoraBLL.Instancia.RegistrarLogin(nombre); //registramos la acción en la bitácora, enviando el nombre del usuario que hizo login
+                //crea instancia de bitacora y registra el login con el nombre
                 return UsuarioActivo; // retornamos el usuario activo para mostrar su nombre en la barra de navegación
             }
             catch (Exception ex)
@@ -178,6 +181,7 @@ namespace BLL
         public void Logout()
         {
             BitacoraBLL.Instancia.RegistrarLogout(UsuarioActivo?.Nombre ?? "");
+            PerfilBLL.Instancia.LimpiarPerfil();  // limpia el perfil activo
             UsuarioActivo = null; // limpiamos la sesión
         }
 

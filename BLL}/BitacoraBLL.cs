@@ -8,7 +8,7 @@ namespace BLL
     public class BitacoraBLL
     {
         //singleton
-        private static BitacoraBLL _instancia;
+        private static BitacoraBLL _instancia; //instancia privada para controlar acceso con el singleton
         public static BitacoraBLL Instancia
         {
             get
@@ -19,18 +19,23 @@ namespace BLL
             }
         }
 
-        private BitacoraBLL() { _dal = new BitacoraDAL(); }
+        private BitacoraBLL() 
+        { 
+            _dal = new BitacoraDAL(); 
+        } //creamos bitacoraDAL para usar sus métodos de registro
+        
         private readonly BitacoraDAL _dal;
 
         
         private string UsuarioActual =>
             UsuarioBLL.Instancia.UsuarioActivo?.Nombre ?? "Sistema";
+        //verificar si hay un usuario activo, si no, se registra como "Sistema" para eventos automáticos
 
         private void Registrar(string actividad, TipoEvento tipo,
-            string descripcion = null, string entidad = null,
+            string descripcion = null, string entidad = null, //opcional para eventos más detallados
             string anterior = null, string nuevo = null)
         {
-            _dal.RegistrarEvento(new RegistroBitacora
+            _dal.RegistrarEvento(new RegistroBitacora //creamos un registro de bitácora con los datos recibidos y el usuario actual
             {
                 Fecha         = DateTime.Now,
                 Usuario       = UsuarioActual,
@@ -45,27 +50,27 @@ namespace BLL
 
         
 
-        public void RegistrarLogin(string nombreUsuario)
+        public void RegistrarLogin(string nombreUsuario) //recibimos el nombre de usuarios
         {
-            Registrar("LOGIN", TipoEvento.Exito,
+            Registrar("LOGIN", TipoEvento.Exito,    //registramos el evento de login 
                 $"El usuario '{nombreUsuario}' inició sesión.");
         }
 
         public void RegistrarLogout(string nombreUsuario)
         {
-            Registrar("LOGOUT", TipoEvento.Exito,
+            Registrar("LOGOUT", TipoEvento.Exito,    //registramos el evento de logout
                 $"El usuario '{nombreUsuario}' cerró sesión.");
         }
 
         public void RegistrarError(string actividad, Exception ex)
         {
-            Registrar(actividad, TipoEvento.Error,
+            Registrar(actividad, TipoEvento.Error,  //registramos el evento de error con la descripción del error y el tipo de excepción
                 $"Error: {ex.Message}",
                 entidad: ex.GetType().Name);
         }
 
         public void RegistrarExcepcion(string actividad, Exception ex)
-        {
+        {   //registramos el evento de excepcion 
             Registrar(actividad, TipoEvento.Excepcion,
                 $"Excepción: {ex.Message}\n{ex.StackTrace}",
                 entidad: ex.GetType().Name);
@@ -80,7 +85,7 @@ namespace BLL
                 null, $"Id:{u.Id} Nombre:{u.Nombre}");
 
             _dal.RegistrarAuditoriaUsuario(new AuditoriaUsuario
-            {
+            {   //registramos el evento de agregar usuario con los datos del nuevo usuario
                 Fecha          = DateTime.Now,
                 UsuarioAccion  = UsuarioActual,
                 Operacion      = "ADD",
@@ -177,6 +182,34 @@ namespace BLL
                 ValorNuevo      = valorNuevo
             });
         }
+
+        public void RegistrarAsignacionPerfil(string nombreUsuarioAfectado,int idUsuarioAfectado,string perfilAnterior,string perfilNuevo)
+        {
+            // Registra en la bitácora general
+            Registrar(
+                actividad: "ASIGNAR_PERFIL",
+                tipo: TipoEvento.Exito,
+                descripcion: $"Perfil asignado a '{nombreUsuarioAfectado}' " +
+                             $"(Id: {idUsuarioAfectado}). " +
+                             $"Anterior: '{perfilAnterior ?? "Sin perfil"}' → " +
+                             $"Nuevo: '{perfilNuevo}'.",
+                entidad: "Perfil",
+                anterior: perfilAnterior,
+                nuevo: perfilNuevo
+            );
+
+            // También queda en AuditoriaUsuario para tener una trazabilidad completa
+            _dal.RegistrarAuditoriaUsuario(new AuditoriaUsuario
+            {
+                Fecha = DateTime.Now,
+                UsuarioAccion = UsuarioActual,
+                Operacion = "ASIGNAR_PERFIL",
+                IdUsuario = idUsuarioAfectado,
+                NombreAnterior = perfilAnterior ?? "Sin perfil",
+                NombreNuevo = perfilNuevo
+            });
+        }
+
 
         //Consultas
 
