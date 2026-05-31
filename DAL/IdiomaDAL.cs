@@ -160,7 +160,7 @@ namespace DAL
             }
         }
 
-        /// Inserta o actualiza una traducción para un idioma y palabra.
+        // Inserta o actualiza una traducción para un idioma y palabra.
         public void SaveTraduccion(int idIdioma, int idPalabra, string traduccion)
         {
             using (var con = new SqlConnection(cs))
@@ -190,7 +190,8 @@ namespace DAL
             }
         }
 
-        public void DeleteTraduccion(int idIdioma, int idPalabra)
+        //Elimina una tag y todas sus traducciones
+        public void DeletePalabra(int idPalabra)
         {
             using (var con = new SqlConnection(cs))
             {
@@ -199,10 +200,44 @@ namespace DAL
                 {
                     try
                     {
-                        var cmd = new SqlCommand("DELETE FROM Traduccion WHERE IdIdioma=@IdI AND IdPalabra=@IdP",
-                            con, tr);
-                        cmd.Parameters.AddWithValue("@IdI", idIdioma);
-                        cmd.Parameters.AddWithValue("@IdP", idPalabra);
+                        // Primero las traducciones (FK)
+                        var cmdT = new SqlCommand(
+                            "DELETE FROM Traduccion WHERE IdPalabra = @Id", con, tr);
+                        cmdT.Parameters.AddWithValue("@Id", idPalabra);
+                        cmdT.ExecuteNonQuery();
+
+                        var cmdP = new SqlCommand(
+                            "DELETE FROM Palabra WHERE IdPalabra = @Id", con, tr);
+                        cmdP.Parameters.AddWithValue("@Id", idPalabra);
+                        cmdP.ExecuteNonQuery();
+
+                        tr.Commit();
+                    }
+                    catch { tr.Rollback(); throw; }
+                }
+            }
+        }
+
+        // Asigna todas las palabras existentes a un idioma,
+        // con traducción vacía. Usa NOT EXISTS para no duplicar.
+        public void AsignarTodasLasPalabrasAIdioma(int idIdioma)
+        {
+            using (var con = new SqlConnection(cs))
+            {
+                con.Open();
+                using (var tr = con.BeginTransaction())
+                {
+                    try
+                    {
+                        var cmd = new SqlCommand(@"
+                            INSERT INTO Traduccion (IdIdioma, IdPalabra, Traduccion)
+                            SELECT @IdIdioma, p.IdPalabra, ''
+                            FROM Palabra p
+                            WHERE NOT EXISTS (
+                                SELECT 1 FROM Traduccion t
+                                WHERE t.IdIdioma = @IdIdioma AND t.IdPalabra = p.IdPalabra
+                            )", con, tr);
+                        cmd.Parameters.AddWithValue("@IdIdioma", idIdioma);
                         cmd.ExecuteNonQuery();
                         tr.Commit();
                     }
@@ -210,5 +245,34 @@ namespace DAL
                 }
             }
         }
+
+        // Asigna una tag a todos los idiomas existentes,
+        // con traducción vacía. Usa NOT EXISTS para no duplicar.
+        public void AsignarPalabraATodosLosIdiomas(int idPalabra)
+        {
+            using (var con = new SqlConnection(cs))
+            {
+                con.Open();
+                using (var tr = con.BeginTransaction())
+                {
+                    try
+                    {
+                        var cmd = new SqlCommand(@"
+                            INSERT INTO Traduccion (IdIdioma, IdPalabra, Traduccion)
+                            SELECT i.IdIdioma, @IdPalabra, ''
+                            FROM Idioma i
+                            WHERE NOT EXISTS (
+                                SELECT 1 FROM Traduccion t
+                                WHERE t.IdIdioma = i.IdIdioma AND t.IdPalabra = @IdPalabra
+                            )", con, tr);
+                        cmd.Parameters.AddWithValue("@IdPalabra", idPalabra);
+                        cmd.ExecuteNonQuery();
+                        tr.Commit();
+                    }
+                    catch { tr.Rollback(); throw; }
+                }
+            }
+        }
+
     }
 }

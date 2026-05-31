@@ -39,10 +39,12 @@
             IdiomaMenuItem = new ToolStripMenuItem();
             bitacoraToolStripMenuItem = new ToolStripMenuItem();
             salirToolStripMenuItem = new ToolStripMenuItem();
-            label1 = new Label();
-            lblUser = new Label();
             contextMenuStrip1 = new ContextMenuStrip(components);
+            statusStrip1 = new StatusStrip();
+            toolStripStatusLabel1 = new ToolStripStatusLabel();
+            lblstatusUser = new ToolStripStatusLabel();
             menuStrip2.SuspendLayout();
+            statusStrip1.SuspendLayout();
             SuspendLayout();
             // 
             // menuStrip2
@@ -126,44 +128,48 @@
             salirToolStripMenuItem.Text = "Logout";
             salirToolStripMenuItem.Click += salirToolStripMenuItem_Click;
             // 
-            // label1
-            // 
-            label1.AutoSize = true;
-            label1.Font = new Font("Rockwell", 14.25F, FontStyle.Italic, GraphicsUnit.Point, 0);
-            label1.Location = new Point(230, 109);
-            label1.Name = "label1";
-            label1.Size = new Size(202, 21);
-            label1.TabIndex = 2;
-            label1.Tag = "lblLogeado";
-            label1.Text = "Usted se loggeo como:";
-            // 
-            // lblUser
-            // 
-            lblUser.AutoSize = true;
-            lblUser.Font = new Font("Rockwell", 12F, FontStyle.Regular, GraphicsUnit.Point, 0);
-            lblUser.Location = new Point(438, 111);
-            lblUser.Name = "lblUser";
-            lblUser.Size = new Size(0, 19);
-            lblUser.TabIndex = 4;
-            // 
             // contextMenuStrip1
             // 
             contextMenuStrip1.Name = "contextMenuStrip1";
             contextMenuStrip1.Size = new Size(61, 4);
+            // 
+            // statusStrip1
+            // 
+            statusStrip1.Items.AddRange(new ToolStripItem[] { toolStripStatusLabel1, lblstatusUser });
+            statusStrip1.Location = new Point(0, 428);
+            statusStrip1.Name = "statusStrip1";
+            statusStrip1.Size = new Size(800, 22);
+            statusStrip1.TabIndex = 6;
+            statusStrip1.Text = "statusStrip1";
+            // 
+            // toolStripStatusLabel1
+            // 
+            toolStripStatusLabel1.Name = "toolStripStatusLabel1";
+            toolStripStatusLabel1.Size = new Size(118, 17);
+            toolStripStatusLabel1.Tag = "lblLogeado";
+            toolStripStatusLabel1.Text = "toolStripStatusLabel1";
+            // 
+            // lblstatusUser
+            // 
+            lblstatusUser.Name = "lblstatusUser";
+            lblstatusUser.Size = new Size(118, 17);
+            lblstatusUser.Text = "toolStripStatusLabel2";
             // 
             // frmNav
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(800, 450);
-            Controls.Add(lblUser);
-            Controls.Add(label1);
+            Controls.Add(statusStrip1);
             Controls.Add(menuStrip2);
+            IsMdiContainer = true;
             Name = "frmNav";
             Text = "frmNav";
             Load += frmNav_Load;
             menuStrip2.ResumeLayout(false);
             menuStrip2.PerformLayout();
+            statusStrip1.ResumeLayout(false);
+            statusStrip1.PerformLayout();
             ResumeLayout(false);
             PerformLayout();
         }
@@ -173,8 +179,6 @@
         private ToolStripMenuItem registrarToolStripMenuItem;
         private ToolStripMenuItem listarToolStripMenuItem;
         private ToolStripMenuItem salirToolStripMenuItem;
-        private Label label1;
-        private Label lblUser;
         private ToolStripMenuItem registrarToolStripMenuItem1;
         private ToolStripMenuItem modificarToolStripMenuItem;
         private ToolStripMenuItem eliminarToolStripMenuItem;
@@ -182,5 +186,8 @@
         private ToolStripMenuItem IdiomaMenuItem;
         private ToolStripMenuItem bitacoraToolStripMenuItem;
         private ToolStripMenuItem perfilesToolStripMenuItem;
+        private StatusStrip statusStrip1;
+        private ToolStripStatusLabel toolStripStatusLabel1;
+        private ToolStripStatusLabel lblstatusUser;
     }
 }

@@ -2,32 +2,28 @@ namespace BE
 {
     public class Idioma
     {
-        public int    IdIdioma { get; set; }
-        public string Nombre   { get; set; }
-        public bool   Defecto  { get; set; }
+        public int IdIdioma { get; set; }
+        public string Nombre { get; set; }
+        public bool Defecto { get; set; }
 
-        // Diccionario en memoria: Tag del control --> traducción
         public Dictionary<string, string> Traducciones { get; set; }
             = new Dictionary<string, string>();
 
-        // Busca la traducción de una clave.
+        // Devuelve la traducción de una clave.
+        // Si la clave no existe O su traducción está vacía,
+        // devuelve la clave misma para no dejar el control en blanco.
         public string Traducir(string clave)
         {
             if (string.IsNullOrEmpty(clave)) return clave;
-            return Traducciones.TryGetValue(clave, out string valor) ? valor : clave;
-        }
-        public override string ToString()
-        {
-            if (Nombre != null)
-            {
-                return Nombre;
-            }
-            else
-            {
-                return "Idioma sin nombre";
-            }
+
+            if (Traducciones.TryGetValue(clave, out string valor)
+                && !string.IsNullOrEmpty(valor))
+                return valor;
+
+            return clave;
         }
     }
+
 
     public class Palabra
     {

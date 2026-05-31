@@ -22,7 +22,7 @@ namespace TrabajoPracticoIntegrador15_4
         public frmNav()
         {
             InitializeComponent();
-            lblUser.Text = UsuarioBLL.Instancia.UsuarioActivo?.Nombre;
+            lblstatusUser.Text = UsuarioBLL.Instancia.UsuarioActivo?.Nombre;
         }
 
         private void frmNav_Load(object sender, EventArgs e)
@@ -101,14 +101,13 @@ namespace TrabajoPracticoIntegrador15_4
 
             agregar.Click += (s, e) =>
             {
-                new frmIdioma().ShowDialog();
+                frmIdioma frmIdioma = new frmIdioma();
+                frmIdioma.MdiParent = this;
+                frmIdioma.Show();
                 CargarMenuIdiomas();
             };
             IdiomaMenuItem.DropDownItems.Add(agregar);
         }
-
-
-
 
         private void registrarToolStripMenuItem_Click(object sender, EventArgs e)
         {
@@ -118,25 +117,29 @@ namespace TrabajoPracticoIntegrador15_4
         private void listarToolStripMenuItem_Click(object sender, EventArgs e)
         {
             frmListar frmListar = new frmListar();
-            frmListar.ShowDialog();
+            frmListar.MdiParent = this;
+            frmListar.Show();
         }
 
         private void registrarToolStripMenuItem1_Click(object sender, EventArgs e)
         {
             frmRegistrar frmRegistrar = new frmRegistrar();
-            frmRegistrar.ShowDialog();
+            frmRegistrar.MdiParent = this;
+            frmRegistrar.Show();
         }
 
         private void modificarToolStripMenuItem_Click(object sender, EventArgs e)
         {
             frmModificar frmModificar = new frmModificar();
-            frmModificar.ShowDialog();
+            frmModificar.MdiParent = this;
+            frmModificar.Show();
         }
 
         private void eliminarToolStripMenuItem_Click(object sender, EventArgs e)
         {
             frmEliminar frmEliminar = new frmEliminar();
-            frmEliminar.ShowDialog();
+            frmEliminar.MdiParent= this;
+            frmEliminar.Show();
         }
 
         private void salirToolStripMenuItem_Click(object sender, EventArgs e)
@@ -164,13 +167,15 @@ namespace TrabajoPracticoIntegrador15_4
         private void bitacoraToolStripMenuItem_Click(object sender, EventArgs e)
         {
             frmBitacora frmBitacora = new frmBitacora();
-            frmBitacora.ShowDialog();
+            frmBitacora.MdiParent = this;
+            frmBitacora.Show();
         }
 
         private void perfilesToolStripMenuItem_Click(object sender, EventArgs e)
         {
             frmPerfil frmPerfil = new frmPerfil();
-            frmPerfil.ShowDialog();
+            frmPerfil.MdiParent=this;
+            frmPerfil.Show();
         }
     }
 }

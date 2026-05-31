@@ -9,7 +9,7 @@ namespace BLL_
     //Gestor Idioma
     public class GestorIdioma
     {
-        // Uso Singleton
+        // Singleton 
         private static GestorIdioma _instancia;
         public static GestorIdioma Instancia
         {
@@ -31,20 +31,16 @@ namespace BLL_
         private readonly List<IObservadorIdioma> _observadores
             = new List<IObservadorIdioma>();
 
-        //El idioma activo en el sistema
         public Idioma IdiomaActivo { get; private set; }
-
-        //lista de idiomas cargados desde la db
         public List<Idioma> IdiomasDisponibles { get; private set; }
 
-        //patron observer
 
+
+        // Observer 
         public void Suscribir(IObservadorIdioma obs)
         {
             if (!_observadores.Contains(obs))
-            {
                 _observadores.Add(obs);
-            }
         }
 
         public void Desuscribir(IObservadorIdioma obs)
@@ -55,100 +51,104 @@ namespace BLL_
         private void Notificar()
         {
             foreach (var obs in _observadores)
-            {
                 obs.ActualizarIdioma(IdiomaActivo);
-            }
         }
+
 
         //carga de los idiomas desde la base de datos
         public void CargarIdiomas()
         {
             IdiomasDisponibles = _dal.GetAllIdiomas();
 
-            // Si no hay activo, usar el marcado como defecto
             if (IdiomaActivo == null)
             {
                 IdiomaActivo = IdiomasDisponibles.Find(i => i.Defecto);
-
-                if (IdiomaActivo == null)
-                {
-                    if (IdiomasDisponibles.Count > 0)
-                    {
-                        IdiomaActivo = IdiomasDisponibles[0];
-                    }
-                    else
-                    {
-                        IdiomaActivo = null;
-                    }
-                }
+                if (IdiomaActivo == null && IdiomasDisponibles.Count > 0)
+                    IdiomaActivo = IdiomasDisponibles[0];
+            }
+            else
+            {
+                // Refrescar el idioma activo con los datos recién cargados
+                IdiomaActivo = IdiomasDisponibles.Find(i => i.IdIdioma == IdiomaActivo.IdIdioma)
+                               ?? IdiomaActivo;
             }
         }
 
-        // Cambia el idioma activo y notifica a todos los formularios registrados.
         public void CambiarIdioma(Idioma idioma)
         {
             IdiomaActivo = idioma;
             Notificar();
         }
 
-        //Agrega un idioma nuevo y recarga la lista.
-        public Idioma AgregarIdioma(string nombre, bool defecto,
-            List<(string clave, string valor)> traducciones)
+
+        //ABM de Idiomas
+        // Ahora cuando se crea un idioma se le asigna automaticamente todas las tags
+        // existentes con traducción vacía, listas para completar desde form
+        public Idioma AgregarIdioma(string nombre, bool defecto)
         {
             if (string.IsNullOrEmpty(nombre))
                 throw new Exception("El idioma debe tener un nombre.");
 
             int idIdioma = _dal.AddIdioma(nombre, defecto);
 
-            foreach (var (clave, valor) in traducciones)
-            {
-                if (string.IsNullOrEmpty(clave) || string.IsNullOrEmpty(valor)) continue;
-                int idPalabra = _dal.AddPalabra(clave);
-                _dal.SaveTraduccion(idIdioma, idPalabra, valor);
-            }
+            // Asignación automática de todas las tags
+            _dal.AsignarTodasLasPalabrasAIdioma(idIdioma);
 
             CargarIdiomas();
             return IdiomasDisponibles.Find(i => i.IdIdioma == idIdioma);
         }
 
-        //Elimina un idioma y recarga la lista
         public void EliminarIdioma(int idIdioma)
         {
             _dal.DeleteIdioma(idIdioma);
             CargarIdiomas();
 
-            // Si se eliminó el activo, cambiar al primero disponible
             if (IdiomaActivo != null && IdiomaActivo.IdIdioma == idIdioma)
             {
-                if (IdiomasDisponibles.Count > 0)
-                {
-                    IdiomaActivo = IdiomasDisponibles[0];
-                }
-                else
-                {
-                    IdiomaActivo = null;
-                }
-
-                if (IdiomaActivo != null)
-                {
-                    Notificar();
-                }
+                IdiomaActivo = IdiomasDisponibles.Count > 0 ? IdiomasDisponibles[0] : null;
+                if (IdiomaActivo != null) Notificar();
             }
         }
 
-        //Guarda o actualiza una traducción individual
+
+        //  Traducciones 
+
         public void GuardarTraduccion(int idIdioma, string clave, string valor)
         {
-            int idPalabra = _dal.AddPalabra(clave);
+            int idPalabra = _dal.AddPalabra(clave); // devuelve la existente si ya está
             _dal.SaveTraduccion(idIdioma, idPalabra, valor);
-            CargarIdiomas(); // refresca el diccionario en memoria
-            if (IdiomaActivo?.IdIdioma == idIdioma)
-            {
-                Notificar();
-            }
+            CargarIdiomas();
+            if (IdiomaActivo?.IdIdioma == idIdioma) Notificar();
         }
 
-        //Devuelve todas las palabras disponibles
+
+        //ABM de Tag 
+
         public List<Palabra> GetPalabras() => _dal.GetAllPalabras();
+
+        // ahora al crear una tag se la asigna automaticamente a todos los idiomas
+        // existentes con traducción vacía.
+        public void AgregarPalabra(string texto)
+        {
+            if (string.IsNullOrEmpty(texto))
+                throw new Exception("La tag no puede estar vacía.");
+
+            int idPalabra = _dal.AddPalabra(texto);
+
+            // Asignación automática a todos los idiomas
+            _dal.AsignarPalabraATodosLosIdiomas(idPalabra);
+
+            CargarIdiomas(); // refresca diccionarios en memoria
+        }
+
+        public void EliminarPalabra(int idPalabra)
+        {
+            _dal.DeletePalabra(idPalabra);
+            CargarIdiomas();
+            // Si el idioma activo cambió su set de claves, notificar
+            if (IdiomaActivo != null) Notificar();
+        }
+
+
     }
 }

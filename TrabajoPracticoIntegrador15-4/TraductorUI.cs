@@ -14,8 +14,8 @@ namespace TrabajoPracticoIntegrador15_4
         {
             foreach (Control c in controles)
             {
-                if (c.Tag != null)
-                    c.Text = idioma.Traducir(c.Tag.ToString());
+                if (c.Tag is string clave)
+                    c.Text = idioma.Traducir(clave);
 
                 // Si tiene controles hijos los recorre también
                 if (c.Controls.Count > 0)
@@ -24,6 +24,10 @@ namespace TrabajoPracticoIntegrador15_4
                 // Si es un MenuStrip, recorre sus ítems
                 if (c is MenuStrip menu)
                     TraducirMenu(menu.Items, idioma);
+                
+                //Si es un StatusStrip, recorre sus items
+                if (c is StatusStrip status)
+                    TraducirMenu(status.Items, idioma);
             }
         }
 
@@ -31,8 +35,9 @@ namespace TrabajoPracticoIntegrador15_4
         {
             foreach (ToolStripItem item in items)
             {
-                if (item.Tag != null)
-                    item.Text = idioma.Traducir(item.Tag.ToString());
+                // Solo traduce si el Tag es un string
+                if (item.Tag is string clave)
+                    item.Text = idioma.Traducir(clave);
 
                 if (item is ToolStripMenuItem subMenu)
                     TraducirMenu(subMenu.DropDownItems, idioma);
