@@ -6,7 +6,7 @@ namespace BLL
 {
     public class PerfilBLL
     {
-        //Singleton
+        // Singleton
         private static PerfilBLL _instancia;
         public static PerfilBLL Instancia
         {
@@ -18,55 +18,90 @@ namespace BLL
             }
         }
 
-        private PerfilBLL() { _dal = new PerfilDAL(); } // Constructor privado para controlar la creación de instancias
-        private readonly PerfilDAL _dal; // DAL para acceder a datos de perfiles
+        public Perfil GetPerfilDeUsuario(int idUsuario)
+            => _dal.GetPerfilDeUsuario(idUsuario);
 
-        // Perfil del usuario activo
+        private PerfilBLL() { _dal = new PerfilDAL(); }
+        private readonly PerfilDAL _dal;
+
+        // Perfil del usuario activo 
         public Perfil PerfilActivo { get; private set; }
 
         public void CargarPerfilDeUsuario(int idUsuario)
-        {
-            PerfilActivo = _dal.GetPerfilDeUsuario(idUsuario); //desde la bll le pedimos a la dal que 
-        }                                                      // cargue el perfil del usuario activo según su id
+            => PerfilActivo = _dal.GetPerfilDeUsuario(idUsuario);
 
         public void LimpiarPerfil()
-        {
-            PerfilActivo = null;
-        }
+            => PerfilActivo = null;
 
-        // Verificación de permisos 
-        public bool TienePermiso(string codigo)         // delega la verificación al perfil activo, que a su vez delega al árbol de permisos
+        public bool TienePermiso(string codigo)
             => PerfilActivo?.TienePermiso(codigo) ?? false;
 
-        // Gestión de perfiles 
-        public List<Perfil> GetAllPerfiles() // creamos uan lista que devuelva todos los perfiles de la db
+        // Gestión de perfiles
+        public List<Perfil> GetAllPerfiles()
             => _dal.GetAllPerfiles();
- 
-        // Asigna un perfil a un usuario y registra el otorgamiento
-        // en la bitácora con el estado anterior y el nuevo.
 
         public void AsignarPerfil(int idUsuario, string nombreUsuario,
             int idPerfil, string nombrePerfilNuevo)
         {
-            // Obtenemos el perfil actual ANTES de cambiar para registrar el anterior
             Perfil perfilAnterior = _dal.GetPerfilDeUsuario(idUsuario);
             string nombreAnterior = perfilAnterior?.Nombre;
 
-            // Persiste el cambio
             _dal.AsignarPerfil(idUsuario, idPerfil);
 
-            // Registra en bitácora: quién, cuándo, qué cambió
             BitacoraBLL.Instancia.RegistrarAsignacionPerfil(
                 nombreUsuarioAfectado: nombreUsuario,
-                idUsuarioAfectado: idUsuario,   //enviamos todos los parametros
+                idUsuarioAfectado: idUsuario,
                 perfilAnterior: nombreAnterior,
                 perfilNuevo: nombrePerfilNuevo
             );
         }
 
-        // Constantes de permisos
+        // ABM de conjuntos de permisos
+        //Devuelve los permisos atómicos para seleccionar
+        public List<PermisoAtomico> GetPermisosAtomicos()
+            => _dal.GetPermisosAtomicos();
+
+        // Crea un conjunto de permisos  --> categoría + perfil asignable 
+        public void CrearConjunto(string nombre, List<string> codigos)
+        {
+            if (string.IsNullOrEmpty(nombre))
+                throw new Exception("El conjunto debe tener un nombre.");
+            if (codigos == null || codigos.Count == 0)
+                throw new Exception("Seleccione al menos un permiso.");
+
+            try
+            {
+                _dal.CrearConjunto(nombre, codigos);
+
+                //Registro en bitácora: qué conjunto se creó y con qué permisos
+                BitacoraBLL.Instancia.RegistrarCreacionConjunto(
+                    nombre, string.Join(", ", codigos));
+            }
+            catch (Exception ex)
+            {
+                BitacoraBLL.Instancia.RegistrarError("CREAR_CONJUNTO", ex);
+                throw;
+            }
+
+        }
+
+        // Elimina un conjunto creado
+        public void EliminarConjunto(int idPerfil, string nombre, string codigoCompuesto)
+        {
+            string[] protegidos = { "Administrador", "Operador", "Usuario" };
+            if (Array.Exists(protegidos, p => p == nombre))
+                throw new Exception(
+                    $"El perfil '{nombre}' es del sistema y no puede eliminarse.");
+
+            if (string.IsNullOrEmpty(codigoCompuesto))
+                throw new Exception("No se pudo determinar el código del conjunto.");
+
+            _dal.EliminarConjunto(idPerfil, codigoCompuesto);
+        }
+
+        // Permisos constantes
         public static class Permisos
-        { //hardcodeamos los codigos de permisos para usarlos, importante que coincidan con la db
+        {
             public const string CrearUsuario = "USR001";
             public const string ModificarUsuario = "USR002";
             public const string EliminarUsuario = "USR003";
@@ -74,6 +109,8 @@ namespace BLL
             public const string AgregarIdioma = "IDM001";
             public const string EliminarIdioma = "IDM002";
             public const string GestionarTraducciones = "IDM003";
+            public const string AgregarTags = "TAG001"; 
+            public const string EliminarTags = "TAG002"; 
             public const string VerBitacora = "BIT001";
             public const string GestionarPerfiles = "PRF001";
             public const string GestionUsuarios = "GE010";
@@ -82,4 +119,5 @@ namespace BLL
             public const string Operador = "GE040";
         }
     }
+
 }

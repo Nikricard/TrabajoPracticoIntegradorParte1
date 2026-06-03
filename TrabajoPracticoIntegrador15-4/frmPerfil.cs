@@ -63,7 +63,48 @@ namespace TrabajoPracticoIntegrador15_4
             usuarioSeleccionado = (Usuario)dgvUsuarios.SelectedRows[0].DataBoundItem;
             txtNombre.Text = usuarioSeleccionado.Nombre;
 
+            // Cargar el perfil ACTUAL del usuario seleccionado
+            MostrarPerfilDelUsuario(usuarioSeleccionado.Id);
+
         }
+
+        // Obtiene el perfil que tiene asignado el usuario y lo refleja
+        // tanto en el ComboBox como en el árbol de permisos.
+        private void MostrarPerfilDelUsuario(int idUsuario)
+        {
+            // Pedimos a la BLL el perfil del usuario (puede ser null)
+            Perfil perfilUsuario = PerfilBLL.Instancia.GetPerfilDeUsuario(idUsuario);
+
+            if (perfilUsuario == null)
+            {
+                // El usuario no tiene perfil asignado
+                treePermisos.Nodes.Clear();
+                cmbPerfil.SelectedIndex = -1;
+                return;
+            }
+
+            // Seleccionar el perfil en el ComboBox
+            SeleccionarPerfilEnCombo(perfilUsuario.IdPerfil);
+
+            // Mostrar su árbol de permisos
+            MostrarArbolPermisos(perfilUsuario);
+        }
+
+        // Selecciona en el ComboBox el perfil cuyo IdPerfil coincide.
+        private void SeleccionarPerfilEnCombo(int idPerfil)
+        {
+            foreach (Perfil p in cmbPerfil.Items)
+            {
+                if (p.IdPerfil == idPerfil)
+                {
+                    cmbPerfil.SelectedItem = p;
+                    return;
+                }
+            }
+            cmbPerfil.SelectedIndex = -1;
+        }
+
+
 
         private void cmbPerfil_SelectedIndexChanged(object sender, EventArgs e)
         {
@@ -73,21 +114,20 @@ namespace TrabajoPracticoIntegrador15_4
             }
         }
 
+        //Árbol de permisos (Composite recursivo)
+
         private void MostrarArbolPermisos(Perfil perfil)
         {
             treePermisos.Nodes.Clear();
-
             if (perfil?.Permiso == null) return;
 
             TreeNode raiz = new TreeNode($"[{perfil.Permiso.Codigo}] {perfil.Permiso.Nombre}");
             raiz.Tag = perfil.Permiso;
-
-            // Recorrido recursivo del árbol Composite
             AgregarNodosRecursivo(raiz, perfil.Permiso);
-
             treePermisos.Nodes.Add(raiz);
             treePermisos.ExpandAll();
         }
+
 
         private void AgregarNodosRecursivo(TreeNode nodo, IPermiso permiso)
         {
@@ -129,7 +169,6 @@ namespace TrabajoPracticoIntegrador15_4
 
             try
             {
-                // Pasa nombre de usuario y nombre de perfil para la bitácora
                 PerfilBLL.Instancia.AsignarPerfil(
                     usuarioSeleccionado.Id,
                     usuarioSeleccionado.Nombre,
@@ -149,7 +188,6 @@ namespace TrabajoPracticoIntegrador15_4
                 MessageBox.Show(ex.Message, "Error",
                     MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
-
 
         }
 

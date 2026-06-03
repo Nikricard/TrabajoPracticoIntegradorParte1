@@ -269,11 +269,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\alcal\\OneDrive\\Escritorio\\TrabajoPracticoIntegradorParte1\\TrabajoPracticoIntegrador15-4\\UI.csproj",
+      "projectUniqueName": "C:\\Users\\alcal\\OneDrive\\Escritorio\\TpGitHub\\TrabajoPracticoIntegradorParte1\\TrabajoPracticoIntegrador15-4\\UI.csproj",
       "projectName": "UI",
-      "projectPath": "C:\\Users\\alcal\\OneDrive\\Escritorio\\TrabajoPracticoIntegradorParte1\\TrabajoPracticoIntegrador15-4\\UI.csproj",
+      "projectPath": "C:\\Users\\alcal\\OneDrive\\Escritorio\\TpGitHub\\TrabajoPracticoIntegradorParte1\\TrabajoPracticoIntegrador15-4\\UI.csproj",
       "packagesPath": "C:\\Users\\alcal\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\alcal\\OneDrive\\Escritorio\\TrabajoPracticoIntegradorParte1\\TrabajoPracticoIntegrador15-4\\obj\\",
+      "outputPath": "C:\\Users\\alcal\\OneDrive\\Escritorio\\TpGitHub\\TrabajoPracticoIntegradorParte1\\TrabajoPracticoIntegrador15-4\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "D:\\Visual Studio Violeta\\Shared\\NuGetPackages"
@@ -294,14 +294,14 @@
         "net8.0-windows7.0": {
           "targetAlias": "net8.0-windows",
           "projectReferences": {
-            "C:\\Users\\alcal\\OneDrive\\Escritorio\\TrabajoPracticoIntegradorParte1\\BE\\BE.csproj": {
-              "projectPath": "C:\\Users\\alcal\\OneDrive\\Escritorio\\TrabajoPracticoIntegradorParte1\\BE\\BE.csproj"
+            "C:\\Users\\alcal\\OneDrive\\Escritorio\\TpGitHub\\TrabajoPracticoIntegradorParte1\\BE\\BE.csproj": {
+              "projectPath": "C:\\Users\\alcal\\OneDrive\\Escritorio\\TpGitHub\\TrabajoPracticoIntegradorParte1\\BE\\BE.csproj"
             },
-            "C:\\Users\\alcal\\OneDrive\\Escritorio\\TrabajoPracticoIntegradorParte1\\BLL}\\BLL.csproj": {
-              "projectPath": "C:\\Users\\alcal\\OneDrive\\Escritorio\\TrabajoPracticoIntegradorParte1\\BLL}\\BLL.csproj"
+            "C:\\Users\\alcal\\OneDrive\\Escritorio\\TpGitHub\\TrabajoPracticoIntegradorParte1\\BLL}\\BLL.csproj": {
+              "projectPath": "C:\\Users\\alcal\\OneDrive\\Escritorio\\TpGitHub\\TrabajoPracticoIntegradorParte1\\BLL}\\BLL.csproj"
             },
-            "C:\\Users\\alcal\\OneDrive\\Escritorio\\TrabajoPracticoIntegradorParte1\\SE\\SE.csproj": {
-              "projectPath": "C:\\Users\\alcal\\OneDrive\\Escritorio\\TrabajoPracticoIntegradorParte1\\SE\\SE.csproj"
+            "C:\\Users\\alcal\\OneDrive\\Escritorio\\TpGitHub\\TrabajoPracticoIntegradorParte1\\SE\\SE.csproj": {
+              "projectPath": "C:\\Users\\alcal\\OneDrive\\Escritorio\\TpGitHub\\TrabajoPracticoIntegradorParte1\\SE\\SE.csproj"
             }
           }
         }

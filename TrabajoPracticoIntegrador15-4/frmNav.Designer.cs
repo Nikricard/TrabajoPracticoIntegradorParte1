@@ -43,13 +43,14 @@
             statusStrip1 = new StatusStrip();
             toolStripStatusLabel1 = new ToolStripStatusLabel();
             lblstatusUser = new ToolStripStatusLabel();
+            permisosToolStripMenuItem = new ToolStripMenuItem();
             menuStrip2.SuspendLayout();
             statusStrip1.SuspendLayout();
             SuspendLayout();
             // 
             // menuStrip2
             // 
-            menuStrip2.Items.AddRange(new ToolStripItem[] { registrarToolStripMenuItem, listarToolStripMenuItem, perfilesToolStripMenuItem, IdiomaMenuItem, bitacoraToolStripMenuItem, salirToolStripMenuItem });
+            menuStrip2.Items.AddRange(new ToolStripItem[] { registrarToolStripMenuItem, listarToolStripMenuItem, permisosToolStripMenuItem, perfilesToolStripMenuItem, IdiomaMenuItem, bitacoraToolStripMenuItem, salirToolStripMenuItem });
             menuStrip2.Location = new Point(0, 0);
             menuStrip2.Name = "menuStrip2";
             menuStrip2.Size = new Size(800, 24);
@@ -155,6 +156,13 @@
             lblstatusUser.Size = new Size(118, 17);
             lblstatusUser.Text = "toolStripStatusLabel2";
             // 
+            // permisosToolStripMenuItem
+            // 
+            permisosToolStripMenuItem.Name = "permisosToolStripMenuItem";
+            permisosToolStripMenuItem.Size = new Size(67, 20);
+            permisosToolStripMenuItem.Text = "Permisos";
+            permisosToolStripMenuItem.Click += permisosToolStripMenuItem_Click;
+            // 
             // frmNav
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
@@ -189,5 +197,6 @@
         private StatusStrip statusStrip1;
         private ToolStripStatusLabel toolStripStatusLabel1;
         private ToolStripStatusLabel lblstatusUser;
+        private ToolStripMenuItem permisosToolStripMenuItem;
     }
 }

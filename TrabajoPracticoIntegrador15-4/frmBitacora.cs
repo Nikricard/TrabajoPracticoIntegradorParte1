@@ -1,22 +1,15 @@
-﻿using ABS;
+using ABS;
 using BE;
 using BLL;
 using BLL_;
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace TrabajoPracticoIntegrador15_4
 {
-    public partial class frmBitacora : Form , IObservadorIdioma
+    public partial class frmBitacora : Form, IObservadorIdioma
     {
-
         private readonly GestorIdioma gestor = GestorIdioma.Instancia;
 
         public void ActualizarIdioma(Idioma idioma)
@@ -29,7 +22,7 @@ namespace TrabajoPracticoIntegrador15_4
 
         private void frmBitacora_Load(object sender, EventArgs e)
         {
-            // Configurar ComboBox de tipo de evento
+            // ComboBox de tipo de evento
             cmbTipoEvento.Items.Clear();
             cmbTipoEvento.Items.Add("Todos");
             cmbTipoEvento.Items.Add("Exito");
@@ -37,28 +30,38 @@ namespace TrabajoPracticoIntegrador15_4
             cmbTipoEvento.Items.Add("Excepcion");
             cmbTipoEvento.SelectedIndex = 0;
 
+            // ComboBox de usuarios — opción "Todos" + todos los usuarios
+            CargarComboUsuarios();
+
             // Fechas por defecto: última semana
             dtpDesde.Value = DateTime.Today.AddDays(-7);
             dtpHasta.Value = DateTime.Today;
 
-            // Configurar columnas legibles de los DataGridViews
             ConfigurarGrillas();
 
-            // Cargar todo sin filtros al abrir
             Buscar();
             CargarAuditorias();
 
             gestor.Suscribir(this);
             if (gestor.IdiomaActivo != null)
-                ActualizarIdioma(gestor.IdiomaActivo);  //Aplica idioma actual
+                ActualizarIdioma(gestor.IdiomaActivo);
+        }
 
+
+        // Llena el ComboBox con "Todos" + los nombres de todos los usuarios.
+        private void CargarComboUsuarios()
+        {
+            cmbUsuario.Items.Clear();
+            cmbUsuario.Items.Add("Todos");
+
+            foreach (Usuario u in UsuarioBLL.Instancia.GetAll())
+                cmbUsuario.Items.Add(u.Nombre);
+
+            cmbUsuario.SelectedIndex = 0;  // por defecto "Todos"
         }
 
         private void ConfigurarGrillas()
         {
-            // creamos columnas con nombres en el dgv para mostrar datos
-            // Ajustar tamaño de columnas para mejor visualización
-
             // Bitácora
             dgvBitacora.AutoGenerateColumns = false;
             dgvBitacora.Columns.Clear();
@@ -109,13 +112,18 @@ namespace TrabajoPracticoIntegrador15_4
         private void Buscar()
         {
             string tipoEvento = cmbTipoEvento.SelectedItem?.ToString() == "Todos"
-                ? null  // Si es "Todos", no filtramos por tipo
-                : cmbTipoEvento.SelectedItem?.ToString();   // Si no es "Todos", usamos el valor seleccionado como filtro
+                ? null
+                : cmbTipoEvento.SelectedItem?.ToString();
 
-            List<RegistroBitacora> resultados = BitacoraBLL.Instancia.Buscar( // llamamos al método de búsqueda de la BLL con los filtros
+            // Si el usuario seleccionado es "Todos", no filtramos por usuario
+            string usuario = cmbUsuario.SelectedItem?.ToString() == "Todos"
+                ? null
+                : cmbUsuario.SelectedItem?.ToString();
+
+            List<RegistroBitacora> resultados = BitacoraBLL.Instancia.Buscar(
                 dtpDesde.Value.Date,
                 dtpHasta.Value.Date,
-                txtUsuario.Text.Trim(), 
+                usuario,
                 txtActividad.Text.Trim(),
                 tipoEvento
             );
@@ -123,16 +131,15 @@ namespace TrabajoPracticoIntegrador15_4
             dgvBitacora.DataSource = null;
             dgvBitacora.DataSource = resultados;
 
-            // Colorear filas según tipo de evento
             foreach (DataGridViewRow row in dgvBitacora.Rows)
             {
                 if (row.DataBoundItem is RegistroBitacora r)
                 {
                     row.DefaultCellStyle.BackColor = r.TipoEvento switch
                     {
-                        TipoEvento.Error => System.Drawing.Color.FromArgb(255, 220, 220),
+                        TipoEvento.Error     => System.Drawing.Color.FromArgb(255, 220, 220),
                         TipoEvento.Excepcion => System.Drawing.Color.FromArgb(255, 200, 200),
-                        _ => System.Drawing.Color.White
+                        _                    => System.Drawing.Color.White
                     };
                 }
             }
@@ -142,31 +149,31 @@ namespace TrabajoPracticoIntegrador15_4
         {
             dgvAudUsuario.DataSource = null;
             dgvAudUsuario.DataSource = BitacoraBLL.Instancia.GetAuditoriaUsuario();
-            // Cargar auditoría de idiomas solo si se selecciona la pestaña correspondiente
+
             dgvAudIdioma.DataSource = null;
             dgvAudIdioma.DataSource = BitacoraBLL.Instancia.GetAuditoriaIdioma();
         }
 
-        private void button1_Click(object sender, EventArgs e) //me olvide el nombre
+        private void button1_Click(object sender, EventArgs e)
         {
-            Buscar(); //buscamos con los filtros ingresados
+            Buscar();
         }
 
         private void button2_Click(object sender, EventArgs e)
         {
             dtpDesde.Value = DateTime.Today.AddDays(-7);
             dtpHasta.Value = DateTime.Today;
-            txtUsuario.Text = string.Empty;
-            txtActividad.Text = string.Empty;
+            cmbUsuario.SelectedIndex    = 0;   // vuelve a "Todos"
+            txtActividad.Text           = string.Empty;
             cmbTipoEvento.SelectedIndex = 0;
             Buscar();
-
         }
+
         private void tabControl_SelectedIndexChanged(object sender, EventArgs e)
         {
             if (tabControl.SelectedTab == tabUsuario ||
                 tabControl.SelectedTab == tabIdioma)
-                CargarAuditorias(); // recarga auditorías al cambiar de pestaña para mostrar datos actualizados
+                CargarAuditorias();
         }
 
         private void btnSalir_Click(object sender, EventArgs e)

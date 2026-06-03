@@ -12,13 +12,14 @@ namespace DAL
         private readonly string cs =
             "Server=DESKTOP-FD6Q6GG\\SQLEXPRESS;Database=Usuarios;Integrated Security=True";
 
-        public List<Perfil> GetAllPerfiles()  // metodo para obtener perfiles de la db
+        // leemos los perfiles y el arbol
+
+        public List<Perfil> GetAllPerfiles()
         {
             Dictionary<string, IPermiso> todos = CargarTodosLosPermisos();
-            ConstruirArbol(todos); // diccionario con todos los permisos atómicos y compuestos, con sus relaciones padre-hijo ya establecidas
+            ConstruirArbol(todos);
 
-            List<Perfil> perfiles = new List<Perfil>(); //lista de perfiles que se va a llenar con los datos de la db y luego se devuelve
-
+            List<Perfil> perfiles = new List<Perfil>();
             using (var con = new SqlConnection(cs))
             {
                 con.Open();
@@ -65,11 +66,7 @@ namespace DAL
                 {
                     IdPerfil = id,
                     Nombre = nombre,
-                    Permiso = todos.ContainsKey(codigo) ? todos[codigo] : null 
-                    // el perfil del usuario se construye con el permiso raíz que
-                    // se obtiene de la db, y ese permiso ya tiene toda su estructura
-                    // de hijos gracias a la construcción del árbol
-
+                    Permiso = todos.ContainsKey(codigo) ? todos[codigo] : null
                 };
             }
         }
@@ -96,7 +93,147 @@ namespace DAL
             }
         }
 
-        // Carga todos los permisos atómicos y compuestos en un diccionario.
+        // ABM de permisos y conjuntos
+
+        // Devuelve todos los permisos atómicos (las funcionalidades base)
+        // para mostrarlos en el CheckedListBox de selección.
+        public List<PermisoAtomico> GetPermisosAtomicos()
+        {
+            var lista = new List<PermisoAtomico>();
+            using (var con = new SqlConnection(cs))
+            {
+                con.Open();
+                var cmd = new SqlCommand(
+                    "SELECT Codigo, Nombre FROM Permiso WHERE EsCompuesto = 0 ORDER BY Codigo", con);
+                var rdr = cmd.ExecuteReader();
+                while (rdr.Read())
+                    lista.Add(new PermisoAtomico
+                    {
+                        Codigo = rdr.GetString(0),
+                        Nombre = rdr.GetString(1)
+                    });
+            }
+            return lista;
+        }
+
+        // Crea un conjunto: un permiso compuesto (categoría) + su perfil
+        // asignable, con los permisos hijos seleccionados.
+        public void CrearConjunto(string nombre, List<string> codigosHijos)
+        {
+            using (var con = new SqlConnection(cs))
+            {
+                con.Open();
+
+                // Verificar nombre único
+                var check = new SqlCommand(
+                    "SELECT COUNT(1) FROM Perfil WHERE Nombre = @N", con);
+                check.Parameters.AddWithValue("@N", nombre);
+                if (Convert.ToInt32(check.ExecuteScalar()) > 0)
+                    throw new Exception($"Ya existe un conjunto llamado '{nombre}'.");
+
+                // Generar código único
+                string codigo = GenerarCodigoCompuesto(con);
+
+                using (var tr = con.BeginTransaction())
+                {
+                    try
+                    {
+                        //Permiso compuesto (categoría)
+                        var cmdP = new SqlCommand(
+                            "INSERT INTO Permiso (Codigo, Nombre, EsCompuesto) VALUES (@C, @N, 1)",
+                            con, tr);
+                        cmdP.Parameters.AddWithValue("@C", codigo);
+                        cmdP.Parameters.AddWithValue("@N", nombre);
+                        cmdP.ExecuteNonQuery();
+
+                        //Hijos del compuesto
+                        foreach (string hijo in codigosHijos)
+                        {
+                            var cmdH = new SqlCommand(
+                                "INSERT INTO PermisoHijo (CodigoPadre, CodigoHijo) VALUES (@P, @H)",
+                                con, tr);
+                            cmdH.Parameters.AddWithValue("@P", codigo);
+                            cmdH.Parameters.AddWithValue("@H", hijo);
+                            cmdH.ExecuteNonQuery();
+                        }
+
+                        //Perfil asignable que apunta al compuesto
+                        var cmdPer = new SqlCommand(
+                            "INSERT INTO Perfil (Nombre, Codigo) VALUES (@N, @C)",
+                            con, tr);
+                        cmdPer.Parameters.AddWithValue("@N", nombre);
+                        cmdPer.Parameters.AddWithValue("@C", codigo);
+                        cmdPer.ExecuteNonQuery();
+
+                        tr.Commit();
+                    }
+                    catch { tr.Rollback(); throw; }
+                }
+            }
+        }
+
+        // Elimina un conjunto: quita el perfil a sus usuarios, y borra
+        // el perfil, sus relaciones hijo y el permiso compuesto.
+
+        public void EliminarConjunto(int idPerfil, string codigoCompuesto)
+        {
+            using (var con = new SqlConnection(cs))
+            {
+                con.Open();
+                using (var tr = con.BeginTransaction())
+                {
+                    try
+                    {
+                        //Le saca el perfil a los usuarios que lo tengan
+                        var cmdU = new SqlCommand(
+                            "UPDATE Usuarios SET IdPerfil = NULL WHERE IdPerfil = @Id", con, tr);
+                        cmdU.Parameters.AddWithValue("@Id", idPerfil);
+                        cmdU.ExecuteNonQuery();
+
+                        //Borra el perfil
+                        var cmdPer = new SqlCommand(
+                            "DELETE FROM Perfil WHERE IdPerfil = @Id", con, tr);
+                        cmdPer.Parameters.AddWithValue("@Id", idPerfil);
+                        cmdPer.ExecuteNonQuery();
+
+                        //Borra las relaciones hijo del compuesto
+                        var cmdH = new SqlCommand(
+                            "DELETE FROM PermisoHijo WHERE CodigoPadre = @C", con, tr);
+                        cmdH.Parameters.AddWithValue("@C", codigoCompuesto);
+                        cmdH.ExecuteNonQuery();
+
+                        //Borra el permiso compuesto
+                        var cmdP = new SqlCommand(
+                            "DELETE FROM Permiso WHERE Codigo = @C", con, tr);
+                        cmdP.Parameters.AddWithValue("@C", codigoCompuesto);
+                        cmdP.ExecuteNonQuery();
+
+                        tr.Commit();
+                    }
+                    catch { tr.Rollback(); throw; }
+                }
+            }
+        }
+
+        // Genera un código compuesto único
+        // buscando el mayor número existente y sumando 10.
+        private string GenerarCodigoCompuesto(SqlConnection con)
+        {
+            int max = 40; // el primero generado será GE050
+            var cmd = new SqlCommand(
+                "SELECT Codigo FROM Permiso WHERE Codigo LIKE 'GE%'", con);
+            var rdr = cmd.ExecuteReader();
+            while (rdr.Read())
+            {
+                string cod = rdr.GetString(0);
+                if (cod.Length > 2 && int.TryParse(cod.Substring(2), out int num))
+                    if (num > max) max = num;
+            }
+            rdr.Close();
+            return "GE" + (max + 10).ToString("D3");
+        }
+
+        // Helpers de composite
 
         private Dictionary<string, IPermiso> CargarTodosLosPermisos()
         {
@@ -121,10 +258,6 @@ namespace DAL
             return todos;
         }
 
-        // Construye el árbol leyendo la tabla PermisoHijo.
-        // Como es muchos-a-muchos, un mismo nodo puede aparecer
-        // bajo múltiples padres (ej: GE010 es hijo de GE040 Y de GE030).
-
         private void ConstruirArbol(Dictionary<string, IPermiso> todos)
         {
             using (var con = new SqlConnection(cs))
@@ -145,4 +278,5 @@ namespace DAL
             }
         }
     }
+
 }

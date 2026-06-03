@@ -56,6 +56,9 @@ namespace TrabajoPracticoIntegrador15_4
             dgvTraducciones.Columns[1].Width = 220;
             dgvTraducciones.Columns[0].ReadOnly = true;
 
+            btnAgregarTag.Enabled = PerfilBLL.Instancia.TienePermiso(PerfilBLL.Permisos.AgregarTags);
+            btnEliminarTag.Enabled = PerfilBLL.Instancia.TienePermiso(PerfilBLL.Permisos.EliminarTags);
+
             CargarGrillaTags();
             CargarGrillaIdiomas();
 

@@ -1,4 +1,4 @@
-﻿namespace TrabajoPracticoIntegrador15_4
+namespace TrabajoPracticoIntegrador15_4
 {
     partial class frmBitacora
     {
@@ -7,10 +7,6 @@
         /// </summary>
         private System.ComponentModel.IContainer components = null;
 
-        /// <summary>
-        /// Clean up any resources being used.
-        /// </summary>
-        /// <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
         protected override void Dispose(bool disposing)
         {
             if (disposing && (components != null))
@@ -22,15 +18,11 @@
 
         #region Windows Form Designer generated code
 
-        /// <summary>
-        /// Required method for Designer support - do not modify
-        /// the contents of this method with the code editor.
-        /// </summary>
         private void InitializeComponent()
         {
             dtpDesde = new DateTimePicker();
             dtpHasta = new DateTimePicker();
-            txtUsuario = new TextBox();
+            cmbUsuario = new ComboBox();          
             txtActividad = new TextBox();
             cmbTipoEvento = new ComboBox();
             button1 = new Button();
@@ -71,12 +63,13 @@
             dtpHasta.Size = new Size(200, 23);
             dtpHasta.TabIndex = 1;
             // 
-            // txtUsuario
+            // cmbUsuario
             // 
-            txtUsuario.Location = new Point(115, 173);
-            txtUsuario.Name = "txtUsuario";
-            txtUsuario.Size = new Size(100, 23);
-            txtUsuario.TabIndex = 2;
+            cmbUsuario.FormattingEnabled = true;
+            cmbUsuario.Location = new Point(115, 173);
+            cmbUsuario.Name = "cmbUsuario";
+            cmbUsuario.Size = new Size(121, 23);
+            cmbUsuario.TabIndex = 2;
             // 
             // txtActividad
             // 
@@ -125,6 +118,7 @@
             tabControl.SelectedIndex = 0;
             tabControl.Size = new Size(466, 401);
             tabControl.TabIndex = 7;
+            tabControl.SelectedIndexChanged += tabControl_SelectedIndexChanged;
             // 
             // tabBitacora
             // 
@@ -259,7 +253,7 @@
             Controls.Add(button1);
             Controls.Add(cmbTipoEvento);
             Controls.Add(txtActividad);
-            Controls.Add(txtUsuario);
+            Controls.Add(cmbUsuario);             
             Controls.Add(dtpHasta);
             Controls.Add(dtpDesde);
             Name = "frmBitacora";
@@ -280,7 +274,7 @@
 
         private DateTimePicker dtpDesde;
         private DateTimePicker dtpHasta;
-        private TextBox txtUsuario;
+        private ComboBox cmbUsuario;              
         private TextBox txtActividad;
         private ComboBox cmbTipoEvento;
         private Button button1;

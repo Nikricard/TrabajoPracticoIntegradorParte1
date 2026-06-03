@@ -210,6 +210,19 @@ namespace BLL
             });
         }
 
+        public void RegistrarCreacionConjunto(string nombreConjunto, string permisosIncluidos)
+        {
+            Registrar(
+                actividad: "CREAR_CONJUNTO",
+                tipo: TipoEvento.Exito,
+                descripcion: $"Conjunto de permisos '{nombreConjunto}' creado.",
+                entidad: "Perfil",
+                anterior: null,
+                nuevo: $"Permisos: {permisosIncluidos}"
+            );
+        }
+
+
 
         //Consultas
 

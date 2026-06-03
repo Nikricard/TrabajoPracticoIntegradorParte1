@@ -62,8 +62,10 @@ namespace TrabajoPracticoIntegrador15_4
             bitacoraToolStripMenuItem.Enabled =
                 p.TienePermiso(PerfilBLL.Permisos.VerBitacora);
 
-            // Perfiles — solo Admin
+            // Perfiles y Permisos — solo quien tenga GestionarPerfiles - Admin
             perfilesToolStripMenuItem.Enabled =
+                p.TienePermiso(PerfilBLL.Permisos.GestionarPerfiles);
+            permisosToolStripMenuItem.Enabled =
                 p.TienePermiso(PerfilBLL.Permisos.GestionarPerfiles);
 
             // Idiomas
@@ -138,7 +140,7 @@ namespace TrabajoPracticoIntegrador15_4
         private void eliminarToolStripMenuItem_Click(object sender, EventArgs e)
         {
             frmEliminar frmEliminar = new frmEliminar();
-            frmEliminar.MdiParent= this;
+            frmEliminar.MdiParent = this;
             frmEliminar.Show();
         }
 
@@ -155,7 +157,7 @@ namespace TrabajoPracticoIntegrador15_4
             ToolStripMenuItem itemSeleccionado = (ToolStripMenuItem)sender;
             Idioma idiomaSeleccionado = (Idioma)itemSeleccionado.Tag;
 
-            // Un solo llamado actualiza TODOS los formularios registrados como observadores
+            // Un solo llamado actualiza todos los formularios registrados como observadores
             gestor.CambiarIdioma(idiomaSeleccionado);
         }
 
@@ -174,8 +176,15 @@ namespace TrabajoPracticoIntegrador15_4
         private void perfilesToolStripMenuItem_Click(object sender, EventArgs e)
         {
             frmPerfil frmPerfil = new frmPerfil();
-            frmPerfil.MdiParent=this;
+            frmPerfil.MdiParent = this;
             frmPerfil.Show();
+        }
+
+        private void permisosToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            frmPermiso frmPermisos = new frmPermiso();
+            frmPermisos.MdiParent = this;
+            frmPermisos.Show();
         }
     }
 }

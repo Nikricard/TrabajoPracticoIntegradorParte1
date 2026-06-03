@@ -1,6 +1,7 @@
-using BE;
-using DAL;
 using ABS;
+using BE;
+using BLL;
+using DAL;
 using System;
 using System.Collections.Generic;
 
@@ -89,25 +90,52 @@ namespace BLL_
             if (string.IsNullOrEmpty(nombre))
                 throw new Exception("El idioma debe tener un nombre.");
 
-            int idIdioma = _dal.AddIdioma(nombre, defecto);
+            try
+            {
+                int idIdioma = _dal.AddIdioma(nombre, defecto);
+                _dal.AsignarTodasLasPalabrasAIdioma(idIdioma);
 
-            // Asignación automática de todas las tags
-            _dal.AsignarTodasLasPalabrasAIdioma(idIdioma);
+                // Registro en bitácora
+                BitacoraBLL.Instancia.RegistrarAddIdioma(idIdioma, nombre);
 
-            CargarIdiomas();
-            return IdiomasDisponibles.Find(i => i.IdIdioma == idIdioma);
+                CargarIdiomas();
+                return IdiomasDisponibles.Find(i => i.IdIdioma == idIdioma);
+            }
+            catch (Exception ex)
+            {
+                BitacoraBLL.Instancia.RegistrarError("ADD_IDIOMA", ex);
+                throw;
+            }
+
         }
 
         public void EliminarIdioma(int idIdioma)
         {
-            _dal.DeleteIdioma(idIdioma);
-            CargarIdiomas();
-
-            if (IdiomaActivo != null && IdiomaActivo.IdIdioma == idIdioma)
+            try
             {
-                IdiomaActivo = IdiomasDisponibles.Count > 0 ? IdiomasDisponibles[0] : null;
-                if (IdiomaActivo != null) Notificar();
+                // Buscamos el nombre antes de borrar para la bitácora
+                Idioma idioma = IdiomasDisponibles.Find(i => i.IdIdioma == idIdioma);
+                string nombre = idioma?.Nombre ?? $"Id {idIdioma}";
+
+                _dal.DeleteIdioma(idIdioma);
+
+                // Registro en bitácora
+                BitacoraBLL.Instancia.RegistrarDeleteIdioma(idIdioma, nombre);
+
+                CargarIdiomas();
+
+                if (IdiomaActivo != null && IdiomaActivo.IdIdioma == idIdioma)
+                {
+                    IdiomaActivo = IdiomasDisponibles.Count > 0 ? IdiomasDisponibles[0] : null;
+                    if (IdiomaActivo != null) Notificar();
+                }
             }
+            catch (Exception ex)
+            {
+                BitacoraBLL.Instancia.RegistrarError("DELETE_IDIOMA", ex);
+                throw;
+            }
+
         }
 
 
@@ -115,10 +143,29 @@ namespace BLL_
 
         public void GuardarTraduccion(int idIdioma, string clave, string valor)
         {
-            int idPalabra = _dal.AddPalabra(clave); // devuelve la existente si ya está
-            _dal.SaveTraduccion(idIdioma, idPalabra, valor);
-            CargarIdiomas();
-            if (IdiomaActivo?.IdIdioma == idIdioma) Notificar();
+            try
+            {
+                // Capturamos el valor anterior para la auditoría
+                Idioma idioma = IdiomasDisponibles.Find(i => i.IdIdioma == idIdioma);
+                string valorAnterior = null;
+                idioma?.Traducciones.TryGetValue(clave, out valorAnterior);
+
+                int idPalabra = _dal.AddPalabra(clave);
+                _dal.SaveTraduccion(idIdioma, idPalabra, valor);
+
+                //Registro en bitácora con valor anterior y nuevo
+                BitacoraBLL.Instancia.RegistrarTraduccion(
+                    idIdioma, clave, valorAnterior, valor);
+
+                CargarIdiomas();
+                if (IdiomaActivo?.IdIdioma == idIdioma) Notificar();
+            }
+            catch (Exception ex)
+            {
+                BitacoraBLL.Instancia.RegistrarError("TRADUCCION", ex);
+                throw;
+            }
+
         }
 
 
@@ -133,20 +180,44 @@ namespace BLL_
             if (string.IsNullOrEmpty(texto))
                 throw new Exception("La tag no puede estar vacía.");
 
-            int idPalabra = _dal.AddPalabra(texto);
+            try
+            {
+                int idPalabra = _dal.AddPalabra(texto);
+                _dal.AsignarPalabraATodosLosIdiomas(idPalabra);
 
-            // Asignación automática a todos los idiomas
-            _dal.AsignarPalabraATodosLosIdiomas(idPalabra);
+                //Registro en bitácora
+                BitacoraBLL.Instancia.RegistrarTraduccion(0, texto, null,
+                    $"Tag '{texto}' creada y asignada a todos los idiomas");
 
-            CargarIdiomas(); // refresca diccionarios en memoria
+                CargarIdiomas();
+            }
+            catch (Exception ex)
+            {
+                BitacoraBLL.Instancia.RegistrarError("ADD_TAG", ex);
+                throw;
+            }
+
         }
 
         public void EliminarPalabra(int idPalabra)
         {
-            _dal.DeletePalabra(idPalabra);
-            CargarIdiomas();
-            // Si el idioma activo cambió su set de claves, notificar
-            if (IdiomaActivo != null) Notificar();
+            try
+            {
+                _dal.DeletePalabra(idPalabra);
+
+                //Registro en bitácora
+                BitacoraBLL.Instancia.RegistrarTraduccion(0, $"Id {idPalabra}",
+                    "Tag existente", "Tag eliminada de todos los idiomas");
+
+                CargarIdiomas();
+                if (IdiomaActivo != null) Notificar();
+            }
+            catch (Exception ex)
+            {
+                BitacoraBLL.Instancia.RegistrarError("DELETE_TAG", ex);
+                throw;
+            }
+
         }
 
 

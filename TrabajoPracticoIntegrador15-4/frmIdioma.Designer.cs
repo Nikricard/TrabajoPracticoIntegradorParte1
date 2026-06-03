@@ -170,13 +170,13 @@
             label2.Name = "label2";
             label2.Size = new Size(25, 15);
             label2.TabIndex = 11;
-            label2.Tag = "";
+            label2.Tag = "Tag";
             label2.Text = "Tag";
             // 
             // label3
             // 
             label3.AutoSize = true;
-            label3.Location = new Point(41, 76);
+            label3.Location = new Point(41, 84);
             label3.Name = "label3";
             label3.Size = new Size(33, 15);
             label3.TabIndex = 12;
