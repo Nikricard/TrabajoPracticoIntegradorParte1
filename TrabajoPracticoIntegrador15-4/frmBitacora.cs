@@ -45,6 +45,7 @@ namespace TrabajoPracticoIntegrador15_4
             gestor.Suscribir(this);
             if (gestor.IdiomaActivo != null)
                 ActualizarIdioma(gestor.IdiomaActivo);
+            
         }
 
 

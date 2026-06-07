@@ -22,7 +22,7 @@ namespace TrabajoPracticoIntegrador15_4
         {
             dtpDesde = new DateTimePicker();
             dtpHasta = new DateTimePicker();
-            cmbUsuario = new ComboBox();          
+            cmbUsuario = new ComboBox();
             txtActividad = new TextBox();
             cmbTipoEvento = new ComboBox();
             button1 = new Button();
@@ -253,7 +253,7 @@ namespace TrabajoPracticoIntegrador15_4
             Controls.Add(button1);
             Controls.Add(cmbTipoEvento);
             Controls.Add(txtActividad);
-            Controls.Add(cmbUsuario);             
+            Controls.Add(cmbUsuario);
             Controls.Add(dtpHasta);
             Controls.Add(dtpDesde);
             Name = "frmBitacora";

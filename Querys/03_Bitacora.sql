@@ -1,18 +1,17 @@
--- ════════════════════════════════════════════════════════
--- 03 — BITÁCORA y AUDITORÍA   (T06)
--- Bitácora general + control de cambios de Usuario e Idioma.
--- Independiente de los otros módulos. Ejecutar en 3º lugar.
--- ════════════════════════════════════════════════════════
+-- Bitacora y auditoria
+-- Control de cambios de Usuario e Idioma.
+-- Ejecutar tercera
+
 USE Usuarios;
 GO
 
--- ── Bitácora general (todas las operaciones) ──────────
+-- Bitácora general (todas las operaciones)
 CREATE TABLE Bitacora (
     IdBitacora    INT          PRIMARY KEY IDENTITY(1,1),
     Fecha         DATETIME     NOT NULL DEFAULT GETDATE(),
     Usuario       VARCHAR(100) NOT NULL,
     Actividad     VARCHAR(100) NOT NULL,
-    TipoEvento    VARCHAR(20)  NOT NULL,   -- 'Exito' / 'Error' / 'Excepcion'
+    TipoEvento    VARCHAR(20)  NOT NULL,   -- Exito, Error ,Excepcion
     Descripcion   VARCHAR(500) NULL,
     Entidad       VARCHAR(50)  NULL,
     ValorAnterior VARCHAR(500) NULL,
@@ -20,19 +19,19 @@ CREATE TABLE Bitacora (
 );
 GO
 
--- ── Control de cambios de Usuario ─────────────────────
+-- Control de cambios de Usuario 
 CREATE TABLE AuditoriaUsuario (
     IdAuditoria    INT          PRIMARY KEY IDENTITY(1,1),
     Fecha          DATETIME     NOT NULL DEFAULT GETDATE(),
     UsuarioAccion  VARCHAR(100) NOT NULL,
-    Operacion      VARCHAR(20)  NOT NULL,   -- 'ADD' / 'MODIFY' / 'DELETE' / 'ASIGNAR_PERFIL'
+    Operacion      VARCHAR(20)  NOT NULL,   -- 'ADD'/'MODIFY'/'DELETE'/'ASIGNAR_PERFIL'
     IdUsuario      INT          NOT NULL,
     NombreAnterior VARCHAR(100) NULL,
     NombreNuevo    VARCHAR(100) NULL
 );
 GO
 
--- ── Control de cambios de Idioma ──────────────────────
+-- Control de cambios de Idioma
 CREATE TABLE AuditoriaIdioma (
     IdAuditoria     INT          PRIMARY KEY IDENTITY(1,1),
     Fecha           DATETIME     NOT NULL DEFAULT GETDATE(),
@@ -50,11 +49,11 @@ GO
 PRINT '03 OK — Tablas de bitácora y auditoría creadas.';
 GO
 
--- ── Verificación final de toda la base ────────────────
+-- Verificación final de toda la base
 SELECT 'Usuarios'         AS Tabla, COUNT(*) AS Registros FROM Usuarios         UNION ALL
 SELECT 'Permiso',                   COUNT(*)               FROM Permiso          UNION ALL
 SELECT 'PermisoHijo',               COUNT(*)               FROM PermisoHijo      UNION ALL
-SELECT 'Perfil',                    COUNT(*)               FROM Perfil           UNION ALL
+SELECT 'UsuarioPermiso',            COUNT(*)               FROM UsuarioPermiso   UNION ALL
 SELECT 'Idioma',                    COUNT(*)               FROM Idioma           UNION ALL
 SELECT 'Palabra',                   COUNT(*)               FROM Palabra          UNION ALL
 SELECT 'Traduccion',                COUNT(*)               FROM Traduccion       UNION ALL

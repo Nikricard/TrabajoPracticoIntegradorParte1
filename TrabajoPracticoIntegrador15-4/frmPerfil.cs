@@ -1,133 +1,114 @@
-﻿using BE;
+using BE;
 using BLL;
 using ABS;
 using BLL_;
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace TrabajoPracticoIntegrador15_4
 {
     public partial class frmPerfil : Form, IObservadorIdioma
     {
-        private Usuario usuarioSeleccionado = null;
-
         private readonly GestorIdioma gestor = GestorIdioma.Instancia;
-        public void ActualizarIdioma(Idioma idioma)
-        => TraductorUI.Traducir(this.Controls, idioma);
+        private Usuario usuarioSeleccionado = null;
 
         public frmPerfil()
         {
             InitializeComponent();
         }
 
+        public void ActualizarIdioma(Idioma idioma)
+            => TraductorUI.Traducir(this.Controls, idioma);
+
         private void frmPerfil_Load(object sender, EventArgs e)
         {
             gestor.Suscribir(this);
             if (gestor.IdiomaActivo != null)
-                ActualizarIdioma(gestor.IdiomaActivo);  // Aplica idioma actual
+                ActualizarIdioma(gestor.IdiomaActivo);
 
-            CargarPerfiles();
+            CargarListas();
             CargarGrillaUsuarios();
-
         }
 
-        private void CargarPerfiles()
+        private void frmPerfil_FormClosed(object sender, FormClosedEventArgs e)
+            => gestor.Desuscribir(this);
+
+        // Carga inicial
+
+        private void CargarListas()
         {
-            List<Perfil> perfiles = PerfilBLL.Instancia.GetAllPerfiles();
-            cmbPerfil.DataSource = perfiles;
-            cmbPerfil.DisplayMember = "Nombre";
-            cmbPerfil.ValueMember = "IdPerfil";
+            // Atómicos
+            clbAtomicos.Items.Clear();
+            clbAtomicos.DisplayMember = "Nombre";
+            foreach (PermisoAtomico p in PerfilBLL.Instancia.GetPermisosAtomicos())
+                clbAtomicos.Items.Add(p);
+
+            // Compuestos (conjuntos)
+            clbCompuestos.Items.Clear();
+            clbCompuestos.DisplayMember = "Nombre";
+            foreach (IPermiso p in PerfilBLL.Instancia.GetConjuntos())
+                clbCompuestos.Items.Add(p);
         }
 
         private void CargarGrillaUsuarios()
         {
             dgvUsuarios.DataSource = null;
             dgvUsuarios.DataSource = UsuarioBLL.Instancia.GetAll();
-
-            // Ocultar columna de contraseña
             if (dgvUsuarios.Columns["Contraseña"] != null)
                 dgvUsuarios.Columns["Contraseña"].Visible = false;
         }
+
+        // Selección de usuario 
 
         private void dgvUsuarios_SelectionChanged(object sender, EventArgs e)
         {
             if (dgvUsuarios.SelectedRows.Count != 1) return;
 
             usuarioSeleccionado = (Usuario)dgvUsuarios.SelectedRows[0].DataBoundItem;
-            txtNombre.Text = usuarioSeleccionado.Nombre;
+            txtNombre.Text      = usuarioSeleccionado.Nombre;
 
-            // Cargar el perfil ACTUAL del usuario seleccionado
-            MostrarPerfilDelUsuario(usuarioSeleccionado.Id);
-
+            MarcarPermisosDelUsuario(usuarioSeleccionado.Id);
+            MostrarArbolDelUsuario(usuarioSeleccionado.Id);
         }
 
-        // Obtiene el perfil que tiene asignado el usuario y lo refleja
-        // tanto en el ComboBox como en el árbol de permisos.
-        private void MostrarPerfilDelUsuario(int idUsuario)
+        //Tilda en ambas listas los permisos que tiene el usuario
+        private void MarcarPermisosDelUsuario(int idUsuario)
         {
-            // Pedimos a la BLL el perfil del usuario (puede ser null)
-            Perfil perfilUsuario = PerfilBLL.Instancia.GetPerfilDeUsuario(idUsuario);
+            List<string> codigos = PerfilBLL.Instancia.GetCodigosDeUsuario(idUsuario);
 
-            if (perfilUsuario == null)
+            for (int i = 0; i < clbAtomicos.Items.Count; i++)
             {
-                // El usuario no tiene perfil asignado
-                treePermisos.Nodes.Clear();
-                cmbPerfil.SelectedIndex = -1;
-                return;
+                IPermiso p = (IPermiso)clbAtomicos.Items[i];
+                clbAtomicos.SetItemChecked(i, codigos.Contains(p.Codigo));
             }
 
-            // Seleccionar el perfil en el ComboBox
-            SeleccionarPerfilEnCombo(perfilUsuario.IdPerfil);
-
-            // Mostrar su árbol de permisos
-            MostrarArbolPermisos(perfilUsuario);
-        }
-
-        // Selecciona en el ComboBox el perfil cuyo IdPerfil coincide.
-        private void SeleccionarPerfilEnCombo(int idPerfil)
-        {
-            foreach (Perfil p in cmbPerfil.Items)
+            for (int i = 0; i < clbCompuestos.Items.Count; i++)
             {
-                if (p.IdPerfil == idPerfil)
-                {
-                    cmbPerfil.SelectedItem = p;
-                    return;
-                }
-            }
-            cmbPerfil.SelectedIndex = -1;
-        }
-
-
-
-        private void cmbPerfil_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            if (cmbPerfil.SelectedItem is Perfil perfil)
-            {
-                MostrarArbolPermisos(perfil);
+                IPermiso p = (IPermiso)clbCompuestos.Items[i];
+                clbCompuestos.SetItemChecked(i, codigos.Contains(p.Codigo));
             }
         }
 
-        //Árbol de permisos (Composite recursivo)
-
-        private void MostrarArbolPermisos(Perfil perfil)
+        //Dibuja el árbol con los permisos efectivos del usuario
+        private void MostrarArbolDelUsuario(int idUsuario)
         {
             treePermisos.Nodes.Clear();
-            if (perfil?.Permiso == null) return;
+            PermisoCompuesto raiz = PerfilBLL.Instancia.GetPermisosDeUsuario(idUsuario);
 
-            TreeNode raiz = new TreeNode($"[{perfil.Permiso.Codigo}] {perfil.Permiso.Nombre}");
-            raiz.Tag = perfil.Permiso;
-            AgregarNodosRecursivo(raiz, perfil.Permiso);
-            treePermisos.Nodes.Add(raiz);
+            if (raiz.Hijos.Count == 0) return;
+
+            foreach (IPermiso permiso in raiz.Hijos)
+            {
+                TreeNode nodo = new TreeNode($"[{permiso.Codigo}] {permiso.Nombre}");
+                nodo.ForeColor = permiso is PermisoCompuesto
+                    ? System.Drawing.Color.DarkBlue
+                    : System.Drawing.Color.DarkGreen;
+                AgregarNodosRecursivo(nodo, permiso);
+                treePermisos.Nodes.Add(nodo);
+            }
             treePermisos.ExpandAll();
         }
-
 
         private void AgregarNodosRecursivo(TreeNode nodo, IPermiso permiso)
         {
@@ -136,22 +117,18 @@ namespace TrabajoPracticoIntegrador15_4
                 foreach (IPermiso hijo in compuesto.Hijos)
                 {
                     TreeNode nodoHijo = new TreeNode($"[{hijo.Codigo}] {hijo.Nombre}");
-                    nodoHijo.Tag = hijo;
-
-                    // Ícono diferente para compuesto vs atómico
                     nodoHijo.ForeColor = hijo is PermisoCompuesto
                         ? System.Drawing.Color.DarkBlue
                         : System.Drawing.Color.DarkGreen;
-
                     nodo.Nodes.Add(nodoHijo);
-
-                    // Llamada recursiva para seguir bajando en el árbol
                     AgregarNodosRecursivo(nodoHijo, hijo);
                 }
             }
         }
 
-        private void btnAsignar_Click(object sender, EventArgs e)
+        // Guardar permisos del usuario
+
+        private void btnGuardar_Click(object sender, EventArgs e)
         {
             if (usuarioSeleccionado == null)
             {
@@ -160,35 +137,29 @@ namespace TrabajoPracticoIntegrador15_4
                 return;
             }
 
-            if (cmbPerfil.SelectedItem is not Perfil perfilSeleccionado)
-            {
-                MessageBox.Show("Seleccione un perfil.", "Atención",
-                    MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                return;
-            }
-
             try
             {
-                PerfilBLL.Instancia.AsignarPerfil(
-                    usuarioSeleccionado.Id,
-                    usuarioSeleccionado.Nombre,
-                    perfilSeleccionado.IdPerfil,
-                    perfilSeleccionado.Nombre
-                );
+                // junta los códigos tildados en las 2 listas
+                var codigos = new List<string>();
+                foreach (IPermiso p in clbAtomicos.CheckedItems)
+                    codigos.Add(p.Codigo);
+                foreach (IPermiso p in clbCompuestos.CheckedItems)
+                    codigos.Add(p.Codigo);
+
+                PerfilBLL.Instancia.GuardarPermisosDeUsuario(
+                    usuarioSeleccionado.Id, usuarioSeleccionado.Nombre, codigos);
 
                 MessageBox.Show(
-                    $"Perfil '{perfilSeleccionado.Nombre}' asignado a " +
-                    $"'{usuarioSeleccionado.Nombre}'.",
+                    $"Permisos actualizados para '{usuarioSeleccionado.Nombre}'.",
                     "Éxito", MessageBoxButtons.OK, MessageBoxIcon.Information);
 
-                CargarGrillaUsuarios();
+                MostrarArbolDelUsuario(usuarioSeleccionado.Id);
             }
             catch (Exception ex)
             {
                 MessageBox.Show(ex.Message, "Error",
                     MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
-
         }
 
         private void btnSalir_Click(object sender, EventArgs e)

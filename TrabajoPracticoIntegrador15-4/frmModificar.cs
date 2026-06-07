@@ -28,6 +28,7 @@ namespace TrabajoPracticoIntegrador15_4
             if (gestor.IdiomaActivo != null)
                 ActualizarIdioma(gestor.IdiomaActivo);  // Aplica idioma actual
 
+
         }
 
         private void btnModificar_Click(object sender, EventArgs e)

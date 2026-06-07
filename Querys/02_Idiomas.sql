@@ -1,12 +1,11 @@
--- ════════════════════════════════════════════════════════
--- 02 — IDIOMAS, PALABRAS y TRADUCCIONES   (T05)
--- Patrón Observer para el cambio de idioma.
--- Independiente de los otros módulos. Ejecutar en 2º lugar.
--- ════════════════════════════════════════════════════════
+-- 02 — Idiomas, Palabras y Traducciones
+--  (las palabras son las tags)
+-- Ejecutar segunda
+
 USE Usuarios;
 GO
 
--- ── Estructura ────────────────────────────────────────
+--  Estructura 
 CREATE TABLE Idioma (
     IdIdioma INT          PRIMARY KEY IDENTITY(1,1),
     Nombre   VARCHAR(50)  NOT NULL UNIQUE,
@@ -28,12 +27,12 @@ CREATE TABLE Traduccion (
 );
 GO
 
--- ── Idiomas iniciales ─────────────────────────────────
+--  Idiomas iniciales 
 INSERT INTO Idioma (Nombre, defecto) VALUES ('Español', 1);  -- IdIdioma = 1
 INSERT INTO Idioma (Nombre, defecto) VALUES ('Inglés',  0);  -- IdIdioma = 2
 GO
 
--- ── Palabras (claves = Tag de cada control) ───────────
+--  Palabras (claves = Tag de cada control) 
 -- El orden define el IdPalabra (1..N). Ejecutar de corrido.
 INSERT INTO Palabra (Texto) VALUES
 ('btnIngresar'),     -- 1
@@ -70,7 +69,7 @@ INSERT INTO Palabra (Texto) VALUES
 ('menuCerrar');      -- 32
 GO
 
--- ── Traducciones Español (IdIdioma = 1) ───────────────
+--  Traducciones Español (IdIdioma = 1) 
 INSERT INTO Traduccion (IdIdioma, IdPalabra, Traduccion) VALUES
 (1, 1,  'Ingresar'),
 (1, 2,  'Registrar'),
@@ -106,7 +105,7 @@ INSERT INTO Traduccion (IdIdioma, IdPalabra, Traduccion) VALUES
 (1, 32, 'Cerrar Sesión');
 GO
 
--- ── Traducciones Inglés (IdIdioma = 2) ────────────────
+--  Traducciones Inglés (IdIdioma = 2) 
 INSERT INTO Traduccion (IdIdioma, IdPalabra, Traduccion) VALUES
 (2, 1,  'Login'),
 (2, 2,  'Register'),

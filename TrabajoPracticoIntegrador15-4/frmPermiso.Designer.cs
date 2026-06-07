@@ -39,6 +39,7 @@
             lblPermisosDisp = new Label();
             label1 = new Label();
             groupBox1 = new GroupBox();
+            btnActualizar = new Button();
             ((System.ComponentModel.ISupportInitialize)dgvConjuntos).BeginInit();
             groupBox1.SuspendLayout();
             SuspendLayout();
@@ -46,7 +47,7 @@
             // clbPermisos
             // 
             clbPermisos.FormattingEnabled = true;
-            clbPermisos.Location = new Point(25, 136);
+            clbPermisos.Location = new Point(24, 136);
             clbPermisos.Name = "clbPermisos";
             clbPermisos.Size = new Size(135, 148);
             clbPermisos.TabIndex = 0;
@@ -81,7 +82,7 @@
             // 
             // btnEliminar
             // 
-            btnEliminar.Location = new Point(321, 49);
+            btnEliminar.Location = new Point(401, 48);
             btnEliminar.Name = "btnEliminar";
             btnEliminar.Size = new Size(75, 23);
             btnEliminar.TabIndex = 4;
@@ -112,7 +113,7 @@
             // 
             // btnSalir
             // 
-            btnSalir.Location = new Point(402, 49);
+            btnSalir.Location = new Point(482, 48);
             btnSalir.Name = "btnSalir";
             btnSalir.Size = new Size(75, 23);
             btnSalir.TabIndex = 7;
@@ -143,6 +144,7 @@
             // 
             // groupBox1
             // 
+            groupBox1.Controls.Add(btnActualizar);
             groupBox1.Controls.Add(label1);
             groupBox1.Controls.Add(clbPermisos);
             groupBox1.Controls.Add(lblPermisosDisp);
@@ -155,11 +157,22 @@
             groupBox1.Controls.Add(btnEliminar);
             groupBox1.Location = new Point(12, 12);
             groupBox1.Name = "groupBox1";
-            groupBox1.Size = new Size(526, 302);
+            groupBox1.Size = new Size(575, 302);
             groupBox1.TabIndex = 10;
             groupBox1.TabStop = false;
             groupBox1.Tag = "lblGestionPermisos";
             groupBox1.Text = "lblGestionPermisos";
+            // 
+            // btnActualizar
+            // 
+            btnActualizar.Location = new Point(320, 49);
+            btnActualizar.Name = "btnActualizar";
+            btnActualizar.Size = new Size(75, 23);
+            btnActualizar.TabIndex = 11;
+            btnActualizar.Tag = "btnActualizar";
+            btnActualizar.Text = "Actualizar";
+            btnActualizar.UseVisualStyleBackColor = true;
+            btnActualizar.Click += btnActualizar_Click_1;
             // 
             // frmPermiso
             // 
@@ -189,5 +202,6 @@
         private Label lblPermisosDisp;
         private Label label1;
         private GroupBox groupBox1;
+        private Button btnActualizar;
     }
 }

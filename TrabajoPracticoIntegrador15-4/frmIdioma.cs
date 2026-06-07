@@ -64,7 +64,7 @@ namespace TrabajoPracticoIntegrador15_4
 
             if (gestor.IdiomaActivo != null)
                 ActualizarIdioma(gestor.IdiomaActivo);
-
+            
         }
 
         // Seccion Tags

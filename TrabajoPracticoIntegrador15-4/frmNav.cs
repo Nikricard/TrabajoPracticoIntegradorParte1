@@ -36,7 +36,6 @@ namespace TrabajoPracticoIntegrador15_4
             {
                 ActualizarIdioma(gestor.IdiomaActivo);
             }
-
         }
 
         // GestorIdioma llama a este método cuando el idioma cambia.

@@ -103,13 +103,23 @@ namespace DAL
             {
                 try
                 {
-                    using (var command = new SqlCommand("Delete from Usuarios where Id = @Id", connection, transaction))
+                    // Borra primero los permisos asignados al usuario.
+                    // Si no, la FK de UsuarioPermiso → Usuarios impide el borrado.
+                    using (var cmdPerm = new SqlCommand(
+                        "Delete from UsuarioPermiso where IdUsuario = @Id",
+                        connection, transaction))
                     {
-                        //command.CommandType = CommandType.StoredProcedure; 
+                        cmdPerm.Parameters.Add("@Id", SqlDbType.Int).Value = usuario.Id;
+                        cmdPerm.ExecuteNonQuery();
+                    }
 
+                    //Ahora sí borra el usuario.
+                    using (var command = new SqlCommand(
+                        "Delete from Usuarios where Id = @Id",
+                        connection, transaction))
+                    {
                         command.Parameters.Add("@Id", SqlDbType.Int).Value = usuario.Id;
-
-                        var result = command.ExecuteScalar();
+                        command.ExecuteNonQuery();
                     }
 
                     transaction.Commit();
@@ -127,6 +137,7 @@ namespace DAL
                 }
             }
         }
+
 
         public Usuario? Login(string nombre, string contrasenaHash)
         {
