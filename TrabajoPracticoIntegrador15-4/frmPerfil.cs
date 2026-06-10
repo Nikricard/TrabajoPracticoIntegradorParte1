@@ -8,7 +8,7 @@ using System.Windows.Forms;
 
 namespace TrabajoPracticoIntegrador15_4
 {
-    public partial class frmPerfil : Form, IObservadorIdioma
+    public partial class frmPerfil : Form, IObservadorIdioma, IObservadorConjuntos
     {
         private readonly GestorIdioma gestor = GestorIdioma.Instancia;
         private Usuario usuarioSeleccionado = null;
@@ -24,6 +24,7 @@ namespace TrabajoPracticoIntegrador15_4
         private void frmPerfil_Load(object sender, EventArgs e)
         {
             gestor.Suscribir(this);
+            PerfilBLL.Instancia.SuscribirConjuntos(this);   // escucha cambios de conjuntos
             if (gestor.IdiomaActivo != null)
                 ActualizarIdioma(gestor.IdiomaActivo);
 
@@ -32,7 +33,22 @@ namespace TrabajoPracticoIntegrador15_4
         }
 
         private void frmPerfil_FormClosed(object sender, FormClosedEventArgs e)
-            => gestor.Desuscribir(this);
+        {
+            gestor.Desuscribir(this);
+            PerfilBLL.Instancia.DesuscribirConjuntos(this);
+        }
+
+        // Observer de conjuntos: lo dispara frmPermiso al crear/modificar/eliminar un conjunto.
+        // Refresca las listas y, si hay un usuario seleccionado, reaplica sus marcas y el árbol.
+        public void ActualizarConjuntos()
+        {
+            CargarListas();
+            if (usuarioSeleccionado != null)
+            {
+                MarcarPermisosDelUsuario(usuarioSeleccionado.Id);
+                MostrarArbolDelUsuario(usuarioSeleccionado.Id);
+            }
+        }
 
         // Carga inicial
 
@@ -165,6 +181,7 @@ namespace TrabajoPracticoIntegrador15_4
         private void btnSalir_Click(object sender, EventArgs e)
         {
             gestor.Desuscribir(this);
+            PerfilBLL.Instancia.DesuscribirConjuntos(this);
             Close();
         }
     }

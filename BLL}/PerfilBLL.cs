@@ -1,3 +1,4 @@
+using ABS;
 using BE;
 using DAL;
 using System;
@@ -22,13 +23,32 @@ namespace BLL
         private PerfilBLL() { _dal = new PerfilDAL(); }
         private readonly PerfilDAL _dal;
 
+        // Observador de conjuntos
+        // PerfilBLL avisa a los formularios suscriptos cuando se
+        // crea, modifica o elimina un conjunto, para que se refresquen las listas.
+        private readonly List<IObservadorConjuntos> _observadores
+            = new List<IObservadorConjuntos>();
+
+        public void SuscribirConjuntos(IObservadorConjuntos obs)
+        {
+            if (!_observadores.Contains(obs))
+                _observadores.Add(obs);
+        }
+
+        public void DesuscribirConjuntos(IObservadorConjuntos obs)
+            => _observadores.Remove(obs);
+
+        private void NotificarConjuntos()
+        {
+            foreach (var obs in _observadores)
+                obs.ActualizarConjuntos();
+        }
+
         // Permisos del usuario activo 
-        // PerfilActivo.Permiso es un compuesto virtual con TODOS
-        // los permisos asignados al usuario. TienePermiso lo recorre.
         public Perfil PerfilActivo { get; private set; }
 
         // Carga todos los permisos del usuario en un compuesto raíz.
-        // Se llama desde el Login (mismo nombre que antes, no rompe nada).
+        // Se llama desde el Login
         public void CargarPerfilDeUsuario(int idUsuario)
         {
             PermisoCompuesto raiz = _dal.GetPermisosDeUsuario(idUsuario);
@@ -59,7 +79,7 @@ namespace BLL
         public void GuardarPermisosDeUsuario(int idUsuario, string nombreUsuario,
             List<string> codigos)
         {
-            // Capturar los permisos actuales ANTES de sobrescribir
+            // Capturar los permisos actuales antes de sobrescribir
             List<string> anteriores = _dal.GetCodigosDeUsuario(idUsuario);
             string textoAnterior = anteriores.Count > 0
                 ? string.Join(", ", anteriores)
@@ -102,6 +122,7 @@ namespace BLL
                 _dal.CrearConjunto(nombre, codigos);
                 BitacoraBLL.Instancia.RegistrarCreacionConjunto(
                     nombre, string.Join(", ", codigos));
+                NotificarConjuntos();   // avisa a los formularios suscriptos
             }
             catch (Exception ex)
             {
@@ -120,6 +141,7 @@ namespace BLL
                 throw new Exception("Seleccione al menos un permiso.");
 
             _dal.ActualizarConjunto(codigo, nombre, codigos);
+            NotificarConjuntos();   // avisa a los formularios suscriptos
         }
 
         public void EliminarConjunto(string codigo, string nombre)
@@ -130,19 +152,21 @@ namespace BLL
                 throw new Exception("No se pudo determinar el código del conjunto.");
 
             _dal.EliminarConjunto(codigo);
+            NotificarConjuntos();   // avisa a los formularios suscriptos
         }
 
-        // Conjuntos del sistema que no se pueden tocar
+        // Conjuntos del sistema que no se pueden modificar ni eliminar
         private bool EsProtegido(string nombre)
         {
             string[] protegidos =
-                { "Administrador", "Operador", "Gestión de usuarios", "Gestión de idiomas" };
+                { "Administrador", "Operador", "Traductor", "Auditor" };
             return Array.Exists(protegidos, p => p == nombre);
         }
 
         // Constantes de permisos
         public static class Permisos
         {
+            // Atómicos
             public const string CrearUsuario          = "USR001";
             public const string ModificarUsuario      = "USR002";
             public const string EliminarUsuario       = "USR003";
@@ -154,10 +178,10 @@ namespace BLL
             public const string EliminarTags          = "TAG002";
             public const string VerBitacora           = "BIT001";
             public const string GestionarPerfiles     = "PRF001";
-            public const string GestionUsuarios       = "GE010";
-            public const string GestionIdiomas        = "GE020";
-            public const string Administrador         = "GE030";
-            public const string Operador              = "GE040";
+            public const string Operador      = "GE010";
+            public const string Traductor     = "GE020";
+            public const string Auditor       = "GE030";
+            public const string Administrador = "GE040";
         }
     }
 }

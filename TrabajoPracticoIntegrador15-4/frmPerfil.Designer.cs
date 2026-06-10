@@ -26,13 +26,15 @@ namespace TrabajoPracticoIntegrador15_4
             label2 = new Label();
             label3 = new Label();
             label4 = new Label();
+            groupBox1 = new GroupBox();
             ((System.ComponentModel.ISupportInitialize)dgvUsuarios).BeginInit();
+            groupBox1.SuspendLayout();
             SuspendLayout();
             // 
             // dgvUsuarios
             // 
             dgvUsuarios.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            dgvUsuarios.Location = new Point(284, 89);
+            dgvUsuarios.Location = new Point(253, 51);
             dgvUsuarios.Name = "dgvUsuarios";
             dgvUsuarios.Size = new Size(240, 256);
             dgvUsuarios.TabIndex = 0;
@@ -40,7 +42,7 @@ namespace TrabajoPracticoIntegrador15_4
             // 
             // txtNombre
             // 
-            txtNombre.Location = new Point(52, 27);
+            txtNombre.Location = new Point(71, 313);
             txtNombre.Name = "txtNombre";
             txtNombre.Size = new Size(120, 23);
             txtNombre.TabIndex = 1;
@@ -49,7 +51,7 @@ namespace TrabajoPracticoIntegrador15_4
             // 
             clbAtomicos.CheckOnClick = true;
             clbAtomicos.FormattingEnabled = true;
-            clbAtomicos.Location = new Point(530, 89);
+            clbAtomicos.Location = new Point(499, 51);
             clbAtomicos.Name = "clbAtomicos";
             clbAtomicos.Size = new Size(150, 256);
             clbAtomicos.TabIndex = 2;
@@ -58,14 +60,14 @@ namespace TrabajoPracticoIntegrador15_4
             // 
             clbCompuestos.CheckOnClick = true;
             clbCompuestos.FormattingEnabled = true;
-            clbCompuestos.Location = new Point(686, 89);
+            clbCompuestos.Location = new Point(655, 51);
             clbCompuestos.Name = "clbCompuestos";
             clbCompuestos.Size = new Size(150, 256);
             clbCompuestos.TabIndex = 3;
             // 
             // btnGuardar
             // 
-            btnGuardar.Location = new Point(178, 26);
+            btnGuardar.Location = new Point(197, 312);
             btnGuardar.Name = "btnGuardar";
             btnGuardar.Size = new Size(100, 23);
             btnGuardar.TabIndex = 4;
@@ -76,14 +78,14 @@ namespace TrabajoPracticoIntegrador15_4
             // 
             // treePermisos
             // 
-            treePermisos.Location = new Point(48, 89);
+            treePermisos.Location = new Point(17, 51);
             treePermisos.Name = "treePermisos";
             treePermisos.Size = new Size(230, 256);
             treePermisos.TabIndex = 5;
             // 
             // btnSalir
             // 
-            btnSalir.Location = new Point(284, 27);
+            btnSalir.Location = new Point(303, 313);
             btnSalir.Name = "btnSalir";
             btnSalir.Size = new Size(100, 23);
             btnSalir.TabIndex = 6;
@@ -95,7 +97,7 @@ namespace TrabajoPracticoIntegrador15_4
             // label1
             // 
             label1.AutoSize = true;
-            label1.Location = new Point(52, 9);
+            label1.Location = new Point(17, 317);
             label1.Name = "label1";
             label1.Size = new Size(51, 15);
             label1.TabIndex = 7;
@@ -105,7 +107,7 @@ namespace TrabajoPracticoIntegrador15_4
             // label2
             // 
             label2.AutoSize = true;
-            label2.Location = new Point(530, 71);
+            label2.Location = new Point(499, 33);
             label2.Name = "label2";
             label2.Size = new Size(107, 15);
             label2.TabIndex = 8;
@@ -115,7 +117,7 @@ namespace TrabajoPracticoIntegrador15_4
             // label3
             // 
             label3.AutoSize = true;
-            label3.Location = new Point(48, 71);
+            label3.Location = new Point(17, 33);
             label3.Name = "label3";
             label3.Size = new Size(55, 15);
             label3.TabIndex = 9;
@@ -125,36 +127,48 @@ namespace TrabajoPracticoIntegrador15_4
             // label4
             // 
             label4.AutoSize = true;
-            label4.Location = new Point(686, 71);
+            label4.Location = new Point(655, 33);
             label4.Name = "label4";
             label4.Size = new Size(125, 15);
             label4.TabIndex = 10;
             label4.Tag = "lblConjuntos";
             label4.Text = "Permisos Compuestos";
             // 
+            // groupBox1
+            // 
+            groupBox1.Controls.Add(treePermisos);
+            groupBox1.Controls.Add(label1);
+            groupBox1.Controls.Add(label4);
+            groupBox1.Controls.Add(btnSalir);
+            groupBox1.Controls.Add(dgvUsuarios);
+            groupBox1.Controls.Add(btnGuardar);
+            groupBox1.Controls.Add(label3);
+            groupBox1.Controls.Add(txtNombre);
+            groupBox1.Controls.Add(clbAtomicos);
+            groupBox1.Controls.Add(label2);
+            groupBox1.Controls.Add(clbCompuestos);
+            groupBox1.Location = new Point(44, 26);
+            groupBox1.Name = "groupBox1";
+            groupBox1.Size = new Size(832, 364);
+            groupBox1.TabIndex = 11;
+            groupBox1.TabStop = false;
+            groupBox1.Tag = "lblGestionPerfiles";
+            groupBox1.Text = "Gestion de Perfiles";
+            // 
             // frmPerfil
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(975, 450);
-            Controls.Add(label4);
-            Controls.Add(label3);
-            Controls.Add(label2);
-            Controls.Add(label1);
-            Controls.Add(btnSalir);
-            Controls.Add(treePermisos);
-            Controls.Add(btnGuardar);
-            Controls.Add(clbCompuestos);
-            Controls.Add(clbAtomicos);
-            Controls.Add(txtNombre);
-            Controls.Add(dgvUsuarios);
+            ClientSize = new Size(1090, 446);
+            Controls.Add(groupBox1);
             Name = "frmPerfil";
             Text = "frmPerfil";
             FormClosed += frmPerfil_FormClosed;
             Load += frmPerfil_Load;
             ((System.ComponentModel.ISupportInitialize)dgvUsuarios).EndInit();
+            groupBox1.ResumeLayout(false);
+            groupBox1.PerformLayout();
             ResumeLayout(false);
-            PerformLayout();
         }
 
         #endregion
@@ -170,5 +184,6 @@ namespace TrabajoPracticoIntegrador15_4
         private Label label2;
         private Label label3;
         private Label label4;
+        private GroupBox groupBox1;
     }
 }

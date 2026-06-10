@@ -154,24 +154,28 @@ namespace DAL
                 con.Open();
 
                 var check = new SqlCommand(
+                    // Verificar que no exista un permiso atómico con el mismo nombre
                     "SELECT COUNT(1) FROM Permiso WHERE Nombre = @N AND EsCompuesto = 1", con);
                 check.Parameters.AddWithValue("@N", nombre);
+                // Verificar que no exista otro conjunto con el mismo nombre
                 if (Convert.ToInt32(check.ExecuteScalar()) > 0)
+                    // Si ya existe un conjunto con ese nombre, lanzar una excepción
                     throw new Exception($"Ya existe un conjunto llamado '{nombre}'.");
-
+                // Generar código único para el nuevo conjunto
                 string codigo = GenerarCodigoCompuesto(con);
 
                 using (var tr = con.BeginTransaction())
                 {
                     try
                     {
+                        // Insertar el nuevo permiso compuesto
                         var cmdP = new SqlCommand(
                             "INSERT INTO Permiso (Codigo, Nombre, EsCompuesto) VALUES (@C, @N, 1)",
                             con, tr);
                         cmdP.Parameters.AddWithValue("@C", codigo);
                         cmdP.Parameters.AddWithValue("@N", nombre);
                         cmdP.ExecuteNonQuery();
-
+                        // Insertar las relaciones con los hijos seleccionados
                         foreach (string hijo in codigosHijos)
                         {
                             var cmdH = new SqlCommand(
