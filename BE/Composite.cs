@@ -27,15 +27,15 @@ namespace BE
     {
         public string Codigo { get; set; }
         public string Nombre { get; set; }
-        public List<IPermiso> Hijos { get; set; } = new List<IPermiso>();
+        public List<IPermiso> Hijos { get; set; } = new List<IPermiso>();   // lista de permisos hijos
 
-        public void Agregar(IPermiso permiso) => Hijos.Add(permiso);
-        public void Quitar(IPermiso permiso) => Hijos.Remove(permiso);
+        public void Agregar(IPermiso permiso) => Hijos.Add(permiso);    // Agrega un permiso hijo al compuesto
+        public void Quitar(IPermiso permiso) => Hijos.Remove(permiso);  // Elimina un permiso hijo del compuesto
 
         // Recorre recursivamente todos los hijos buscando el código.
         // Un compuesto tiene el permiso si al menos uno de sus hijos lo tiene.
 
-        public bool TienePermiso(string codigo)
+        public bool TienePermiso(string codigo) // Verifica si el permiso compuesto o alguno de sus hijos tiene el código dado
         {
             if (Codigo == codigo) return true;
             foreach (IPermiso hijo in Hijos)

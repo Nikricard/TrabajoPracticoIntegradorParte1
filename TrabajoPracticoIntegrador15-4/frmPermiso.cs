@@ -38,8 +38,8 @@ namespace TrabajoPracticoIntegrador15_4
         // Carga de datos 
 
         // Llena las dos listas:
-        //   - clbAtomicos  -> solo permisos atómicos
-        //   - clbCompuestos-> solo conjuntos (permisos compuestos)
+        // clbAtomicos  -> solo permisos atómicos
+        // clbCompuestos-> solo permisos compuestos
         // En los compuestos excluye el conjunto que se esté editando
         // para evitar la auto-referencia (que un conjunto se contenga a sí mismo).
         private void CargarSeleccionables(string codigoExcluir)
@@ -158,13 +158,15 @@ namespace TrabajoPracticoIntegrador15_4
             {
                 string nombre = txtNombre.Text.Trim();
                 var codigos = RecogerMarcados();
+                //verificaciones
                 if (codigos.Count == 0)
                 {
                     MessageBox.Show("Seleccione al menos un permiso.", "Atención",
                         MessageBoxButtons.OK, MessageBoxIcon.Warning);
                     return;
                 }
-
+                //llamamos a actualizar conjunto del BLL con el código del conjunto seleccionado,
+                //el nuevo nombre y los códigos seleccionados
                 PerfilBLL.Instancia.ActualizarConjunto(
                     conjuntoSeleccionado.Codigo, nombre, codigos);
 

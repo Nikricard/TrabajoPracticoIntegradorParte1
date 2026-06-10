@@ -91,14 +91,16 @@ namespace TrabajoPracticoIntegrador15_4
         //Tilda en ambas listas los permisos que tiene el usuario
         private void MarcarPermisosDelUsuario(int idUsuario)
         {
+            // obtiene los códigos de permisos del usuario y tilda los que correspondan en las listas
             List<string> codigos = PerfilBLL.Instancia.GetCodigosDeUsuario(idUsuario);
-
+            
+            // recorre ambas listas y marca los permisos que el usuario tiene según los códigos obtenidos
             for (int i = 0; i < clbAtomicos.Items.Count; i++)
             {
                 IPermiso p = (IPermiso)clbAtomicos.Items[i];
                 clbAtomicos.SetItemChecked(i, codigos.Contains(p.Codigo));
             }
-
+            // lo mismo pero para compuestos
             for (int i = 0; i < clbCompuestos.Items.Count; i++)
             {
                 IPermiso p = (IPermiso)clbCompuestos.Items[i];
@@ -130,13 +132,19 @@ namespace TrabajoPracticoIntegrador15_4
         {
             if (permiso is PermisoCompuesto compuesto)
             {
+                // Si el permiso es un compuesto, recorre sus hijos y los agrega como nodos hijos del nodo actual.
                 foreach (IPermiso hijo in compuesto.Hijos)
                 {
+                    // Crea un nodo para el hijo y lo agrega al nodo actual,
+                    // luego llama recursivamente para agregar los hijos del hijo.
                     TreeNode nodoHijo = new TreeNode($"[{hijo.Codigo}] {hijo.Nombre}");
+                    //los compuestos en azul oscuro y los atómicos en verde oscuro
                     nodoHijo.ForeColor = hijo is PermisoCompuesto
                         ? System.Drawing.Color.DarkBlue
                         : System.Drawing.Color.DarkGreen;
+                    // Agrega el nodo hijo al nodo actual
                     nodo.Nodes.Add(nodoHijo);
+                    // Llama recursivamente para agregar los hijos del hijo
                     AgregarNodosRecursivo(nodoHijo, hijo);
                 }
             }
@@ -157,22 +165,23 @@ namespace TrabajoPracticoIntegrador15_4
             {
                 // junta los códigos tildados en las 2 listas
                 var codigos = new List<string>();
+                //lista de atomicos
                 foreach (IPermiso p in clbAtomicos.CheckedItems)
                     codigos.Add(p.Codigo);
+                //lista de compuestos
                 foreach (IPermiso p in clbCompuestos.CheckedItems)
                     codigos.Add(p.Codigo);
 
                 PerfilBLL.Instancia.GuardarPermisosDeUsuario(
                     usuarioSeleccionado.Id, usuarioSeleccionado.Nombre, codigos);
 
-                MessageBox.Show(
-                    $"Permisos actualizados para '{usuarioSeleccionado.Nombre}'.",
-                    "Éxito", MessageBoxButtons.OK, MessageBoxIcon.Information);
-
+                MessageBox.Show($"Permisos actualizados para '{usuarioSeleccionado.Nombre}'.", "Éxito", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                // refresca las marcas y el árbol con los datos guardados
                 MostrarArbolDelUsuario(usuarioSeleccionado.Id);
             }
             catch (Exception ex)
             {
+                //mensaje personalizado
                 MessageBox.Show(ex.Message, "Error",
                     MessageBoxButtons.OK, MessageBoxIcon.Error);
             }

@@ -29,15 +29,18 @@ namespace BLL
         private readonly List<IObservadorConjuntos> _observadores
             = new List<IObservadorConjuntos>();
 
+        //suscribe conjuntos al observador de arriba
         public void SuscribirConjuntos(IObservadorConjuntos obs)
         {
             if (!_observadores.Contains(obs))
                 _observadores.Add(obs);
         }
 
+        //desuscribe conjuntos del observador de arriba
         public void DesuscribirConjuntos(IObservadorConjuntos obs)
             => _observadores.Remove(obs);
 
+        // Notifica a los formularios suscriptos que actualicen las listas de conjuntos.
         private void NotificarConjuntos()
         {
             foreach (var obs in _observadores)
@@ -51,6 +54,7 @@ namespace BLL
         // Se llama desde el Login
         public void CargarPerfilDeUsuario(int idUsuario)
         {
+            //creamos un perfil con el id del usuario, un nombre genérico y el compuesto raíz que contiene todos los permisos del usuario
             PermisoCompuesto raiz = _dal.GetPermisosDeUsuario(idUsuario);
             PerfilActivo = new Perfil
             {
@@ -65,7 +69,7 @@ namespace BLL
         public bool TienePermiso(string codigo)
             => PerfilActivo?.TienePermiso(codigo) ?? false;
 
-        // Asignación de permisos a usuarios 
+        // Proceso de asignacion de permisos a usuarios 
 
         // Compuesto con los permisos actuales de un usuario (para el árbol)
         public PermisoCompuesto GetPermisosDeUsuario(int idUsuario)
@@ -76,21 +80,20 @@ namespace BLL
             => _dal.GetCodigosDeUsuario(idUsuario);
 
         // Guarda la lista completa de permisos de un usuario y lo registra.
-        public void GuardarPermisosDeUsuario(int idUsuario, string nombreUsuario,
-            List<string> codigos)
+        public void GuardarPermisosDeUsuario(int idUsuario, string nombreUsuario, List<string> codigos)
         {
             // Capturar los permisos actuales antes de sobrescribir
             List<string> anteriores = _dal.GetCodigosDeUsuario(idUsuario);
             string textoAnterior = anteriores.Count > 0
                 ? string.Join(", ", anteriores)
                 : "Sin permisos";
-
+            // Guardar los nuevos permisos
             _dal.GuardarPermisosDeUsuario(idUsuario, codigos);
 
             string textoNuevo = codigos.Count > 0
                 ? string.Join(", ", codigos)
                 : "Sin permisos";
-
+            // Registrar el cambio en la bitácora
             BitacoraBLL.Instancia.RegistrarAsignacionPerfil(
                 nombreUsuarioAfectado: nombreUsuario,
                 idUsuarioAfectado:     idUsuario,
@@ -114,18 +117,22 @@ namespace BLL
         {
             if (string.IsNullOrEmpty(nombre))
                 throw new Exception("El conjunto debe tener un nombre.");
+            //verificaciones
             if (codigos == null || codigos.Count == 0)
                 throw new Exception("Seleccione al menos un permiso.");
 
             try
             {
+                // El código del conjunto se genera automáticamente en el DAL, por eso no se recibe como parámetro.
                 _dal.CrearConjunto(nombre, codigos);
+                //registro en bitacora
                 BitacoraBLL.Instancia.RegistrarCreacionConjunto(
                     nombre, string.Join(", ", codigos));
                 NotificarConjuntos();   // avisa a los formularios suscriptos
             }
             catch (Exception ex)
             {
+                //registro del error en bitacora
                 BitacoraBLL.Instancia.RegistrarError("CREAR_CONJUNTO", ex);
                 throw;
             }
@@ -133,24 +140,26 @@ namespace BLL
 
         public void ActualizarConjunto(string codigo, string nombre, List<string> codigos)
         {
+            //verificaciones
             if (string.IsNullOrEmpty(codigo))
                 throw new Exception("Seleccione un conjunto para actualizar.");
             if (EsProtegido(nombre))
                 throw new Exception($"El conjunto '{nombre}' es del sistema y no puede modificarse.");
             if (codigos == null || codigos.Count == 0)
                 throw new Exception("Seleccione al menos un permiso.");
-
+            //llamamos a actualizar conjunto del DAL
             _dal.ActualizarConjunto(codigo, nombre, codigos);
             NotificarConjuntos();   // avisa a los formularios suscriptos
         }
 
         public void EliminarConjunto(string codigo, string nombre)
         {
+            //verificaciones
             if (EsProtegido(nombre))
                 throw new Exception($"El conjunto '{nombre}' es del sistema y no puede eliminarse.");
             if (string.IsNullOrEmpty(codigo))
                 throw new Exception("No se pudo determinar el código del conjunto.");
-
+            //llamamos a eliminar conjunto del DAL
             _dal.EliminarConjunto(codigo);
             NotificarConjuntos();   // avisa a los formularios suscriptos
         }
@@ -158,8 +167,9 @@ namespace BLL
         // Conjuntos del sistema que no se pueden modificar ni eliminar
         private bool EsProtegido(string nombre)
         {
-            string[] protegidos =
-                { "Administrador", "Operador", "Traductor", "Auditor" };
+            //array de nombres protegidos para que no se puedan modificar ni eliminar
+            string[] protegidos = { "Administrador", "Operador", "Traductor", "Auditor" };
+            //verificamos si el nombre del conjunto está en el array de protegidos
             return Array.Exists(protegidos, p => p == nombre);
         }
 
@@ -167,6 +177,10 @@ namespace BLL
         public static class Permisos
         {
             // Atómicos
+
+            //Como se aclara en la carpeta modelo, los códigos de los permisos atómicos siguen la estructura XXXnnn,
+            //donde XXX es una abreviatura del módulo o función a la que se refieren, y nnn es un número secuencial.
+            //Esto facilita la organización y lectura de los permisos.
             public const string CrearUsuario          = "USR001";
             public const string ModificarUsuario      = "USR002";
             public const string EliminarUsuario       = "USR003";
