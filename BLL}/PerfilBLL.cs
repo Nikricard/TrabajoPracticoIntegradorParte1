@@ -107,10 +107,10 @@ namespace BLL
         public List<PermisoAtomico> GetPermisosAtomicos()
             => _dal.GetPermisosAtomicos();
 
-        public List<IPermiso> GetSeleccionablesParaConjunto(string codigoExcluir)
+        public List<PermisoBase> GetSeleccionablesParaConjunto(string codigoExcluir)
             => _dal.GetSeleccionablesParaConjunto(codigoExcluir);
 
-        public List<IPermiso> GetConjuntos()
+        public List<PermisoBase> GetConjuntos()
             => _dal.GetConjuntos();
 
         public void CrearConjunto(string nombre, List<string> codigos)
@@ -177,10 +177,6 @@ namespace BLL
         public static class Permisos
         {
             // Atómicos
-
-            //Como se aclara en la carpeta modelo, los códigos de los permisos atómicos siguen la estructura XXXnnn,
-            //donde XXX es una abreviatura del módulo o función a la que se refieren, y nnn es un número secuencial.
-            //Esto facilita la organización y lectura de los permisos.
             public const string CrearUsuario          = "USR001";
             public const string ModificarUsuario      = "USR002";
             public const string EliminarUsuario       = "USR003";

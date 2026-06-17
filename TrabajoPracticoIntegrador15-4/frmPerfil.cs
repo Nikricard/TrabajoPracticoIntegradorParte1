@@ -63,7 +63,7 @@ namespace TrabajoPracticoIntegrador15_4
             // Compuestos (conjuntos)
             clbCompuestos.Items.Clear();
             clbCompuestos.DisplayMember = "Nombre";
-            foreach (IPermiso p in PerfilBLL.Instancia.GetConjuntos())
+            foreach (PermisoBase p in PerfilBLL.Instancia.GetConjuntos())
                 clbCompuestos.Items.Add(p);
         }
 
@@ -97,13 +97,13 @@ namespace TrabajoPracticoIntegrador15_4
             // recorre ambas listas y marca los permisos que el usuario tiene según los códigos obtenidos
             for (int i = 0; i < clbAtomicos.Items.Count; i++)
             {
-                IPermiso p = (IPermiso)clbAtomicos.Items[i];
+                PermisoBase p = (PermisoBase)clbAtomicos.Items[i];
                 clbAtomicos.SetItemChecked(i, codigos.Contains(p.Codigo));
             }
             // lo mismo pero para compuestos
             for (int i = 0; i < clbCompuestos.Items.Count; i++)
             {
-                IPermiso p = (IPermiso)clbCompuestos.Items[i];
+                PermisoBase p = (PermisoBase)clbCompuestos.Items[i];
                 clbCompuestos.SetItemChecked(i, codigos.Contains(p.Codigo));
             }
         }
@@ -116,7 +116,7 @@ namespace TrabajoPracticoIntegrador15_4
 
             if (raiz.Hijos.Count == 0) return;
 
-            foreach (IPermiso permiso in raiz.Hijos)
+            foreach (PermisoBase permiso in raiz.Hijos)
             {
                 TreeNode nodo = new TreeNode($"[{permiso.Codigo}] {permiso.Nombre}");
                 nodo.ForeColor = permiso is PermisoCompuesto
@@ -128,12 +128,12 @@ namespace TrabajoPracticoIntegrador15_4
             treePermisos.ExpandAll();
         }
 
-        private void AgregarNodosRecursivo(TreeNode nodo, IPermiso permiso)
+        private void AgregarNodosRecursivo(TreeNode nodo, PermisoBase permiso)
         {
             if (permiso is PermisoCompuesto compuesto)
             {
                 // Si el permiso es un compuesto, recorre sus hijos y los agrega como nodos hijos del nodo actual.
-                foreach (IPermiso hijo in compuesto.Hijos)
+                foreach (PermisoBase hijo in compuesto.Hijos)
                 {
                     // Crea un nodo para el hijo y lo agrega al nodo actual,
                     // luego llama recursivamente para agregar los hijos del hijo.
@@ -166,10 +166,10 @@ namespace TrabajoPracticoIntegrador15_4
                 // junta los códigos tildados en las 2 listas
                 var codigos = new List<string>();
                 //lista de atomicos
-                foreach (IPermiso p in clbAtomicos.CheckedItems)
+                foreach (PermisoBase p in clbAtomicos.CheckedItems)
                     codigos.Add(p.Codigo);
                 //lista de compuestos
-                foreach (IPermiso p in clbCompuestos.CheckedItems)
+                foreach (PermisoBase p in clbCompuestos.CheckedItems)
                     codigos.Add(p.Codigo);
 
                 PerfilBLL.Instancia.GuardarPermisosDeUsuario(

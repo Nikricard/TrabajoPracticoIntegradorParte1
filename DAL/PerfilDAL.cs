@@ -1,4 +1,4 @@
-﻿using BE;
+using BE;
 using System;
 using System.Collections.Generic;
 using System.Data.Common;
@@ -12,15 +12,13 @@ namespace DAL
         private readonly string cs =
             "Server=DESKTOP-FD6Q6GG\\SQLEXPRESS;Database=Usuarios;Integrated Security=True";
 
-
         // Devuelve un permiso compuesto "raíz virtual" que agrupa todos
         // los permisos asignados al usuario (atómicos y compuestos).
         // Sirve para login (TienePermiso) y para el TreeView.
-
         public PermisoCompuesto GetPermisosDeUsuario(int idUsuario)
         {
             // Cargar todos los permisos atómicos y compuestos en un diccionario.
-            Dictionary<string, IPermiso> todos = CargarTodosLosPermisos();
+            Dictionary<string, PermisoBase> todos = CargarTodosLosPermisos();
             // Construir el árbol de permisos compuesto a partir de las relaciones padre-hijo.
             ConstruirArbol(todos);
 
@@ -118,13 +116,13 @@ namespace DAL
         
         // Permisos seleccionables para armar un conjunto: atómicos + compuestos,
         // excluye el propio conjunto que se está editando (evita auto-referencia).
-        public List<IPermiso> GetSeleccionablesParaConjunto(string codigoExcluir)
+        public List<PermisoBase> GetSeleccionablesParaConjunto(string codigoExcluir)
         {
             // Cargar todos los permisos en un diccionario y construir el árbol para que los compuestos tengan sus hijos.
-            Dictionary<string, IPermiso> todos = CargarTodosLosPermisos();
+            Dictionary<string, PermisoBase> todos = CargarTodosLosPermisos();
             ConstruirArbol(todos);
 
-            var lista = new List<IPermiso>();
+            var lista = new List<PermisoBase>();
             foreach (var kv in todos)
                 if (kv.Key != codigoExcluir)
                     lista.Add(kv.Value);
@@ -132,12 +130,12 @@ namespace DAL
         }
 
         // Devuelve solo los permisos compuestos para el grid.
-        public List<IPermiso> GetConjuntos()
+        public List<PermisoBase> GetConjuntos()
         {
-            Dictionary<string, IPermiso> todos = CargarTodosLosPermisos();
+            Dictionary<string, PermisoBase> todos = CargarTodosLosPermisos();
             ConstruirArbol(todos);
 
-            var lista = new List<IPermiso>();
+            var lista = new List<PermisoBase>();
             foreach (var p in todos.Values)
                 if (p is PermisoCompuesto) lista.Add(p);
             return lista;
@@ -276,9 +274,9 @@ namespace DAL
 
         // Para Composite
         // Carga todos los permisos atómicos y compuestos en un diccionario sin relaciones.
-        private Dictionary<string, IPermiso> CargarTodosLosPermisos()
+        private Dictionary<string, PermisoBase> CargarTodosLosPermisos()
         {
-            var todos = new Dictionary<string, IPermiso>();
+            var todos = new Dictionary<string, PermisoBase>();
             using (var con = new SqlConnection(cs))
             {
                 con.Open();
@@ -291,15 +289,15 @@ namespace DAL
                     bool esCompuesto = rdr.GetBoolean(2);
                     // Crear un objeto PermisoCompuesto o PermisoAtomico según el valor de EsCompuesto y agregarlo al diccionario.
                     todos[codigo] = esCompuesto
-                        ? (IPermiso)new PermisoCompuesto { Codigo = codigo, Nombre = nombre }
-                        : (IPermiso)new PermisoAtomico { Codigo = codigo, Nombre = nombre };
+                        ? (PermisoBase)new PermisoCompuesto { Codigo = codigo, Nombre = nombre }
+                        : (PermisoBase)new PermisoAtomico { Codigo = codigo, Nombre = nombre };
                 }
             }
             return todos;
         }
 
         // Construye el árbol de permisos compuesto a partir de las relaciones padre-hijo.
-        private void ConstruirArbol(Dictionary<string, IPermiso> todos)
+        private void ConstruirArbol(Dictionary<string, PermisoBase> todos)
         {
             using (var con = new SqlConnection(cs))
             {
@@ -319,5 +317,4 @@ namespace DAL
             }
         }
     }
-
 }

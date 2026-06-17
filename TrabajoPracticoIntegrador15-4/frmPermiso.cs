@@ -11,7 +11,7 @@ namespace TrabajoPracticoIntegrador15_4
     public partial class frmPermiso : Form, IObservadorIdioma
     {
         private readonly GestorIdioma gestor = GestorIdioma.Instancia;
-        private IPermiso conjuntoSeleccionado = null;
+        private PermisoBase conjuntoSeleccionado = null;
 
         public frmPermiso()
         {
@@ -54,7 +54,7 @@ namespace TrabajoPracticoIntegrador15_4
             // permisos compuestos, excluyendo el que se edita
             clbCompuestos.Items.Clear();
             clbCompuestos.DisplayMember = "Nombre";
-            foreach (IPermiso p in PerfilBLL.Instancia.GetConjuntos())
+            foreach (PermisoBase p in PerfilBLL.Instancia.GetConjuntos())
                 if (p.Codigo != codigoExcluir)
                     clbCompuestos.Items.Add(p);
         }
@@ -72,7 +72,7 @@ namespace TrabajoPracticoIntegrador15_4
         {
             if (dgvConjuntos.SelectedRows.Count != 1) return;
 
-            conjuntoSeleccionado = (IPermiso)dgvConjuntos.SelectedRows[0].DataBoundItem;
+            conjuntoSeleccionado = (PermisoBase)dgvConjuntos.SelectedRows[0].DataBoundItem;
             // Si se selecciona un conjunto, carga su nombre y marca sus hijos en las listas.
             txtNombre.Text = conjuntoSeleccionado.Nombre;
             // Carga el nombre del conjunto en el TextBox
@@ -84,12 +84,12 @@ namespace TrabajoPracticoIntegrador15_4
             var hijosDirectos = new HashSet<string>();
             // Solo marca los hijos directos, no los permisos anidados dentro de otros compuestos.
             if (conjuntoSeleccionado is PermisoCompuesto compuesto)
-                foreach (IPermiso hijo in compuesto.Hijos)
+                foreach (PermisoBase hijo in compuesto.Hijos)
                     hijosDirectos.Add(hijo.Codigo);//
 
             for (int i = 0; i < clbAtomicos.Items.Count; i++)//un for clasico que no hacia desde 1er año
             {
-                IPermiso p = (IPermiso)clbAtomicos.Items[i];// Recorre los permisos atómicos y marca los
+                PermisoBase p = (PermisoBase)clbAtomicos.Items[i];// Recorre los permisos atómicos y marca los
                                                             // que son hijos directos del conjunto seleccionado.
                 clbAtomicos.SetItemChecked(i, hijosDirectos.Contains(p.Codigo));
                 // Si el código del permiso atómico está en el conjunto de hijos directos, se marca como seleccionado.
@@ -97,7 +97,7 @@ namespace TrabajoPracticoIntegrador15_4
 
             for (int i = 0; i < clbCompuestos.Items.Count; i++)
             {
-                IPermiso p = (IPermiso)clbCompuestos.Items[i];
+                PermisoBase p = (PermisoBase)clbCompuestos.Items[i];
                 // Recorre los permisos compuestos y marca los que son hijos directos del conjunto seleccionado.
                 clbCompuestos.SetItemChecked(i, hijosDirectos.Contains(p.Codigo));
                 // Si el código del permiso compuesto está en el conjunto de hijos directos, se marca como seleccionado.
@@ -224,9 +224,9 @@ namespace TrabajoPracticoIntegrador15_4
         private List<string> RecogerMarcados()
         {   // Recorre ambas listas de permisos (atómicos y compuestos) y junta los códigos de los seleccionados en una sola lista.
             var codigos = new List<string>();
-            foreach (IPermiso p in clbAtomicos.CheckedItems)
+            foreach (PermisoBase p in clbAtomicos.CheckedItems)
                 codigos.Add(p.Codigo);
-            foreach (IPermiso p in clbCompuestos.CheckedItems)
+            foreach (PermisoBase p in clbCompuestos.CheckedItems)
                 codigos.Add(p.Codigo);
             return codigos;
         }
@@ -234,6 +234,7 @@ namespace TrabajoPracticoIntegrador15_4
         // Desmarca ambas listas (deja el nombre y el conjunto seleccionado).
         private void btnLimpiar_Click(object sender, EventArgs e)
         {
+            txtNombre.Clear();
             for (int i = 0; i < clbAtomicos.Items.Count; i++)
                 clbAtomicos.SetItemChecked(i, false);
             for (int i = 0; i < clbCompuestos.Items.Count; i++)
