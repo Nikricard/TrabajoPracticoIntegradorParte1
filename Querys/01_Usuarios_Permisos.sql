@@ -93,5 +93,4 @@ INSERT INTO UsuarioPermiso (IdUsuario, Codigo)
 SELECT Id, 'GE040' FROM Usuarios WHERE Nombre = 'admin';
 GO
 
-PRINT '01 OK — Usuarios y permisos creados (modelo múltiple).';
-GO
+

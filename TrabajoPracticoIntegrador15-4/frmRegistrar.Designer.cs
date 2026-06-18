@@ -58,7 +58,7 @@
             btnRegistrar.Location = new Point(102, 112);
             btnRegistrar.Name = "btnRegistrar";
             btnRegistrar.Size = new Size(75, 23);
-            btnRegistrar.TabIndex = 2;
+            btnRegistrar.TabIndex = 3;
             btnRegistrar.Tag = "btnRegistrar";
             btnRegistrar.Text = "Registrar";
             btnRegistrar.UseVisualStyleBackColor = true;
@@ -69,7 +69,7 @@
             btnSalir.Location = new Point(205, 112);
             btnSalir.Name = "btnSalir";
             btnSalir.Size = new Size(75, 23);
-            btnSalir.TabIndex = 3;
+            btnSalir.TabIndex = 4;
             btnSalir.Tag = "btnSalir";
             btnSalir.Text = "Salir";
             btnSalir.UseVisualStyleBackColor = true;
@@ -80,7 +80,7 @@
             txtContraseña.Location = new Point(97, 75);
             txtContraseña.Name = "txtContraseña";
             txtContraseña.Size = new Size(206, 23);
-            txtContraseña.TabIndex = 5;
+            txtContraseña.TabIndex = 2;
             // 
             // label2
             // 

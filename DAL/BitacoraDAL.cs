@@ -9,7 +9,7 @@ namespace DAL
     public class BitacoraDAL
     {
         private readonly string cs =
-            "Server=DESKTOP-FD6Q6GG\\SQLEXPRESS;Database=Usuarios;Integrated Security=True";
+            "Server=.;Database=Usuarios;Integrated Security=True";
 
         public void RegistrarEvento(RegistroBitacora r)
         {

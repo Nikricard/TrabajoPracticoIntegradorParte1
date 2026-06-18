@@ -2,12 +2,16 @@ using System.Collections.Generic;
 
 namespace BE
 {
-    // Componente: clase abstracta común para permisos atómicos y compuestos
+    // Clase abstracta común para permisos atómicos y compuestos
     public abstract class PermisoBase
     {
         public string Codigo { get; set; }
         public string Nombre { get; set; }
         public abstract bool TienePermiso(string codigo);
+        //declaracion de los metodos en la clase abstracta base
+        public abstract void Agregar(PermisoBase permiso);  // Agrega un permiso hijo al compuesto
+        public abstract void Quitar(PermisoBase permiso);  // Elimina un permiso hijo del compuesto
+
     }
 
     // Permiso atómico --> Leaf
@@ -16,6 +20,11 @@ namespace BE
         // Un permiso atómico coincide solo si el código es exactamente el mismo.
         public override bool TienePermiso(string codigo)
             => Codigo == codigo;
+
+        //Implementacion de los metodos declarados en la clase asbtracta base,
+        //aunque no los usamos porque las hojas no tienen hijos 
+        public override void Agregar(PermisoBase permiso) { }  
+        public override void Quitar(PermisoBase permiso) { }
     }
 
     // Composite: permiso compuesto
@@ -23,8 +32,8 @@ namespace BE
     {
         public List<PermisoBase> Hijos { get; set; } = new List<PermisoBase>();   // lista de permisos hijos
 
-        public void Agregar(PermisoBase permiso) => Hijos.Add(permiso);    // Agrega un permiso hijo al compuesto
-        public void Quitar(PermisoBase permiso) => Hijos.Remove(permiso);  // Elimina un permiso hijo del compuesto
+        public override void Agregar(PermisoBase permiso) => Hijos.Add(permiso);    // Agrega un permiso hijo al compuesto
+        public override void Quitar(PermisoBase permiso) => Hijos.Remove(permiso);  // Elimina un permiso hijo del compuesto
 
         // Recorre recursivamente todos los hijos buscando el código.
         // Un compuesto tiene el permiso si al menos uno de sus hijos lo tiene.

@@ -10,7 +10,7 @@ namespace DAL
     public class PerfilDAL
     {
         private readonly string cs =
-            "Server=DESKTOP-FD6Q6GG\\SQLEXPRESS;Database=Usuarios;Integrated Security=True";
+            "Server=.;Database=Usuarios;Integrated Security=True";
 
         // Devuelve un permiso compuesto "raíz virtual" que agrupa todos
         // los permisos asignados al usuario (atómicos y compuestos).

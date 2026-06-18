@@ -37,7 +37,7 @@ namespace TrabajoPracticoIntegrador15_4
             dgvUsuarios.Location = new Point(253, 51);
             dgvUsuarios.Name = "dgvUsuarios";
             dgvUsuarios.Size = new Size(240, 256);
-            dgvUsuarios.TabIndex = 0;
+            dgvUsuarios.TabIndex = 2;
             dgvUsuarios.SelectionChanged += dgvUsuarios_SelectionChanged;
             // 
             // txtNombre
@@ -45,7 +45,7 @@ namespace TrabajoPracticoIntegrador15_4
             txtNombre.Location = new Point(71, 313);
             txtNombre.Name = "txtNombre";
             txtNombre.Size = new Size(120, 23);
-            txtNombre.TabIndex = 1;
+            txtNombre.TabIndex = 5;
             // 
             // clbAtomicos
             // 
@@ -54,7 +54,7 @@ namespace TrabajoPracticoIntegrador15_4
             clbAtomicos.Location = new Point(499, 51);
             clbAtomicos.Name = "clbAtomicos";
             clbAtomicos.Size = new Size(150, 256);
-            clbAtomicos.TabIndex = 2;
+            clbAtomicos.TabIndex = 3;
             // 
             // clbCompuestos
             // 
@@ -63,14 +63,14 @@ namespace TrabajoPracticoIntegrador15_4
             clbCompuestos.Location = new Point(655, 51);
             clbCompuestos.Name = "clbCompuestos";
             clbCompuestos.Size = new Size(150, 256);
-            clbCompuestos.TabIndex = 3;
+            clbCompuestos.TabIndex = 4;
             // 
             // btnGuardar
             // 
             btnGuardar.Location = new Point(197, 312);
             btnGuardar.Name = "btnGuardar";
             btnGuardar.Size = new Size(100, 23);
-            btnGuardar.TabIndex = 4;
+            btnGuardar.TabIndex = 6;
             btnGuardar.Tag = "btnGuardar";
             btnGuardar.Text = "Guardar";
             btnGuardar.UseVisualStyleBackColor = true;
@@ -81,14 +81,14 @@ namespace TrabajoPracticoIntegrador15_4
             treePermisos.Location = new Point(17, 51);
             treePermisos.Name = "treePermisos";
             treePermisos.Size = new Size(230, 256);
-            treePermisos.TabIndex = 5;
+            treePermisos.TabIndex = 1;
             // 
             // btnSalir
             // 
             btnSalir.Location = new Point(303, 313);
             btnSalir.Name = "btnSalir";
             btnSalir.Size = new Size(100, 23);
-            btnSalir.TabIndex = 6;
+            btnSalir.TabIndex = 7;
             btnSalir.Tag = "btnSalir";
             btnSalir.Text = "Salir";
             btnSalir.UseVisualStyleBackColor = true;

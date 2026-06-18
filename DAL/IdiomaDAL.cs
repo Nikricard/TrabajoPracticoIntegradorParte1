@@ -9,7 +9,7 @@ namespace DAL
     public class IdiomaDAL
     {
         private readonly string cs =
-            "Server=DESKTOP-FD6Q6GG\\SQLEXPRESS;Database=Usuarios;Integrated Security=True";
+            "Server=.;Database=Usuarios;Integrated Security=True";
         //Server facultad = .
         //Server casa = DESKTOP-FD6Q6GG\SQLEXPRESS
 

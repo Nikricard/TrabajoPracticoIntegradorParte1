@@ -52,7 +52,7 @@ namespace TrabajoPracticoIntegrador15_4
             clbAtomicos.Location = new Point(24, 136);
             clbAtomicos.Name = "clbAtomicos";
             clbAtomicos.Size = new Size(130, 148);
-            clbAtomicos.TabIndex = 0;
+            clbAtomicos.TabIndex = 7;
             // 
             // clbCompuestos
             // 
@@ -60,21 +60,21 @@ namespace TrabajoPracticoIntegrador15_4
             clbCompuestos.Location = new Point(160, 136);
             clbCompuestos.Name = "clbCompuestos";
             clbCompuestos.Size = new Size(130, 148);
-            clbCompuestos.TabIndex = 1;
+            clbCompuestos.TabIndex = 8;
             // 
             // txtNombre
             // 
             txtNombre.Location = new Point(24, 49);
             txtNombre.Name = "txtNombre";
             txtNombre.Size = new Size(121, 23);
-            txtNombre.TabIndex = 2;
+            txtNombre.TabIndex = 1;
             // 
             // btnCrear
             // 
             btnCrear.Location = new Point(158, 49);
             btnCrear.Name = "btnCrear";
             btnCrear.Size = new Size(75, 23);
-            btnCrear.TabIndex = 3;
+            btnCrear.TabIndex = 2;
             btnCrear.Tag = "btnCrear";
             btnCrear.Text = "Crear";
             btnCrear.UseVisualStyleBackColor = true;
@@ -85,7 +85,7 @@ namespace TrabajoPracticoIntegrador15_4
             lblConjuntos.AutoSize = true;
             lblConjuntos.Location = new Point(300, 108);
             lblConjuntos.Name = "lblConjuntos";
-            lblConjuntos.Size = new Size(75, 15);
+            lblConjuntos.Size = new Size(62, 15);
             lblConjuntos.TabIndex = 4;
             lblConjuntos.Tag = "lblConjuntos";
             lblConjuntos.Text = "Conjuntos";
@@ -106,7 +106,7 @@ namespace TrabajoPracticoIntegrador15_4
             btnLimpiar.Location = new Point(239, 49);
             btnLimpiar.Name = "btnLimpiar";
             btnLimpiar.Size = new Size(75, 23);
-            btnLimpiar.TabIndex = 6;
+            btnLimpiar.TabIndex = 3;
             btnLimpiar.Tag = "btnLimpiar";
             btnLimpiar.Text = "Limpiar";
             btnLimpiar.UseVisualStyleBackColor = true;
@@ -118,7 +118,7 @@ namespace TrabajoPracticoIntegrador15_4
             dgvConjuntos.Location = new Point(300, 136);
             dgvConjuntos.Name = "dgvConjuntos";
             dgvConjuntos.Size = new Size(255, 148);
-            dgvConjuntos.TabIndex = 7;
+            dgvConjuntos.TabIndex = 9;
             dgvConjuntos.SelectionChanged += dgvConjuntos_SelectionChanged;
             // 
             // btnSalir
@@ -126,7 +126,7 @@ namespace TrabajoPracticoIntegrador15_4
             btnSalir.Location = new Point(482, 48);
             btnSalir.Name = "btnSalir";
             btnSalir.Size = new Size(75, 23);
-            btnSalir.TabIndex = 8;
+            btnSalir.TabIndex = 6;
             btnSalir.Tag = "btnSalir";
             btnSalir.Text = "Salir";
             btnSalir.UseVisualStyleBackColor = true;
@@ -137,7 +137,7 @@ namespace TrabajoPracticoIntegrador15_4
             lblAtomicos.AutoSize = true;
             lblAtomicos.Location = new Point(24, 108);
             lblAtomicos.Name = "lblAtomicos";
-            lblAtomicos.Size = new Size(91, 15);
+            lblAtomicos.Size = new Size(107, 15);
             lblAtomicos.TabIndex = 9;
             lblAtomicos.Tag = "lblAtomicos";
             lblAtomicos.Text = "Permisos atómicos";
@@ -147,7 +147,7 @@ namespace TrabajoPracticoIntegrador15_4
             lblConjuntosDisp.AutoSize = true;
             lblConjuntosDisp.Location = new Point(160, 108);
             lblConjuntosDisp.Name = "lblConjuntosDisp";
-            lblConjuntosDisp.Size = new Size(110, 15);
+            lblConjuntosDisp.Size = new Size(125, 15);
             lblConjuntosDisp.TabIndex = 10;
             lblConjuntosDisp.Tag = "lblConjuntosDisp";
             lblConjuntosDisp.Text = "Conjuntos disponibles";
@@ -190,7 +190,7 @@ namespace TrabajoPracticoIntegrador15_4
             btnActualizar.Location = new Point(320, 49);
             btnActualizar.Name = "btnActualizar";
             btnActualizar.Size = new Size(75, 23);
-            btnActualizar.TabIndex = 13;
+            btnActualizar.TabIndex = 4;
             btnActualizar.Tag = "btnActualizar";
             btnActualizar.Text = "Actualizar";
             btnActualizar.UseVisualStyleBackColor = true;
