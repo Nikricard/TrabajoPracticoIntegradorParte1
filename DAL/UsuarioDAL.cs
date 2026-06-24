@@ -8,7 +8,7 @@ namespace DAL
     public class UsuarioDAL
     {
         private readonly string cs =
-            "Server=.;Database=Usuarios;Integrated Security=True";
+            "Server=DESKTOP-FD6Q6GG\\SQLEXPRESS;Database=Usuarios;Integrated Security=True";
         //Server facultad = .
         //Server casa = DESKTOP-FD6Q6GG\SQLEXPRESS
         public Usuario Add(Usuario usuario)

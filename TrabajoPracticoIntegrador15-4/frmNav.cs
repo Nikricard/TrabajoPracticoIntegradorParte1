@@ -1,4 +1,4 @@
-﻿using ABS;
+using ABS;
 using BE;
 using BLL;
 using BLL_;
@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -38,10 +39,15 @@ namespace TrabajoPracticoIntegrador15_4
             }
         }
 
-        // GestorIdioma llama a este método cuando el idioma cambia.
-        // Actualiza controles normales e ítems del MenuStrip.
+        // GestorIdioma llama a este método cuando el idioma cambia o cuando
+        // cambia la lista de idiomas (alta/baja desde frmIdioma).
+        // Traduce los controles y recarga el menú de idiomas.
         public void ActualizarIdioma(Idioma idioma)
-                => TraductorUI.Traducir(this.Controls, idioma);
+        {
+            TraductorUI.Traducir(this.Controls, idioma);
+            CargarMenuIdiomas();
+        }
+
 
         private void AplicarPermisos()
         {
@@ -71,12 +77,17 @@ namespace TrabajoPracticoIntegrador15_4
             IdiomaMenuItem.Enabled =
                 p.TienePermiso(PerfilBLL.Permisos.AgregarIdioma) ||
                 p.TienePermiso(PerfilBLL.Permisos.ListarUsuarios); // todos ven el idioma
+
+            // Backup / Restore — quien tenga ADM001
+            bool puedeBackup = p.TienePermiso(PerfilBLL.Permisos.Backup);
+            baseDeDatosToolStripMenuItem.Enabled = puedeBackup;
+            backupToolStripMenuItem.Enabled       = puedeBackup;
+            restaurarToolStripMenuItem.Enabled    = puedeBackup;
         }
 
         private void CargarMenuIdiomas()
         {
             IdiomaMenuItem.DropDownItems.Clear();
-            gestor.CargarIdiomas();
 
             foreach (Idioma idioma in gestor.IdiomasDisponibles)
             {
@@ -105,10 +116,84 @@ namespace TrabajoPracticoIntegrador15_4
                 frmIdioma frmIdioma = new frmIdioma();
                 frmIdioma.MdiParent = this;
                 frmIdioma.Show();
-                CargarMenuIdiomas();
             };
             IdiomaMenuItem.DropDownItems.Add(agregar);
         }
+
+        //Backup / Restore
+
+        private void backupToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            using (var dlg = new SaveFileDialog())
+            {
+                dlg.Title = "Guardar backup de la base";
+                dlg.Filter = "Archivo de backup SQL (*.bak)|*.bak";
+                dlg.FileName = $"Usuarios_{DateTime.Now:yyyyMMdd_HHmmss}.bak";
+                if (dlg.ShowDialog() != DialogResult.OK) return;
+
+                try
+                {
+                    Cursor = Cursors.WaitCursor;
+                    BackupBLL.Instancia.HacerBackup(dlg.FileName);
+                    Cursor = Cursors.Default;
+
+                    MessageBox.Show($"Backup creado en:\n{dlg.FileName}",
+                        "Éxito", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                }
+                catch (Exception ex)
+                {
+                    Cursor = Cursors.Default;
+                    MessageBox.Show($"No se pudo crear el backup:\n{ex.Message}",
+                        "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+            }
+        }
+
+        private void restaurarToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            using (var dlg = new OpenFileDialog())
+            {
+                dlg.Title = "Restaurar backup";
+                dlg.Filter = "Archivo de backup SQL (*.bak)|*.bak";
+                if (dlg.ShowDialog() != DialogResult.OK) return;
+
+                var resp = MessageBox.Show(
+                    "Restaurar reemplazará TODA la base de datos actual.\n" +
+                    "Se cerrarán todas las sesiones activas.\n\n" +
+                    "Después de restaurar deberá iniciar sesión nuevamente.\n\n" +
+                    "¿Desea continuar?",
+                    "Confirmar restauración",
+                    MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
+                if (resp != DialogResult.Yes) return;
+
+                try
+                {
+                    Cursor = Cursors.WaitCursor;
+                    BackupBLL.Instancia.RestaurarBackup(dlg.FileName);
+                    Cursor = Cursors.Default;
+
+                    MessageBox.Show(
+                        "Base restaurada correctamente.\n" +
+                        "El sistema volverá a la pantalla de login.",
+                        "Éxito", MessageBoxButtons.OK, MessageBoxIcon.Information);
+
+                    // Tras el restore la sesión actual ya no es válida
+                    UsuarioBLL.Instancia.Logout();
+                    gestor.Desuscribir(this);
+                    new frmLogin().Show();
+                    this.Close();
+                }
+                catch (Exception ex)
+                {
+                    Cursor = Cursors.Default;
+                    MessageBox.Show($"No se pudo restaurar:\n{ex.Message}",
+                        "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+            }
+        }
+
+
+        // Resto de handlers (sin cambios respecto del original)
 
         private void registrarToolStripMenuItem_Click(object sender, EventArgs e)
         {

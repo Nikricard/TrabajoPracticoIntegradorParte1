@@ -99,6 +99,7 @@ namespace BLL_
                 BitacoraBLL.Instancia.RegistrarAddIdioma(idIdioma, nombre);
 
                 CargarIdiomas();
+                Notificar();
                 return IdiomasDisponibles.Find(i => i.IdIdioma == idIdioma);
             }
             catch (Exception ex)
@@ -129,6 +130,8 @@ namespace BLL_
                     IdiomaActivo = IdiomasDisponibles.Count > 0 ? IdiomasDisponibles[0] : null;
                     if (IdiomaActivo != null) Notificar();
                 }
+
+                if (IdiomaActivo != null) Notificar();
             }
             catch (Exception ex)
             {

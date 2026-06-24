@@ -33,9 +33,13 @@ namespace TrabajoPracticoIntegrador15_4
             // 
             // dgvUsuarios
             // 
+            dgvUsuarios.AllowUserToAddRows = false;
             dgvUsuarios.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             dgvUsuarios.Location = new Point(253, 51);
+            dgvUsuarios.MultiSelect = false;
             dgvUsuarios.Name = "dgvUsuarios";
+            dgvUsuarios.ReadOnly = true;
+            dgvUsuarios.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
             dgvUsuarios.Size = new Size(240, 256);
             dgvUsuarios.TabIndex = 2;
             dgvUsuarios.SelectionChanged += dgvUsuarios_SelectionChanged;

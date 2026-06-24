@@ -60,9 +60,13 @@
             // 
             // dgvIdiomas
             // 
+            dgvIdiomas.AllowUserToAddRows = false;
             dgvIdiomas.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             dgvIdiomas.Location = new Point(276, 22);
+            dgvIdiomas.MultiSelect = false;
             dgvIdiomas.Name = "dgvIdiomas";
+            dgvIdiomas.ReadOnly = true;
+            dgvIdiomas.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
             dgvIdiomas.Size = new Size(327, 150);
             dgvIdiomas.TabIndex = 0;
             dgvIdiomas.SelectionChanged += dgvIdiomas_SelectionChanged;
@@ -120,9 +124,13 @@
             // 
             // dgvTraducciones
             // 
+            dgvTraducciones.AllowUserToAddRows = false;
             dgvTraducciones.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             dgvTraducciones.Location = new Point(276, 40);
+            dgvTraducciones.MultiSelect = false;
             dgvTraducciones.Name = "dgvTraducciones";
+            dgvTraducciones.ReadOnly = true;
+            dgvTraducciones.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
             dgvTraducciones.Size = new Size(327, 150);
             dgvTraducciones.TabIndex = 6;
             dgvTraducciones.SelectionChanged += dgvTraducciones_SelectionChanged;
@@ -262,9 +270,13 @@
             // 
             // dgvTags
             // 
+            dgvTags.AllowUserToAddRows = false;
             dgvTags.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             dgvTags.Location = new Point(261, 39);
+            dgvTags.MultiSelect = false;
             dgvTags.Name = "dgvTags";
+            dgvTags.ReadOnly = true;
+            dgvTags.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
             dgvTags.Size = new Size(327, 381);
             dgvTags.TabIndex = 19;
             dgvTags.SelectionChanged += dgvTags_SelectionChanged;

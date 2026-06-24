@@ -188,6 +188,7 @@ namespace BLL
             public const string EliminarTags          = "TAG002";
             public const string VerBitacora           = "BIT001";
             public const string GestionarPerfiles     = "PRF001";
+            public const string Backup = "ADM001";
             public const string Operador      = "GE010";
             public const string Traductor     = "GE020";
             public const string Auditor       = "GE030";

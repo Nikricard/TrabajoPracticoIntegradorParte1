@@ -40,10 +40,13 @@
             // 
             // dgvUsuarios
             // 
+            dgvUsuarios.AllowUserToAddRows = false;
             dgvUsuarios.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             dgvUsuarios.Location = new Point(236, 73);
+            dgvUsuarios.MultiSelect = false;
             dgvUsuarios.Name = "dgvUsuarios";
             dgvUsuarios.ReadOnly = true;
+            dgvUsuarios.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
             dgvUsuarios.Size = new Size(414, 150);
             dgvUsuarios.TabIndex = 0;
             dgvUsuarios.SelectionChanged += dgvUsuarios_SelectionChanged;

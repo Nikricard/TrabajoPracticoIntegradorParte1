@@ -42,6 +42,8 @@ namespace TrabajoPracticoIntegrador15_4
             label1 = new Label();
             groupBox1 = new GroupBox();
             btnActualizar = new Button();
+            lblArbol = new Label();
+            treePermisos = new TreeView();
             ((System.ComponentModel.ISupportInitialize)dgvConjuntos).BeginInit();
             groupBox1.SuspendLayout();
             SuspendLayout();
@@ -114,9 +116,13 @@ namespace TrabajoPracticoIntegrador15_4
             // 
             // dgvConjuntos
             // 
+            dgvConjuntos.AllowUserToAddRows = false;
             dgvConjuntos.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             dgvConjuntos.Location = new Point(300, 136);
+            dgvConjuntos.MultiSelect = false;
             dgvConjuntos.Name = "dgvConjuntos";
+            dgvConjuntos.ReadOnly = true;
+            dgvConjuntos.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
             dgvConjuntos.Size = new Size(255, 148);
             dgvConjuntos.TabIndex = 9;
             dgvConjuntos.SelectionChanged += dgvConjuntos_SelectionChanged;
@@ -177,9 +183,11 @@ namespace TrabajoPracticoIntegrador15_4
             groupBox1.Controls.Add(lblConjuntos);
             groupBox1.Controls.Add(btnLimpiar);
             groupBox1.Controls.Add(btnEliminar);
+            groupBox1.Controls.Add(lblArbol);
+            groupBox1.Controls.Add(treePermisos);
             groupBox1.Location = new Point(12, 12);
             groupBox1.Name = "groupBox1";
-            groupBox1.Size = new Size(575, 302);
+            groupBox1.Size = new Size(835, 302);
             groupBox1.TabIndex = 12;
             groupBox1.TabStop = false;
             groupBox1.Tag = "lblGestionPermisos";
@@ -196,14 +204,32 @@ namespace TrabajoPracticoIntegrador15_4
             btnActualizar.UseVisualStyleBackColor = true;
             btnActualizar.Click += btnActualizar_Click_1;
             // 
+            // lblArbol
+            // 
+            lblArbol.AutoSize = true;
+            lblArbol.Location = new Point(575, 108);
+            lblArbol.Name = "lblArbol";
+            lblArbol.Size = new Size(113, 15);
+            lblArbol.TabIndex = 13;
+            lblArbol.Tag = "lblArbolConjunto";
+            lblArbol.Text = "Detalle del conjunto";
+            // 
+            // treePermisos
+            // 
+            treePermisos.Location = new Point(575, 136);
+            treePermisos.Name = "treePermisos";
+            treePermisos.Size = new Size(240, 148);
+            treePermisos.TabIndex = 14;
+            // 
             // frmPermiso
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(800, 450);
+            ClientSize = new Size(870, 340);
             Controls.Add(groupBox1);
             Name = "frmPermiso";
             Text = "frmPermiso";
+            FormClosed += frmPermiso_FormClosed;
             Load += frmPermiso_Load;
             ((System.ComponentModel.ISupportInitialize)dgvConjuntos).EndInit();
             groupBox1.ResumeLayout(false);
@@ -227,5 +253,7 @@ namespace TrabajoPracticoIntegrador15_4
         private Label label1;
         private GroupBox groupBox1;
         private Button btnActualizar;
+        private TreeView treePermisos;
+        private Label lblArbol;
     }
 }

@@ -8,7 +8,7 @@ using System.Windows.Forms;
 
 namespace TrabajoPracticoIntegrador15_4
 {
-    public partial class frmBitacora : Form, IObservadorIdioma
+    public partial class frmBitacora : Form, IObservadorIdioma, IObservadorBitacora
     {
         private readonly GestorIdioma gestor = GestorIdioma.Instancia;
 
@@ -43,9 +43,31 @@ namespace TrabajoPracticoIntegrador15_4
             CargarAuditorias();
 
             gestor.Suscribir(this);
+            BitacoraBLL.Instancia.Suscribir(this);  // escucha nuevos eventos
+
             if (gestor.IdiomaActivo != null)
                 ActualizarIdioma(gestor.IdiomaActivo);
-            
+        }
+
+        // Observer de bitácora: lo dispara cualquier BLL cuando registra un evento.
+        // Refresca respetando los filtros actuales que tenga el usuario aplicados.
+        public void ActualizarBitacora()
+        {
+            // Si el form se cerró pero quedó algún observer huérfano, no hacer nada.
+            if (IsDisposed || !IsHandleCreated) return;
+
+            // Las llamadas pueden venir de otro thread? Aseguro UI thread con Invoke.
+            if (InvokeRequired)
+            {
+                BeginInvoke(new Action(ActualizarBitacora));
+                return;
+            }
+
+            Buscar();
+            // Si está en una pestaña de auditoría, también la refresco.
+            if (tabControl.SelectedTab == tabUsuario ||
+                tabControl.SelectedTab == tabIdioma)
+                CargarAuditorias();
         }
 
 
@@ -68,7 +90,7 @@ namespace TrabajoPracticoIntegrador15_4
             dgvBitacora.Columns.Clear();
             dgvBitacora.Columns.Add(ColTexto("Fecha", "Fecha", 120));
             dgvBitacora.Columns.Add(ColTexto("Usuario", "Usuario", 100));
-            dgvBitacora.Columns.Add(ColTexto("Actividad", "Actividad", 130));
+            dgvBitacora.Columns.Add(ColTexto("Actividad", "Actividad", 160));
             dgvBitacora.Columns.Add(ColTexto("TipoEvento", "Tipo", 80));
             dgvBitacora.Columns.Add(ColTexto("Entidad", "Entidad", 80));
             dgvBitacora.Columns.Add(ColTexto("Descripcion", "Descripción", 200));
@@ -80,7 +102,7 @@ namespace TrabajoPracticoIntegrador15_4
             dgvAudUsuario.Columns.Clear();
             dgvAudUsuario.Columns.Add(ColTexto("Fecha", "Fecha", 120));
             dgvAudUsuario.Columns.Add(ColTexto("UsuarioAccion", "Quién", 100));
-            dgvAudUsuario.Columns.Add(ColTexto("Operacion", "Operación", 80));
+            dgvAudUsuario.Columns.Add(ColTexto("Operacion", "Operación", 140));
             dgvAudUsuario.Columns.Add(ColTexto("IdUsuario", "ID usuario", 80));
             dgvAudUsuario.Columns.Add(ColTexto("NombreAnterior", "Nombre anterior", 140));
             dgvAudUsuario.Columns.Add(ColTexto("NombreNuevo", "Nombre nuevo", 140));
@@ -90,7 +112,7 @@ namespace TrabajoPracticoIntegrador15_4
             dgvAudIdioma.Columns.Clear();
             dgvAudIdioma.Columns.Add(ColTexto("Fecha", "Fecha", 120));
             dgvAudIdioma.Columns.Add(ColTexto("UsuarioAccion", "Quién", 100));
-            dgvAudIdioma.Columns.Add(ColTexto("Operacion", "Operación", 100));
+            dgvAudIdioma.Columns.Add(ColTexto("Operacion", "Operación", 160));
             dgvAudIdioma.Columns.Add(ColTexto("IdIdioma", "ID idioma", 80));
             dgvAudIdioma.Columns.Add(ColTexto("NombreAnterior", "Nombre anterior", 120));
             dgvAudIdioma.Columns.Add(ColTexto("NombreNuevo", "Nombre nuevo", 120));
@@ -180,6 +202,7 @@ namespace TrabajoPracticoIntegrador15_4
         private void btnSalir_Click(object sender, EventArgs e)
         {
             gestor.Desuscribir(this);
+            BitacoraBLL.Instancia.Desuscribir(this);
             Close();
         }
     }

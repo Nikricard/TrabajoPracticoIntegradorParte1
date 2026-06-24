@@ -133,9 +133,13 @@ namespace TrabajoPracticoIntegrador15_4
             // 
             // dgvBitacora
             // 
+            dgvBitacora.AllowUserToAddRows = false;
             dgvBitacora.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             dgvBitacora.Location = new Point(6, 6);
+            dgvBitacora.MultiSelect = false;
             dgvBitacora.Name = "dgvBitacora";
+            dgvBitacora.ReadOnly = true;
+            dgvBitacora.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
             dgvBitacora.Size = new Size(446, 361);
             dgvBitacora.TabIndex = 13;
             // 

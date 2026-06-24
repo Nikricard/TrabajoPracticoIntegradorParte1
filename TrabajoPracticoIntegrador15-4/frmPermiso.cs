@@ -49,7 +49,6 @@ namespace TrabajoPracticoIntegrador15_4
             clbAtomicos.DisplayMember = "Nombre";
             foreach (PermisoAtomico p in PerfilBLL.Instancia.GetPermisosAtomicos())
                 clbAtomicos.Items.Add(p);
-            //recorre lista de permisos y los agrega
 
             // permisos compuestos, excluyendo el que se edita
             clbCompuestos.Items.Clear();
@@ -64,8 +63,7 @@ namespace TrabajoPracticoIntegrador15_4
             dgvConjuntos.DataSource = null;
             dgvConjuntos.DataSource = PerfilBLL.Instancia.GetConjuntos();
             if (dgvConjuntos.Columns["Hijos"] != null)
-                dgvConjuntos.Columns["Hijos"].Visible = false;  // oculta la columna de hijos para no mostrar la estructura interna
-            // recarga el DataGridView con los conjuntos disponibles
+                dgvConjuntos.Columns["Hijos"].Visible = false;
         }
 
         private void dgvConjuntos_SelectionChanged(object sender, EventArgs e)
@@ -73,34 +71,67 @@ namespace TrabajoPracticoIntegrador15_4
             if (dgvConjuntos.SelectedRows.Count != 1) return;
 
             conjuntoSeleccionado = (PermisoBase)dgvConjuntos.SelectedRows[0].DataBoundItem;
-            // Si se selecciona un conjunto, carga su nombre y marca sus hijos en las listas.
             txtNombre.Text = conjuntoSeleccionado.Nombre;
-            // Carga el nombre del conjunto en el TextBox
 
             // Recargar ambas listas excluyendo el propio conjunto
             CargarSeleccionables(conjuntoSeleccionado.Codigo);
 
             // Marca los hijos directos del conjunto seleccionado en las listas.
             var hijosDirectos = new HashSet<string>();
-            // Solo marca los hijos directos, no los permisos anidados dentro de otros compuestos.
             if (conjuntoSeleccionado is PermisoCompuesto compuesto)
                 foreach (PermisoBase hijo in compuesto.Hijos)
-                    hijosDirectos.Add(hijo.Codigo);//
+                    hijosDirectos.Add(hijo.Codigo);
 
-            for (int i = 0; i < clbAtomicos.Items.Count; i++)//un for clasico que no hacia desde 1er año
+            for (int i = 0; i < clbAtomicos.Items.Count; i++)
             {
-                PermisoBase p = (PermisoBase)clbAtomicos.Items[i];// Recorre los permisos atómicos y marca los
-                                                            // que son hijos directos del conjunto seleccionado.
+                PermisoBase p = (PermisoBase)clbAtomicos.Items[i];
                 clbAtomicos.SetItemChecked(i, hijosDirectos.Contains(p.Codigo));
-                // Si el código del permiso atómico está en el conjunto de hijos directos, se marca como seleccionado.
             }
 
             for (int i = 0; i < clbCompuestos.Items.Count; i++)
             {
                 PermisoBase p = (PermisoBase)clbCompuestos.Items[i];
-                // Recorre los permisos compuestos y marca los que son hijos directos del conjunto seleccionado.
                 clbCompuestos.SetItemChecked(i, hijosDirectos.Contains(p.Codigo));
-                // Si el código del permiso compuesto está en el conjunto de hijos directos, se marca como seleccionado.
+            }
+
+            // Mostrar el árbol del conjunto seleccionado
+            MostrarArbolDelConjunto(conjuntoSeleccionado);
+        }
+
+        // Dibuja el árbol completo del conjunto, bajando recursivamente
+        // por todos los hijos (atómicos y compuestos).
+        // Usa la misma lógica que frmPerfil.MostrarArbolDelUsuario.
+        private void MostrarArbolDelConjunto(PermisoBase raiz)
+        {
+            treePermisos.Nodes.Clear();
+            if (!(raiz is PermisoCompuesto compuesto) || compuesto.Hijos.Count == 0)
+                return;
+
+            foreach (PermisoBase hijo in compuesto.Hijos)
+            {
+                TreeNode nodo = new TreeNode($"[{hijo.Codigo}] {hijo.Nombre}");
+                nodo.ForeColor = hijo is PermisoCompuesto
+                    ? System.Drawing.Color.DarkBlue
+                    : System.Drawing.Color.DarkGreen;
+                AgregarNodosRecursivo(nodo, hijo);
+                treePermisos.Nodes.Add(nodo);
+            }
+            treePermisos.ExpandAll();
+        }
+
+        private void AgregarNodosRecursivo(TreeNode nodo, PermisoBase permiso)
+        {
+            if (permiso is PermisoCompuesto compuesto)
+            {
+                foreach (PermisoBase hijo in compuesto.Hijos)
+                {
+                    TreeNode nodoHijo = new TreeNode($"[{hijo.Codigo}] {hijo.Nombre}");
+                    nodoHijo.ForeColor = hijo is PermisoCompuesto
+                        ? System.Drawing.Color.DarkBlue
+                        : System.Drawing.Color.DarkGreen;
+                    nodo.Nodes.Add(nodoHijo);
+                    AgregarNodosRecursivo(nodoHijo, hijo);
+                }
             }
         }
 
@@ -115,7 +146,6 @@ namespace TrabajoPracticoIntegrador15_4
                 {
                     MessageBox.Show("Ingrese un nombre para el conjunto.", "Atención",
                         MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                    //mensaje personalizado en caso de error
                     return;
                 }
 
@@ -124,15 +154,13 @@ namespace TrabajoPracticoIntegrador15_4
                 {
                     MessageBox.Show("Seleccione al menos un permiso.", "Atención",
                         MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                    //mensaje personalizado en caso de error
                     return;
                 }
 
                 PerfilBLL.Instancia.CrearConjunto(nombre, codigos);
-                //creamos el conjunto con el nombre y los códigos seleccionados
                 MessageBox.Show($"Conjunto '{nombre}' creado.", "Éxito",
                     MessageBoxButtons.OK, MessageBoxIcon.Information);
-                //mensaje personalizado de éxito
+
                 LimpiarFormulario();
                 CargarConjuntos();
             }
@@ -158,15 +186,13 @@ namespace TrabajoPracticoIntegrador15_4
             {
                 string nombre = txtNombre.Text.Trim();
                 var codigos = RecogerMarcados();
-                //verificaciones
                 if (codigos.Count == 0)
                 {
                     MessageBox.Show("Seleccione al menos un permiso.", "Atención",
                         MessageBoxButtons.OK, MessageBoxIcon.Warning);
                     return;
                 }
-                //llamamos a actualizar conjunto del BLL con el código del conjunto seleccionado,
-                //el nuevo nombre y los códigos seleccionados
+
                 PerfilBLL.Instancia.ActualizarConjunto(
                     conjuntoSeleccionado.Codigo, nombre, codigos);
 
@@ -222,7 +248,7 @@ namespace TrabajoPracticoIntegrador15_4
 
         // Junta los códigos marcados en las dos listas.
         private List<string> RecogerMarcados()
-        {   // Recorre ambas listas de permisos (atómicos y compuestos) y junta los códigos de los seleccionados en una sola lista.
+        {
             var codigos = new List<string>();
             foreach (PermisoBase p in clbAtomicos.CheckedItems)
                 codigos.Add(p.Codigo);
@@ -231,7 +257,7 @@ namespace TrabajoPracticoIntegrador15_4
             return codigos;
         }
 
-        // Desmarca ambas listas (deja el nombre y el conjunto seleccionado).
+        // Desmarca ambas listas y limpia el árbol.
         private void btnLimpiar_Click(object sender, EventArgs e)
         {
             txtNombre.Clear();
@@ -239,13 +265,15 @@ namespace TrabajoPracticoIntegrador15_4
                 clbAtomicos.SetItemChecked(i, false);
             for (int i = 0; i < clbCompuestos.Items.Count; i++)
                 clbCompuestos.SetItemChecked(i, false);
+            treePermisos.Nodes.Clear();
         }
 
         private void LimpiarFormulario()
         {
             txtNombre.Text = string.Empty;
             conjuntoSeleccionado = null;
-            CargarSeleccionables(null);  // recarga ambas listas sin marcas
+            CargarSeleccionables(null);
+            treePermisos.Nodes.Clear();
         }
 
         private void btnSalir_Click(object sender, EventArgs e)

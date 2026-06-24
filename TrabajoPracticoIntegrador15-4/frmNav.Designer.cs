@@ -1,4 +1,4 @@
-﻿namespace TrabajoPracticoIntegrador15_4
+namespace TrabajoPracticoIntegrador15_4
 {
     partial class frmNav
     {
@@ -38,6 +38,9 @@
             perfilesToolStripMenuItem = new ToolStripMenuItem();
             IdiomaMenuItem = new ToolStripMenuItem();
             bitacoraToolStripMenuItem = new ToolStripMenuItem();
+            baseDeDatosToolStripMenuItem = new ToolStripMenuItem();
+            backupToolStripMenuItem = new ToolStripMenuItem();
+            restaurarToolStripMenuItem = new ToolStripMenuItem();
             salirToolStripMenuItem = new ToolStripMenuItem();
             contextMenuStrip1 = new ContextMenuStrip(components);
             statusStrip1 = new StatusStrip();
@@ -50,7 +53,7 @@
             // 
             // menuStrip2
             // 
-            menuStrip2.Items.AddRange(new ToolStripItem[] { registrarToolStripMenuItem, listarToolStripMenuItem, permisosToolStripMenuItem, perfilesToolStripMenuItem, IdiomaMenuItem, bitacoraToolStripMenuItem, salirToolStripMenuItem });
+            menuStrip2.Items.AddRange(new ToolStripItem[] { registrarToolStripMenuItem, listarToolStripMenuItem, permisosToolStripMenuItem, perfilesToolStripMenuItem, IdiomaMenuItem, bitacoraToolStripMenuItem, baseDeDatosToolStripMenuItem, salirToolStripMenuItem });
             menuStrip2.Location = new Point(0, 0);
             menuStrip2.Name = "menuStrip2";
             menuStrip2.Size = new Size(800, 24);
@@ -120,6 +123,30 @@
             bitacoraToolStripMenuItem.Tag = "menuBitacora";
             bitacoraToolStripMenuItem.Text = "Bitacora";
             bitacoraToolStripMenuItem.Click += bitacoraToolStripMenuItem_Click;
+            // 
+            // baseDeDatosToolStripMenuItem
+            // 
+            baseDeDatosToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { backupToolStripMenuItem, restaurarToolStripMenuItem });
+            baseDeDatosToolStripMenuItem.Name = "baseDeDatosToolStripMenuItem";
+            baseDeDatosToolStripMenuItem.Size = new Size(96, 20);
+            baseDeDatosToolStripMenuItem.Tag = "menuBaseDatos";
+            baseDeDatosToolStripMenuItem.Text = "Base de datos";
+            // 
+            // backupToolStripMenuItem
+            // 
+            backupToolStripMenuItem.Name = "backupToolStripMenuItem";
+            backupToolStripMenuItem.Size = new Size(180, 22);
+            backupToolStripMenuItem.Tag = "menuBackup";
+            backupToolStripMenuItem.Text = "Hacer backup...";
+            backupToolStripMenuItem.Click += backupToolStripMenuItem_Click;
+            // 
+            // restaurarToolStripMenuItem
+            // 
+            restaurarToolStripMenuItem.Name = "restaurarToolStripMenuItem";
+            restaurarToolStripMenuItem.Size = new Size(180, 22);
+            restaurarToolStripMenuItem.Tag = "menuRestore";
+            restaurarToolStripMenuItem.Text = "Restaurar backup...";
+            restaurarToolStripMenuItem.Click += restaurarToolStripMenuItem_Click;
             // 
             // salirToolStripMenuItem
             // 
@@ -194,6 +221,9 @@
         private ToolStripMenuItem IdiomaMenuItem;
         private ToolStripMenuItem bitacoraToolStripMenuItem;
         private ToolStripMenuItem perfilesToolStripMenuItem;
+        private ToolStripMenuItem baseDeDatosToolStripMenuItem;
+        private ToolStripMenuItem backupToolStripMenuItem;
+        private ToolStripMenuItem restaurarToolStripMenuItem;
         private StatusStrip statusStrip1;
         private ToolStripStatusLabel toolStripStatusLabel1;
         private ToolStripStatusLabel lblstatusUser;
