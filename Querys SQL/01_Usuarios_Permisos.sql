@@ -1,12 +1,19 @@
--- Usuarios y Permisos
--- Patrón Composite
--- Permisos atómicos o compuestos a traves de la tabla UsuarioPermiso.
--- Un "conjunto" es un permiso compuesto con nombre.
--- Ejecutar primero
+--  01 — Usuarios y Permisos (estructura + datos base)
+--  Crea las tablas de Usuarios, Permiso, PermisoHijo y UsuarioPermiso.
+--  Inserta permisos atómicos (USR, IDM, TAG, BIT, PRF), compuestos del sistema
+--  (GE010 Operador, GE020 Traductor, GE030 Auditor, GE040 Administrador) y el
+--  usuario admin inicial con clave "admin".
+--
+--  Patrón Composite: la jerarquía de permisos vive en PermisoHijo,
+--  que es una autorrelación de Permiso (CodigoPadre/CodigoHijo).
+--
+--  Incluye la columna DVH en Usuarios para el soporte de dígitos
+--  verificadores (queda NULL hasta que el sistema los calcule por primera vez).
+
 USE Usuarios;
 GO
 
--- Estructura 
+-- Estructura
 
 -- Permisos (atómicos y compuestos en la misma tabla)
 CREATE TABLE Permiso (
@@ -24,11 +31,12 @@ CREATE TABLE PermisoHijo (
 );
 GO
 
--- Usuarios
+-- Usuarios (con columna DVH — dígito verificador horizontal por fila)
 CREATE TABLE Usuarios (
     Id         INT          PRIMARY KEY IDENTITY(1,1),
     Nombre     VARCHAR(100) NOT NULL UNIQUE,
-    Contrasena VARCHAR(200) NOT NULL
+    Contrasena VARCHAR(200) NOT NULL,
+    DVH        VARCHAR(64)  NULL   -- hash SHA-256 de Id + Nombre + Contrasena
 );
 GO
 
@@ -40,7 +48,7 @@ CREATE TABLE UsuarioPermiso (
 );
 GO
 
--- Permisos atómicos = las funcionalidades base
+-- Permisos atómicos (las funcionalidades base)
 INSERT INTO Permiso (Codigo, Nombre, EsCompuesto) VALUES
 ('USR001', 'Crear usuario',        0),
 ('USR002', 'Modificar usuario',    0),
@@ -63,7 +71,7 @@ INSERT INTO Permiso (Codigo, Nombre, EsCompuesto) VALUES
 ('GE040', 'Administrador', 1);
 GO
 
--- Árbol de permisos 
+-- Árbol de permisos
 -- Operador → ABM de usuarios + listar
 INSERT INTO PermisoHijo (CodigoPadre, CodigoHijo) VALUES
 ('GE010','USR001'),('GE010','USR002'),('GE010','USR003'),('GE010','USR004');
@@ -77,13 +85,13 @@ INSERT INTO PermisoHijo (CodigoPadre, CodigoHijo) VALUES
 INSERT INTO PermisoHijo (CodigoPadre, CodigoHijo) VALUES
 ('GE030','BIT001');
 
--- Administrador → todo (Operador + Traductor + Auditor + gestionar perfiles)
+-- Administrador → Operador + Traductor + Auditor + gestionar perfiles
 INSERT INTO PermisoHijo (CodigoPadre, CodigoHijo) VALUES
 ('GE040','GE010'),('GE040','GE020'),('GE040','GE030'),('GE040','PRF001');
 GO
 
 -- Usuario admin inicial
--- Usuario: admin   Contraseña: admin
+-- Usuario: admin   Contraseña: admin   (hash SHA-256)
 INSERT INTO Usuarios (Nombre, Contrasena) VALUES
 ('admin', '8c6976e5b5410415bde908bd4dee15dfb167a9c873fc4bb8a81f6f2ab448a918');
 GO
@@ -93,4 +101,5 @@ INSERT INTO UsuarioPermiso (IdUsuario, Codigo)
 SELECT Id, 'GE040' FROM Usuarios WHERE Nombre = 'admin';
 GO
 
-
+PRINT '01 OK — Usuarios y permisos creados.';
+GO

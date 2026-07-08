@@ -41,6 +41,7 @@ namespace TrabajoPracticoIntegrador15_4
             baseDeDatosToolStripMenuItem = new ToolStripMenuItem();
             backupToolStripMenuItem = new ToolStripMenuItem();
             restaurarToolStripMenuItem = new ToolStripMenuItem();
+            recalcularDVToolStripMenuItem = new ToolStripMenuItem();
             salirToolStripMenuItem = new ToolStripMenuItem();
             contextMenuStrip1 = new ContextMenuStrip(components);
             statusStrip1 = new StatusStrip();
@@ -126,7 +127,7 @@ namespace TrabajoPracticoIntegrador15_4
             // 
             // baseDeDatosToolStripMenuItem
             // 
-            baseDeDatosToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { backupToolStripMenuItem, restaurarToolStripMenuItem });
+            baseDeDatosToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { backupToolStripMenuItem, restaurarToolStripMenuItem, recalcularDVToolStripMenuItem });
             baseDeDatosToolStripMenuItem.Name = "baseDeDatosToolStripMenuItem";
             baseDeDatosToolStripMenuItem.Size = new Size(96, 20);
             baseDeDatosToolStripMenuItem.Tag = "menuBaseDatos";
@@ -135,7 +136,7 @@ namespace TrabajoPracticoIntegrador15_4
             // backupToolStripMenuItem
             // 
             backupToolStripMenuItem.Name = "backupToolStripMenuItem";
-            backupToolStripMenuItem.Size = new Size(180, 22);
+            backupToolStripMenuItem.Size = new Size(220, 22);
             backupToolStripMenuItem.Tag = "menuBackup";
             backupToolStripMenuItem.Text = "Hacer backup...";
             backupToolStripMenuItem.Click += backupToolStripMenuItem_Click;
@@ -143,10 +144,18 @@ namespace TrabajoPracticoIntegrador15_4
             // restaurarToolStripMenuItem
             // 
             restaurarToolStripMenuItem.Name = "restaurarToolStripMenuItem";
-            restaurarToolStripMenuItem.Size = new Size(180, 22);
+            restaurarToolStripMenuItem.Size = new Size(220, 22);
             restaurarToolStripMenuItem.Tag = "menuRestore";
             restaurarToolStripMenuItem.Text = "Restaurar backup...";
             restaurarToolStripMenuItem.Click += restaurarToolStripMenuItem_Click;
+            // 
+            // recalcularDVToolStripMenuItem
+            // 
+            recalcularDVToolStripMenuItem.Name = "recalcularDVToolStripMenuItem";
+            recalcularDVToolStripMenuItem.Size = new Size(220, 22);
+            recalcularDVToolStripMenuItem.Tag = "menuRecalcularDV";
+            recalcularDVToolStripMenuItem.Text = "Recalcular dígitos verificadores";
+            recalcularDVToolStripMenuItem.Click += recalcularDVToolStripMenuItem_Click;
             // 
             // salirToolStripMenuItem
             // 
@@ -224,6 +233,7 @@ namespace TrabajoPracticoIntegrador15_4
         private ToolStripMenuItem baseDeDatosToolStripMenuItem;
         private ToolStripMenuItem backupToolStripMenuItem;
         private ToolStripMenuItem restaurarToolStripMenuItem;
+        private ToolStripMenuItem recalcularDVToolStripMenuItem;
         private StatusStrip statusStrip1;
         private ToolStripStatusLabel toolStripStatusLabel1;
         private ToolStripStatusLabel lblstatusUser;

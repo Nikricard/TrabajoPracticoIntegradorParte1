@@ -1,213 +1,163 @@
-﻿using BE;
-using SE;
+using BE;
+using System;
+using System.Collections.Generic;
 using System.Data.SqlClient;
-using System.Data;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
 namespace DAL
 {
     public class UsuarioDAL
     {
-        private readonly string cs =
-            "Server=DESKTOP-FD6Q6GG\\SQLEXPRESS;Database=Usuarios;Integrated Security=True";
-        //Server facultad = .
-        //Server casa = DESKTOP-FD6Q6GG\SQLEXPRESS
+        private readonly string conexion = "Server=DESKTOP-FD6Q6GG\\SQLEXPRESS;Database=Usuarios;Integrated Security=True";
+
         public Usuario Add(Usuario usuario)
-        {
-            //string conexion
-            using (var con = new SqlConnection(cs)) //establecemos conexion
+        {   //se recibe un usuario en la lista, hasheado previamente en BLL, con datos ya validados en BE
+            using (SqlConnection conn = new SqlConnection(conexion))
             {
-                con.Open();
-                //abrimos
-                using (var cmd = new SqlCommand("SELECT COUNT(1) FROM Usuarios WHERE Nombre = @Nombre", con))
-                {        //ingresamos la query en la variable cmd junto con la conexion    
-                    cmd.Parameters.Add("@Nombre", SqlDbType.VarChar).Value = usuario.Nombre;
-                    int count = Convert.ToInt32(cmd.ExecuteScalar());
-                    //nos aseguramos que el usuario no exista en la db 
-                    if (count > 0)
-                    {
-                        // Lanzamos una excepción específica que controlaremos en la interfaz
-                        throw new Exception("El usuario ya existe en la base de datos.");
-                    }
+                conn.Open();
+
+                // SELECT SCOPE_IDENTITY() recupera el Id IDENTITY
+                // que SQL Server genera. Esto es lo que permite que
+                // IntegridadBLL pueda leer el usuario recién creado para
+                // calcular su DVH sin depender del fallback por nombre.
+                SqlCommand cmd = new SqlCommand(
+                    "INSERT INTO Usuarios(Nombre, Contrasena) VALUES(@Nombre, @Contrasena); " +
+                    "SELECT SCOPE_IDENTITY();", conn);
+                cmd.Parameters.AddWithValue("@Nombre", usuario.Nombre);
+                cmd.Parameters.AddWithValue("@Contrasena", usuario.Contraseña);
+
+                // ExecuteScalar devuelve el primer valor de la primera fila:
+                // el Id que acaba de generar SQL Server.
+                object resultado = cmd.ExecuteScalar();
+                if (resultado == null || resultado == DBNull.Value)
+                {
+                    throw new Exception("No se pudo agregar el usuario");
                 }
 
-                using (var transaccion = con.BeginTransaction())
-                { //comenzamos una transaccion y la almacenamos en una variable
-                    try
-                    {
-                        using (var cmd = new SqlCommand("Insert into Usuarios (Nombre,Contrasena) Values (@Nombre,@Contraseña)", con, transaccion))
-                        {
-                            //command.CommandType = CommandType.StoredProcedure;
-                            //al final opte por no usar stored procedure
-                            cmd.Parameters.Add("@Nombre", SqlDbType.VarChar).Value = usuario.Nombre;
-                            cmd.Parameters.Add("@Contraseña", SqlDbType.VarChar).Value = usuario.Contraseña;
-                            //pasamos los parametros a la query 
-                            var result = cmd.ExecuteScalar(); //ejecutamos 
-                        }
-
-                        transaccion.Commit(); //ejecutamos
-                        return usuario;
-                    }
-                    catch (SqlException ex)
-                    {
-                        transaccion.Rollback(); //en caso de error
-                        throw new Exception("Error de SQL.", ex);
-                    }
-                    catch
-                    {
-                        transaccion.Rollback();
-                        throw;
-                    }
-                }
+                usuario.Id = Convert.ToInt32(resultado);
+                return usuario;
             }
         }
 
-        public Usuario Modify(Usuario usuario)
+        public Usuario Login(string nombre, string contraseñaHasheada)
         {
-            SqlConnection connection = new SqlConnection(cs);
-            connection.Open();
-            using (var transaction = connection.BeginTransaction())
+            using (SqlConnection conn = new SqlConnection(conexion))
             {
-                try
+                conn.Open();
+
+                SqlCommand cmd = new SqlCommand(
+                    "SELECT Id, Nombre, Contrasena FROM Usuarios " +
+                    "WHERE Nombre = @Nombre AND Contrasena = @Contrasena", conn);
+                cmd.Parameters.AddWithValue("@Nombre", nombre);
+                cmd.Parameters.AddWithValue("@Contrasena", contraseñaHasheada);
+
+                SqlDataReader reader = cmd.ExecuteReader();
+
+                if (reader.Read())
                 {
-                    using (var command = new SqlCommand("Update Usuarios set Nombre = @Nombre where Id = @Id", connection, transaction))
+                    Usuario usuario = new Usuario
                     {
-                        //command.CommandType = CommandType.StoredProcedure; 
-
-                        command.Parameters.Add("@Nombre", SqlDbType.VarChar).Value = usuario.Nombre;
-                        command.Parameters.Add("@Id", SqlDbType.Int).Value = usuario.Id;
-
-                        var result = command.ExecuteScalar();
-                    }
-
-                    transaction.Commit();
+                        Id = reader.GetInt32(0),
+                        Nombre = reader.GetString(1),
+                        Contraseña = reader.GetString(2)
+                    };
                     return usuario;
                 }
-                catch (SqlException ex)
-                {
-                    transaction.Rollback();
-                    throw new Exception("Error de SQL.", ex);
-                }
-                catch
-                {
-                    transaction.Rollback();
-                    throw;
-                }
-            }
-        }
-
-        public Usuario Delete(Usuario usuario)
-        {
-            SqlConnection connection = new SqlConnection(cs);
-            connection.Open();
-            using (var transaction = connection.BeginTransaction())
-            {
-                try
-                {
-                    // Borra primero los permisos asignados al usuario.
-                    // Si no, la FK de UsuarioPermiso → Usuarios impide el borrado.
-                    using (var cmdPerm = new SqlCommand(
-                        "Delete from UsuarioPermiso where IdUsuario = @Id",
-                        connection, transaction))
-                    {
-                        cmdPerm.Parameters.Add("@Id", SqlDbType.Int).Value = usuario.Id;
-                        cmdPerm.ExecuteNonQuery();
-                    }
-
-                    //Ahora sí borra el usuario.
-                    using (var command = new SqlCommand(
-                        "Delete from Usuarios where Id = @Id",
-                        connection, transaction))
-                    {
-                        command.Parameters.Add("@Id", SqlDbType.Int).Value = usuario.Id;
-                        command.ExecuteNonQuery();
-                    }
-
-                    transaction.Commit();
-                    return usuario;
-                }
-                catch (SqlException ex)
-                {
-                    transaction.Rollback();
-                    throw new Exception("Error de SQL.", ex);
-                }
-                catch
-                {
-                    transaction.Rollback();
-                    throw;
-                }
-            }
-        }
-
-
-        public Usuario? Login(string nombre, string contrasenaHash)
-        {
-
-            using (var connection = new SqlConnection(cs))  
-            {
-                connection.Open();
-
-                using (var command = new SqlCommand(
-                    "SELECT Id, Nombre FROM Usuarios WHERE Nombre = @Nombre AND Contrasena = @Contrasena",
-                    connection))
-                {
-                    command.Parameters.Add("@Nombre", SqlDbType.VarChar).Value = nombre;
-                    command.Parameters.Add("@Contrasena", SqlDbType.VarChar).Value = contrasenaHash;
-
-                    using (var reader = command.ExecuteReader())
-                    {
-                        if (reader.Read())
-                        {
-                            return new Usuario
-                            {
-                                Id = reader.GetInt32(0),
-                                Nombre = reader.GetString(1)
-                                // No devolvemos la contraseña, no es necesario
-                            };
-                        }
-                        return null; // usuario no encontrado o contraseña incorrecta
-                    }
-                }
+                return null;
             }
         }
 
         public List<Usuario> GetAll()
         {
-            SqlConnection connection = new SqlConnection(cs);
-            List<Usuario> usuarios = new List<Usuario>();
-            try
-            {
-                connection.Open();
+            List<Usuario> lista = new List<Usuario>();
 
-                SqlCommand command = new SqlCommand("Select * from Usuarios ORDER BY Id ASC", connection);
-                SqlDataReader reader = command.ExecuteReader();
+            using (SqlConnection conn = new SqlConnection(conexion))
+            {
+                conn.Open();
+
+                SqlCommand cmd = new SqlCommand(
+                    "SELECT Id, Nombre, Contrasena FROM Usuarios ORDER BY Id", conn);
+                SqlDataReader reader = cmd.ExecuteReader();
+
                 while (reader.Read())
-                {//Ejecutamos un reader que almacene en una lista todos los usuarios
-                    Usuario usuario = new Usuario();
-                    usuario.Id = reader.GetInt32(0);
-                    usuario.Nombre = reader.GetString(1);
-                    usuario.Contraseña = reader.GetString(2);
-                    usuarios.Add(usuario);
-                }
-
-                return usuarios; //retornamos la lista para mostrar
-            }
-            catch (SqlException)
-            {
-                throw new Exception("SQL Error.");
-            }
-            catch (Exception)
-            {
-
-                throw;
-            }
-            finally
-            {
-                if (connection.State == ConnectionState.Open)
                 {
-                    connection.Close();
+                    lista.Add(new Usuario
+                    {
+                        Id = reader.GetInt32(0),
+                        Nombre = reader.GetString(1),
+                        Contraseña = reader.GetString(2)
+                    });
                 }
+            }
+            return lista;
+        }
+
+        public Usuario Modify(Usuario usuario)
+        {
+            using (SqlConnection conn = new SqlConnection(conexion))
+            {
+                conn.Open();
+
+                // solo se actualiza el Nombre.
+                // La contraseña no se toca .
+                SqlCommand cmd = new SqlCommand(
+                    "UPDATE Usuarios SET Nombre = @Nombre WHERE Id = @Id", conn);
+                cmd.Parameters.AddWithValue("@Nombre", usuario.Nombre);
+                cmd.Parameters.AddWithValue("@Id", usuario.Id);
+
+                int filas = cmd.ExecuteNonQuery();
+                if (filas == 0)
+                {
+                    throw new Exception("No se pudo modificar el usuario");
+                }
+                return usuario;
             }
         }
 
+        public Usuario Delete(Usuario usuario)
+        {
+            using (SqlConnection conn = new SqlConnection(conexion))
+            {
+                conn.Open();
+
+                // Se borran en transacción: primero los permisos asignados al
+                // usuario (para no romper la FK en UsuarioPermiso), después
+                // el usuario. Sin este paso previo, SQL Server tira error 547
+                // ("FOREIGN KEY constraint conflict") cuando el usuario tiene
+                // permisos asignados.
+                using (SqlTransaction tr = conn.BeginTransaction())
+                {
+                    try
+                    {
+                        SqlCommand cmdPermisos = new SqlCommand(
+                            "DELETE FROM UsuarioPermiso WHERE IdUsuario = @Id", conn, tr);
+                        cmdPermisos.Parameters.AddWithValue("@Id", usuario.Id);
+                        cmdPermisos.ExecuteNonQuery();
+
+                        SqlCommand cmdUsuario = new SqlCommand(
+                            "DELETE FROM Usuarios WHERE Id = @Id", conn, tr);
+                        cmdUsuario.Parameters.AddWithValue("@Id", usuario.Id);
+                        int filas = cmdUsuario.ExecuteNonQuery();
+
+                        if (filas == 0)
+                        {
+                            tr.Rollback();
+                            throw new Exception("No se pudo eliminar el usuario");
+                        }
+
+                        tr.Commit();
+                    }
+                    catch
+                    {
+                        tr.Rollback();
+                        throw;
+                    }
+                }
+
+                return usuario;
+            }
+        }
     }
 }

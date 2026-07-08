@@ -1,15 +1,9 @@
-﻿using BE;
+using ABS;
+using BE;
 using BLL;
 using BLL_;
-using ABS;
 using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Data.SqlClient;
 using System.Windows.Forms;
 
 namespace TrabajoPracticoIntegrador15_4
@@ -19,7 +13,7 @@ namespace TrabajoPracticoIntegrador15_4
         private readonly GestorIdioma gestor = GestorIdioma.Instancia;
 
         public void ActualizarIdioma(Idioma idioma)
-        => TraductorUI.Traducir(this.Controls, idioma);
+            => TraductorUI.Traducir(this.Controls, idioma);
 
         public frmListar()
         {
@@ -28,23 +22,47 @@ namespace TrabajoPracticoIntegrador15_4
 
         private void frmListar_Load(object sender, EventArgs e)
         {
-            dgvUsuarios.DataSource = UsuarioBLL.Instancia.GetAll();
-            //llamada al metodo GetAll usando la instancia del UsuarioBLL
-            //y establecemos la lista devuelta como datasource
-            
-            gestor.Suscribir(this);    
+            gestor.Suscribir(this);
             if (gestor.IdiomaActivo != null)
-                ActualizarIdioma(gestor.IdiomaActivo);  // Aplica idioma actual
+                ActualizarIdioma(gestor.IdiomaActivo);
+
+            CargarUsuarios();
         }
 
-        private void dgvUsuarios_SelectionChanged(object sender, EventArgs e)
+        // Carga los usuarios directamente desde la BD para poder mostrar
+        // la columna DVH (que no está en la entidad Usuario para no
+        // filtrarla a las capas superiores como si fuera un campo de negocio).
+        private void CargarUsuarios()
         {
-            
+            string cs = "Server=DESKTOP-FD6Q6GG\\SQLEXPRESS;Database=Usuarios;Integrated Security=True";
+
+            var tabla = new System.Data.DataTable();
+            using (var con = new SqlConnection(cs))
+            {
+                con.Open();
+                var cmd = new SqlCommand(
+                    "SELECT Id, Nombre, ISNULL(DVH, '(sin calcular)') AS DVH " +
+                    "FROM Usuarios ORDER BY Id", con);
+                var adapter = new SqlDataAdapter(cmd);
+                adapter.Fill(tabla);
+            }
+
+            dgvUsuarios.AutoGenerateColumns = true;
+            dgvUsuarios.DataSource = tabla;
+
+            // Ajustes visuales de la columna DVH
+            if (dgvUsuarios.Columns["DVH"] != null)
+            {
+                dgvUsuarios.Columns["DVH"].HeaderText = "DVH (hash)";
+                dgvUsuarios.Columns["DVH"].DefaultCellStyle.Font =
+                    new System.Drawing.Font("Consolas", 8);
+                dgvUsuarios.Columns["DVH"].Width = 400;
+            }
         }
 
         private void btnSalir_Click(object sender, EventArgs e)
         {
-            gestor.Desuscribir(this);  
+            gestor.Desuscribir(this);
             Close();
         }
     }

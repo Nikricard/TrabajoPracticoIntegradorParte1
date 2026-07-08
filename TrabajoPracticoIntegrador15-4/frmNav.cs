@@ -41,7 +41,6 @@ namespace TrabajoPracticoIntegrador15_4
 
         // GestorIdioma llama a este método cuando el idioma cambia o cuando
         // cambia la lista de idiomas (alta/baja desde frmIdioma).
-        // Traduce los controles y recarga el menú de idiomas.
         public void ActualizarIdioma(Idioma idioma)
         {
             TraductorUI.Traducir(this.Controls, idioma);
@@ -67,7 +66,7 @@ namespace TrabajoPracticoIntegrador15_4
             bitacoraToolStripMenuItem.Enabled =
                 p.TienePermiso(PerfilBLL.Permisos.VerBitacora);
 
-            // Perfiles y Permisos — solo quien tenga GestionarPerfiles - Admin
+            // Perfiles y Permisos
             perfilesToolStripMenuItem.Enabled =
                 p.TienePermiso(PerfilBLL.Permisos.GestionarPerfiles);
             permisosToolStripMenuItem.Enabled =
@@ -76,13 +75,14 @@ namespace TrabajoPracticoIntegrador15_4
             // Idiomas
             IdiomaMenuItem.Enabled =
                 p.TienePermiso(PerfilBLL.Permisos.AgregarIdioma) ||
-                p.TienePermiso(PerfilBLL.Permisos.ListarUsuarios); // todos ven el idioma
+                p.TienePermiso(PerfilBLL.Permisos.ListarUsuarios);
 
-            // Backup / Restore — quien tenga ADM001
+            // Backup / Restore / Recalcular DVH — quien tenga ADM001
             bool puedeBackup = p.TienePermiso(PerfilBLL.Permisos.Backup);
             baseDeDatosToolStripMenuItem.Enabled = puedeBackup;
             backupToolStripMenuItem.Enabled       = puedeBackup;
             restaurarToolStripMenuItem.Enabled    = puedeBackup;
+            recalcularDVToolStripMenuItem.Enabled = puedeBackup;
         }
 
         private void CargarMenuIdiomas()
@@ -104,11 +104,10 @@ namespace TrabajoPracticoIntegrador15_4
             IdiomaMenuItem.DropDownItems.Add(new ToolStripSeparator());
 
             var agregar = new ToolStripMenuItem();
-            agregar.Tag = "menuAgregar";   // misma clave que está en la tabla Palabra
+            agregar.Tag = "menuAgregar";
             agregar.Text = gestor.IdiomaActivo != null
                              ? gestor.IdiomaActivo.Traducir("menuAgregar")
                              : "Gestionar idiomas...";
-
             agregar.Enabled = PerfilBLL.Instancia.TienePermiso(PerfilBLL.Permisos.AgregarIdioma);
 
             agregar.Click += (s, e) =>
@@ -120,7 +119,7 @@ namespace TrabajoPracticoIntegrador15_4
             IdiomaMenuItem.DropDownItems.Add(agregar);
         }
 
-        //Backup / Restore
+        // Backup / Restore / Recalcular DVH
 
         private void backupToolStripMenuItem_Click(object sender, EventArgs e)
         {
@@ -192,8 +191,50 @@ namespace TrabajoPracticoIntegrador15_4
             }
         }
 
+        // Recalcula todos los DVH y el DVV desde cero, tomando el estado
+        // actual de la tabla Usuarios como válido.
+        // Uso previsto:
+        //   • Inicializar el sistema por primera vez (DVH en NULL).
+        //   • Aceptar el estado tras un restore de backup.
+        //   • Aceptar el estado actual tras detectar adulteración
+        //     (con criterio — legítima los cambios detectados).
+        private void recalcularDVToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            var resp = MessageBox.Show(
+                "Recalcular los dígitos verificadores tomará el estado ACTUAL " +
+                "de la tabla Usuarios como válido.\n\n" +
+                "Usalo cuando:\n" +
+                "  • Inicializás el control de integridad por primera vez.\n" +
+                "  • Acabás de restaurar un backup confiable.\n" +
+                "  • Verificaste el detalle de una adulteración y aceptás " +
+                "el estado actual.\n\n" +
+                "¿Desea continuar?",
+                "Recalcular dígitos verificadores",
+                MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+            if (resp != DialogResult.Yes) return;
 
-        // Resto de handlers (sin cambios respecto del original)
+            try
+            {
+                Cursor = Cursors.WaitCursor;
+                IntegridadBLL.Instancia.RecalcularTodo();
+                Cursor = Cursors.Default;
+
+                MessageBox.Show(
+                    "Dígitos verificadores recalculados correctamente.\n" +
+                    "La integridad de la tabla Usuarios quedó validada.",
+                    "Éxito", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            }
+            catch (Exception ex)
+            {
+                Cursor = Cursors.Default;
+                MessageBox.Show(
+                    "Error al recalcular: " + ex.Message,
+                    "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+
+        // Resto de handlers (sin cambios)
 
         private void registrarToolStripMenuItem_Click(object sender, EventArgs e)
         {
@@ -241,7 +282,6 @@ namespace TrabajoPracticoIntegrador15_4
             ToolStripMenuItem itemSeleccionado = (ToolStripMenuItem)sender;
             Idioma idiomaSeleccionado = (Idioma)itemSeleccionado.Tag;
 
-            // Un solo llamado actualiza todos los formularios registrados como observadores
             gestor.CambiarIdioma(idiomaSeleccionado);
         }
 

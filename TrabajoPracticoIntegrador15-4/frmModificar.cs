@@ -24,25 +24,27 @@ namespace TrabajoPracticoIntegrador15_4
         {
             ActualizarGrid();
 
-            gestor.Suscribir(this);    
+            gestor.Suscribir(this);
             if (gestor.IdiomaActivo != null)
-                ActualizarIdioma(gestor.IdiomaActivo);  // Aplica idioma actual
-
-
+                ActualizarIdioma(gestor.IdiomaActivo);
         }
 
         private void btnModificar_Click(object sender, EventArgs e)
         {
             try
             {
+                // El usuario nuevo copia la contraseña hasheada del anterior
+                // para no perderla (frmModificar no la edita).
+                // Aunque UsuarioBLL.Modify ahora relee desde BD para calcular
+                // el DVH, mantenemos el objeto coherente por buenas prácticas.
                 Usuario usuarioNuevo = new Usuario()
-                {//nuevo usuario para guardar atributos dentro
+                {
+                    Id = int.Parse(txtId.Text),
                     Nombre = txtNombre.Text,
-                    Id = int.Parse(txtId.Text)
+                    Contraseña = usuarioAnterior?.Contraseña   // preserva el hash
                 };
 
                 UsuarioBLL.Instancia.Modify(usuarioAnterior, usuarioNuevo);
-                //enviamos el usuario para que lo trabaje la BLL en Modify
                 Limpiar();
                 ActualizarGrid();
             }
@@ -54,20 +56,22 @@ namespace TrabajoPracticoIntegrador15_4
         }
 
         private void dgvUsuarios_SelectionChanged(object sender, EventArgs e)
-        {//esto nos permite actualizar los textbox al usuario seleccionado con el cursor
+        {
             if (dgvUsuarios.SelectedRows.Count == 1)
             {
                 Usuario usuario = (Usuario)dgvUsuarios.SelectedRows[0].DataBoundItem;
                 txtId.Text = usuario.Id.ToString();
                 txtNombre.Text = usuario.Nombre;
 
+                // Preservamos la contraseña actual en el objeto anterior
+                // para poder pasarla al nuevo si la operación de Modify
+                // llegara a necesitarla.
                 usuarioAnterior = new Usuario()
                 {
                     Id = usuario.Id,
-                    Nombre = usuario.Nombre
+                    Nombre = usuario.Nombre,
+                    Contraseña = usuario.Contraseña
                 };
-
-
             }
         }
 
@@ -84,7 +88,7 @@ namespace TrabajoPracticoIntegrador15_4
 
         private void btnSalir_Click(object sender, EventArgs e)
         {
-            gestor.Desuscribir(this); 
+            gestor.Desuscribir(this);
             Close();
         }
     }
