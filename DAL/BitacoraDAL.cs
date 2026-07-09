@@ -1,7 +1,6 @@
 using BE;
 using System;
 using System.Collections.Generic;
-using System.Data;
 using System.Data.SqlClient;
 
 namespace DAL
@@ -11,75 +10,123 @@ namespace DAL
         private readonly string cs =
             "Server=DESKTOP-FD6Q6GG\\SQLEXPRESS;Database=Usuarios;Integrated Security=True";
 
+
+        // Registro de eventos (bitácora) — sin cambios respecto de la versión anterior
         public void RegistrarEvento(RegistroBitacora r)
         {
-            try
+            using (var con = new SqlConnection(cs))
             {
-                using (var con = new SqlConnection(cs))
-                {
-                    con.Open();
-                    var cmd = new SqlCommand(@"
-                        INSERT INTO Bitacora
-                            (Fecha, Usuario, Actividad, TipoEvento,
-                             Descripcion, Entidad, ValorAnterior, ValorNuevo)
-                        VALUES
-                            (@Fecha, @Usuario, @Actividad, @TipoEvento,
-                             @Descripcion, @Entidad, @ValorAnterior, @ValorNuevo)",
-                        con);
-                    cmd.Parameters.AddWithValue("@Fecha",         r.Fecha);
-                    cmd.Parameters.AddWithValue("@Usuario",        r.Usuario       ?? "");  // si el usuario es null, guardamos cadena vacía para evitar errores de null en la BD
-                    cmd.Parameters.AddWithValue("@Actividad",      r.Actividad     ?? "");
-                    cmd.Parameters.AddWithValue("@TipoEvento",     r.TipoEvento.ToString());
-                    cmd.Parameters.AddWithValue("@Descripcion",    r.Descripcion   ?? (object)DBNull.Value);
-                    cmd.Parameters.AddWithValue("@Entidad",        r.Entidad       ?? (object)DBNull.Value);
-                    cmd.Parameters.AddWithValue("@ValorAnterior",  r.ValorAnterior ?? (object)DBNull.Value);
-                    cmd.Parameters.AddWithValue("@ValorNuevo",     r.ValorNuevo    ?? (object)DBNull.Value);
-                    cmd.ExecuteNonQuery();
-                }
+                con.Open();
+                var cmd = new SqlCommand(@"
+                    INSERT INTO Bitacora
+                        (Fecha, Usuario, Actividad, TipoEvento,
+                         Descripcion, Entidad, ValorAnterior, ValorNuevo)
+                    VALUES
+                        (@Fecha, @Usuario, @Actividad, @Tipo,
+                         @Desc, @Entidad, @Ant, @Nue)", con);
+                cmd.Parameters.AddWithValue("@Fecha",    r.Fecha);
+                cmd.Parameters.AddWithValue("@Usuario",  r.Usuario ?? "");
+                cmd.Parameters.AddWithValue("@Actividad", r.Actividad ?? "");
+                cmd.Parameters.AddWithValue("@Tipo",     r.TipoEvento.ToString());
+                cmd.Parameters.AddWithValue("@Desc",     (object)r.Descripcion   ?? DBNull.Value);
+                cmd.Parameters.AddWithValue("@Entidad",  (object)r.Entidad       ?? DBNull.Value);
+                cmd.Parameters.AddWithValue("@Ant",      (object)r.ValorAnterior ?? DBNull.Value);
+                cmd.Parameters.AddWithValue("@Nue",      (object)r.ValorNuevo    ?? DBNull.Value);
+                cmd.ExecuteNonQuery();
             }
-            catch { }
         }
 
+
+        // Auditoría de usuarios — ahora persiste SnapshotJson
+        public void RegistrarAuditoriaUsuario(AuditoriaUsuario a)
+        {
+            using (var con = new SqlConnection(cs))
+            {
+                con.Open();
+                var cmd = new SqlCommand(@"
+                    INSERT INTO AuditoriaUsuario
+                        (Fecha, UsuarioAccion, Operacion, IdUsuario,
+                         NombreAnterior, NombreNuevo, SnapshotJson)
+                    VALUES
+                        (@Fecha, @UsAcc, @Op, @IdUs,
+                         @Ant, @Nue, @Snap)", con);
+                cmd.Parameters.AddWithValue("@Fecha",  a.Fecha);
+                cmd.Parameters.AddWithValue("@UsAcc",  a.UsuarioAccion ?? "");
+                cmd.Parameters.AddWithValue("@Op",     a.Operacion ?? "");
+                cmd.Parameters.AddWithValue("@IdUs",   a.IdUsuario);
+                cmd.Parameters.AddWithValue("@Ant",    (object)a.NombreAnterior ?? DBNull.Value);
+                cmd.Parameters.AddWithValue("@Nue",    (object)a.NombreNuevo    ?? DBNull.Value);
+                cmd.Parameters.AddWithValue("@Snap",   (object)a.SnapshotJson   ?? DBNull.Value);
+                cmd.ExecuteNonQuery();
+            }
+        }
+
+
+        // Auditoría de idiomas — sin cambios
+        public void RegistrarAuditoriaIdioma(AuditoriaIdioma a)
+        {
+            using (var con = new SqlConnection(cs))
+            {
+                con.Open();
+                var cmd = new SqlCommand(@"
+                    INSERT INTO AuditoriaIdioma
+                        (Fecha, UsuarioAccion, Operacion, IdIdioma,
+                         NombreAnterior, NombreNuevo,
+                         ClaveTraduccion, ValorAnterior, ValorNuevo)
+                    VALUES
+                        (@Fecha, @UsAcc, @Op, @IdId,
+                         @NAnt, @NNue,
+                         @Clave, @VAnt, @VNue)", con);
+                cmd.Parameters.AddWithValue("@Fecha",  a.Fecha);
+                cmd.Parameters.AddWithValue("@UsAcc",  a.UsuarioAccion ?? "");
+                cmd.Parameters.AddWithValue("@Op",     a.Operacion ?? "");
+                cmd.Parameters.AddWithValue("@IdId",   a.IdIdioma);
+                cmd.Parameters.AddWithValue("@NAnt",   (object)a.NombreAnterior  ?? DBNull.Value);
+                cmd.Parameters.AddWithValue("@NNue",   (object)a.NombreNuevo     ?? DBNull.Value);
+                cmd.Parameters.AddWithValue("@Clave",  (object)a.ClaveTraduccion ?? DBNull.Value);
+                cmd.Parameters.AddWithValue("@VAnt",   (object)a.ValorAnterior   ?? DBNull.Value);
+                cmd.Parameters.AddWithValue("@VNue",   (object)a.ValorNuevo      ?? DBNull.Value);
+                cmd.ExecuteNonQuery();
+            }
+        }
+
+
+        // Consultas de bitácora — sin cambios respecto de la versión anterior
         public List<RegistroBitacora> Buscar(
             DateTime? desde, DateTime? hasta,
             string usuario, string actividad, string tipoEvento)
         {
             var lista = new List<RegistroBitacora>();
-
             using (var con = new SqlConnection(cs))
             {
                 con.Open();
-                var sql = @"
+                var cmd = new SqlCommand(@"
                     SELECT IdBitacora, Fecha, Usuario, Actividad, TipoEvento,
                            Descripcion, Entidad, ValorAnterior, ValorNuevo
                     FROM Bitacora
-                    WHERE 1=1";
-
-                if (desde.HasValue)      sql += " AND Fecha >= @Desde"; // si el atributo tiene valor, agregamos la condición al SQL
-                if (hasta.HasValue)      sql += " AND Fecha <= @Hasta"; // si el atributo tiene valor, agregamos la condición al SQL
-                if (!string.IsNullOrEmpty(usuario))    sql += " AND Usuario LIKE @Usuario"; //si el usuario no es null, agregamos
-                if (!string.IsNullOrEmpty(actividad))  sql += " AND Actividad LIKE @Actividad"; 
-                if (!string.IsNullOrEmpty(tipoEvento)) sql += " AND TipoEvento = @TipoEvento";
-                sql += " ORDER BY Fecha DESC"; // ordenamos los resultados por fecha descendente para mostrar los eventos más recientes primero
-
-                var cmd = new SqlCommand(sql, con); // creamos el comando con la cadena SQL generada
-                if (desde.HasValue)      cmd.Parameters.AddWithValue("@Desde",      desde.Value);
-                if (hasta.HasValue)      cmd.Parameters.AddWithValue("@Hasta",      hasta.Value.AddDays(1));
-                if (!string.IsNullOrEmpty(usuario))    cmd.Parameters.AddWithValue("@Usuario",    $"%{usuario}%");
-                if (!string.IsNullOrEmpty(actividad))  cmd.Parameters.AddWithValue("@Actividad",  $"%{actividad}%");
-                if (!string.IsNullOrEmpty(tipoEvento)) cmd.Parameters.AddWithValue("@TipoEvento", tipoEvento);
+                    WHERE (@Desde IS NULL OR Fecha >= @Desde)
+                      AND (@Hasta IS NULL OR Fecha <  DATEADD(DAY, 1, @Hasta))
+                      AND (@Us    IS NULL OR Usuario   = @Us)
+                      AND (@Act   IS NULL OR Actividad LIKE '%' + @Act + '%')
+                      AND (@Tipo  IS NULL OR TipoEvento = @Tipo)
+                    ORDER BY Fecha DESC", con);
+                cmd.Parameters.AddWithValue("@Desde", (object)desde ?? DBNull.Value);
+                cmd.Parameters.AddWithValue("@Hasta", (object)hasta ?? DBNull.Value);
+                cmd.Parameters.AddWithValue("@Us",    string.IsNullOrEmpty(usuario)   ? (object)DBNull.Value : usuario);
+                cmd.Parameters.AddWithValue("@Act",   string.IsNullOrEmpty(actividad) ? (object)DBNull.Value : actividad);
+                cmd.Parameters.AddWithValue("@Tipo",  string.IsNullOrEmpty(tipoEvento)? (object)DBNull.Value : tipoEvento);
 
                 var rdr = cmd.ExecuteReader();
                 while (rdr.Read())
                 {
-                    lista.Add(new RegistroBitacora // mapeamos cada registro a un objeto RegistroBitacora
-                    { // posiciones de las columnas según el SELECT
-                      // las posiciones deben coincidir con la db, sino queda cualquier cosa
+                    Enum.TryParse(rdr.GetString(4), out TipoEvento tipo);
+                    lista.Add(new RegistroBitacora
+                    {
                         IdBitacora    = rdr.GetInt32(0),
                         Fecha         = rdr.GetDateTime(1),
                         Usuario       = rdr.GetString(2),
                         Actividad     = rdr.GetString(3),
-                        TipoEvento    = (TipoEvento)Enum.Parse(typeof(TipoEvento), rdr.GetString(4)),
+                        TipoEvento    = tipo,
                         Descripcion   = rdr.IsDBNull(5) ? null : rdr.GetString(5),
                         Entidad       = rdr.IsDBNull(6) ? null : rdr.GetString(6),
                         ValorAnterior = rdr.IsDBNull(7) ? null : rdr.GetString(7),
@@ -90,51 +137,21 @@ namespace DAL
             return lista;
         }
 
-        //Auditoría Usuario
 
-        public void RegistrarAuditoriaUsuario(AuditoriaUsuario a)
-        {
-            try
-            {
-                using (var con = new SqlConnection(cs))
-                {
-                    con.Open();
-                    var cmd = new SqlCommand(@"
-                        INSERT INTO AuditoriaUsuario
-                            (Fecha, UsuarioAccion, Operacion, IdUsuario,
-                             NombreAnterior, NombreNuevo)
-                        VALUES
-                            (@Fecha, @UsuarioAccion, @Operacion, @IdUsuario,
-                             @NombreAnterior, @NombreNuevo)", con);
-                    cmd.Parameters.AddWithValue("@Fecha",          a.Fecha);
-                    cmd.Parameters.AddWithValue("@UsuarioAccion",   a.UsuarioAccion  ?? "");
-                    cmd.Parameters.AddWithValue("@Operacion",       a.Operacion      ?? "");
-                    cmd.Parameters.AddWithValue("@IdUsuario",       a.IdUsuario);
-                    cmd.Parameters.AddWithValue("@NombreAnterior",  a.NombreAnterior ?? (object)DBNull.Value);
-                    cmd.Parameters.AddWithValue("@NombreNuevo",     a.NombreNuevo    ?? (object)DBNull.Value);
-                    cmd.ExecuteNonQuery();
-                }
-            }
-            catch { }
-        }
-
+        // Auditoría de usuarios — trae también el SnapshotJson
         public List<AuditoriaUsuario> GetAuditoriaUsuario(int? idUsuario = null)
         {
             var lista = new List<AuditoriaUsuario>();
             using (var con = new SqlConnection(cs))
             {
                 con.Open();
-                var sql = @"
-                    SELECT IdAuditoria, Fecha, UsuarioAccion, Operacion,
-                           IdUsuario, NombreAnterior, NombreNuevo
-                    FROM AuditoriaUsuario";
-                if (idUsuario.HasValue) sql += " WHERE IdUsuario = @IdUsuario";
-                sql += " ORDER BY Fecha DESC";
-
-                var cmd = new SqlCommand(sql, con);
-                if (idUsuario.HasValue)
-                    cmd.Parameters.AddWithValue("@IdUsuario", idUsuario.Value);
-
+                var cmd = new SqlCommand(@"
+                    SELECT IdAuditoria, Fecha, UsuarioAccion, Operacion, IdUsuario,
+                           NombreAnterior, NombreNuevo, SnapshotJson
+                    FROM AuditoriaUsuario
+                    WHERE (@Id IS NULL OR IdUsuario = @Id)
+                    ORDER BY Fecha DESC", con);
+                cmd.Parameters.AddWithValue("@Id", (object)idUsuario ?? DBNull.Value);
                 var rdr = cmd.ExecuteReader();
                 while (rdr.Read())
                 {
@@ -146,45 +163,14 @@ namespace DAL
                         Operacion      = rdr.GetString(3),
                         IdUsuario      = rdr.GetInt32(4),
                         NombreAnterior = rdr.IsDBNull(5) ? null : rdr.GetString(5),
-                        NombreNuevo    = rdr.IsDBNull(6) ? null : rdr.GetString(6)
+                        NombreNuevo    = rdr.IsDBNull(6) ? null : rdr.GetString(6),
+                        SnapshotJson   = rdr.IsDBNull(7) ? null : rdr.GetString(7)
                     });
                 }
             }
             return lista;
         }
 
-        //Auditoría Idioma
-
-        public void RegistrarAuditoriaIdioma(AuditoriaIdioma a)
-        {
-            try
-            {
-                using (var con = new SqlConnection(cs))
-                {
-                    con.Open();
-                    var cmd = new SqlCommand(@"
-                        INSERT INTO AuditoriaIdioma
-                            (Fecha, UsuarioAccion, Operacion, IdIdioma,
-                             NombreAnterior, NombreNuevo, ClaveTraduccion,
-                             ValorAnterior, ValorNuevo)
-                        VALUES
-                            (@Fecha, @UsuarioAccion, @Operacion, @IdIdioma,
-                             @NombreAnterior, @NombreNuevo, @ClaveTraduccion,
-                             @ValorAnterior, @ValorNuevo)", con);
-                    cmd.Parameters.AddWithValue("@Fecha",           a.Fecha);
-                    cmd.Parameters.AddWithValue("@UsuarioAccion",    a.UsuarioAccion   ?? "");
-                    cmd.Parameters.AddWithValue("@Operacion",        a.Operacion       ?? "");
-                    cmd.Parameters.AddWithValue("@IdIdioma",         a.IdIdioma);
-                    cmd.Parameters.AddWithValue("@NombreAnterior",   a.NombreAnterior  ?? (object)DBNull.Value);
-                    cmd.Parameters.AddWithValue("@NombreNuevo",      a.NombreNuevo     ?? (object)DBNull.Value);
-                    cmd.Parameters.AddWithValue("@ClaveTraduccion",  a.ClaveTraduccion ?? (object)DBNull.Value);
-                    cmd.Parameters.AddWithValue("@ValorAnterior",    a.ValorAnterior   ?? (object)DBNull.Value);
-                    cmd.Parameters.AddWithValue("@ValorNuevo",       a.ValorNuevo      ?? (object)DBNull.Value);
-                    cmd.ExecuteNonQuery();
-                }
-            }
-            catch { }
-        }
 
         public List<AuditoriaIdioma> GetAuditoriaIdioma(int? idIdioma = null)
         {
@@ -192,18 +178,14 @@ namespace DAL
             using (var con = new SqlConnection(cs))
             {
                 con.Open();
-                var sql = @"
+                var cmd = new SqlCommand(@"
                     SELECT IdAuditoria, Fecha, UsuarioAccion, Operacion, IdIdioma,
-                           NombreAnterior, NombreNuevo, ClaveTraduccion,
-                           ValorAnterior, ValorNuevo
-                    FROM AuditoriaIdioma";
-                if (idIdioma.HasValue) sql += " WHERE IdIdioma = @IdIdioma";
-                sql += " ORDER BY Fecha DESC";
-
-                var cmd = new SqlCommand(sql, con);
-                if (idIdioma.HasValue)
-                    cmd.Parameters.AddWithValue("@IdIdioma", idIdioma.Value);
-
+                           NombreAnterior, NombreNuevo,
+                           ClaveTraduccion, ValorAnterior, ValorNuevo
+                    FROM AuditoriaIdioma
+                    WHERE (@Id IS NULL OR IdIdioma = @Id)
+                    ORDER BY Fecha DESC", con);
+                cmd.Parameters.AddWithValue("@Id", (object)idIdioma ?? DBNull.Value);
                 var rdr = cmd.ExecuteReader();
                 while (rdr.Read())
                 {

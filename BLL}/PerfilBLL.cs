@@ -3,12 +3,13 @@ using BE;
 using DAL;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace BLL
 {
     public class PerfilBLL
     {
-        // Singleton 
+        //Singleton
         private static PerfilBLL _instancia;
         public static PerfilBLL Instancia
         {
@@ -20,179 +21,181 @@ namespace BLL
             }
         }
 
-        private PerfilBLL() { _dal = new PerfilDAL(); }
-        private readonly PerfilDAL _dal;
-
-        // Observador de conjuntos
-        // PerfilBLL avisa a los formularios suscriptos cuando se
-        // crea, modifica o elimina un conjunto, para que se refresquen las listas.
-        private readonly List<IObservadorConjuntos> _observadores
-            = new List<IObservadorConjuntos>();
-
-        //suscribe conjuntos al observador de arriba
-        public void SuscribirConjuntos(IObservadorConjuntos obs)
+        private PerfilBLL()
         {
-            if (!_observadores.Contains(obs))
-                _observadores.Add(obs);
+            _dal = new PerfilDAL();
         }
 
-        //desuscribe conjuntos del observador de arriba
-        public void DesuscribirConjuntos(IObservadorConjuntos obs)
-            => _observadores.Remove(obs);
+        private readonly PerfilDAL _dal;
+        public Perfil PerfilActivo { get; private set; }
 
-        // Notifica a los formularios suscriptos que actualicen las listas de conjuntos.
+
+        // Observer de cambios de conjuntos
+        private readonly List<IObservadorConjuntos> _observadoresConjuntos
+            = new List<IObservadorConjuntos>();
+
+        public void SuscribirConjuntos(IObservadorConjuntos obs)
+        {
+            if (!_observadoresConjuntos.Contains(obs))
+                _observadoresConjuntos.Add(obs);
+        }
+
+        public void DesuscribirConjuntos(IObservadorConjuntos obs)
+            => _observadoresConjuntos.Remove(obs);
+
         private void NotificarConjuntos()
         {
-            foreach (var obs in _observadores)
+            foreach (var obs in _observadoresConjuntos.ToList())
                 obs.ActualizarConjuntos();
         }
 
-        // Permisos del usuario activo 
-        public Perfil PerfilActivo { get; private set; }
 
-        // Carga todos los permisos del usuario en un compuesto raíz.
-        // Se llama desde el Login
-        public void CargarPerfilDeUsuario(int idUsuario)
-        {
-            //creamos un perfil con el id del usuario, un nombre genérico y el compuesto raíz que contiene todos los permisos del usuario
-            PermisoCompuesto raiz = _dal.GetPermisosDeUsuario(idUsuario);
-            PerfilActivo = new Perfil
-            {
-                IdPerfil = idUsuario,
-                Nombre   = "Permisos del usuario",
-                Permiso  = raiz
-            };
-        }
-
-        public void LimpiarPerfil() => PerfilActivo = null;
-
-        public bool TienePermiso(string codigo)
-            => PerfilActivo?.TienePermiso(codigo) ?? false;
-
-        // Proceso de asignacion de permisos a usuarios 
-
-        // Compuesto con los permisos actuales de un usuario (para el árbol)
-        public PermisoCompuesto GetPermisosDeUsuario(int idUsuario)
-            => _dal.GetPermisosDeUsuario(idUsuario);
-
-        //Códigos asignados a un usuario (para marcar checkboxes)
-        public List<string> GetCodigosDeUsuario(int idUsuario)
-            => _dal.GetCodigosDeUsuario(idUsuario);
-
-        // Guarda la lista completa de permisos de un usuario y lo registra.
-        public void GuardarPermisosDeUsuario(int idUsuario, string nombreUsuario, List<string> codigos)
-        {
-            // Capturar los permisos actuales antes de sobrescribir
-            List<string> anteriores = _dal.GetCodigosDeUsuario(idUsuario);
-            string textoAnterior = anteriores.Count > 0
-                ? string.Join(", ", anteriores)
-                : "Sin permisos";
-            // Guardar los nuevos permisos
-            _dal.GuardarPermisosDeUsuario(idUsuario, codigos);
-
-            string textoNuevo = codigos.Count > 0
-                ? string.Join(", ", codigos)
-                : "Sin permisos";
-            // Registrar el cambio en la bitácora
-            BitacoraBLL.Instancia.RegistrarAsignacionPerfil(
-                nombreUsuarioAfectado: nombreUsuario,
-                idUsuarioAfectado:     idUsuario,
-                perfilAnterior:        textoAnterior,
-                perfilNuevo:           textoNuevo
-            );
-        }
-
-        // ABM de conjuntos
-
-        public List<PermisoAtomico> GetPermisosAtomicos()
-            => _dal.GetPermisosAtomicos();
-
-        public List<PermisoBase> GetSeleccionablesParaConjunto(string codigoExcluir)
-            => _dal.GetSeleccionablesParaConjunto(codigoExcluir);
-
-        public List<PermisoBase> GetConjuntos()
-            => _dal.GetConjuntos();
-
-        public void CrearConjunto(string nombre, List<string> codigos)
-        {
-            if (string.IsNullOrEmpty(nombre))
-                throw new Exception("El conjunto debe tener un nombre.");
-            //verificaciones
-            if (codigos == null || codigos.Count == 0)
-                throw new Exception("Seleccione al menos un permiso.");
-
-            try
-            {
-                // El código del conjunto se genera automáticamente en el DAL, por eso no se recibe como parámetro.
-                _dal.CrearConjunto(nombre, codigos);
-                //registro en bitacora
-                BitacoraBLL.Instancia.RegistrarCreacionConjunto(
-                    nombre, string.Join(", ", codigos));
-                NotificarConjuntos();   // avisa a los formularios suscriptos
-            }
-            catch (Exception ex)
-            {
-                //registro del error en bitacora
-                BitacoraBLL.Instancia.RegistrarError("CREAR_CONJUNTO", ex);
-                throw;
-            }
-        }
-
-        public void ActualizarConjunto(string codigo, string nombre, List<string> codigos)
-        {
-            //verificaciones
-            if (string.IsNullOrEmpty(codigo))
-                throw new Exception("Seleccione un conjunto para actualizar.");
-            if (EsProtegido(nombre))
-                throw new Exception($"El conjunto '{nombre}' es del sistema y no puede modificarse.");
-            if (codigos == null || codigos.Count == 0)
-                throw new Exception("Seleccione al menos un permiso.");
-            //llamamos a actualizar conjunto del DAL
-            _dal.ActualizarConjunto(codigo, nombre, codigos);
-            NotificarConjuntos();   // avisa a los formularios suscriptos
-        }
-
-        public void EliminarConjunto(string codigo, string nombre)
-        {
-            //verificaciones
-            if (EsProtegido(nombre))
-                throw new Exception($"El conjunto '{nombre}' es del sistema y no puede eliminarse.");
-            if (string.IsNullOrEmpty(codigo))
-                throw new Exception("No se pudo determinar el código del conjunto.");
-            //llamamos a eliminar conjunto del DAL
-            _dal.EliminarConjunto(codigo);
-            NotificarConjuntos();   // avisa a los formularios suscriptos
-        }
-
-        // Conjuntos del sistema que no se pueden modificar ni eliminar
-        private bool EsProtegido(string nombre)
-        {
-            //array de nombres protegidos para que no se puedan modificar ni eliminar
-            string[] protegidos = { "Administrador", "Operador", "Traductor", "Auditor" };
-            //verificamos si el nombre del conjunto está en el array de protegidos
-            return Array.Exists(protegidos, p => p == nombre);
-        }
-
-        // Constantes de permisos
+        // Códigos de permisos del sistema (constantes fuertemente tipadas)
         public static class Permisos
         {
             // Atómicos
-            public const string CrearUsuario          = "USR001";
-            public const string ModificarUsuario      = "USR002";
-            public const string EliminarUsuario       = "USR003";
-            public const string ListarUsuarios        = "USR004";
-            public const string AgregarIdioma         = "IDM001";
-            public const string EliminarIdioma        = "IDM002";
-            public const string GestionarTraducciones = "IDM003";
-            public const string AgregarTags           = "TAG001";
-            public const string EliminarTags          = "TAG002";
-            public const string VerBitacora           = "BIT001";
-            public const string GestionarPerfiles     = "PRF001";
-            public const string Backup = "ADM001";
+            public const string CrearUsuario       = "USR001";
+            public const string ModificarUsuario   = "USR002";
+            public const string EliminarUsuario    = "USR003";
+            public const string ListarUsuarios     = "USR004";
+            public const string AgregarIdioma      = "IDM001";
+            public const string EliminarIdioma     = "IDM002";
+            public const string AgregarTraduccion  = "IDM003";
+            public const string AgregarTag         = "TAG001";
+            public const string EliminarTag        = "TAG002";
+            // Alias en plural para compatibilidad con formularios existentes
+            public const string AgregarTags        = "TAG001";
+            public const string EliminarTags       = "TAG002";
+            public const string VerBitacora        = "BIT001";
+            public const string GestionarPerfiles  = "PRF001";
+            public const string Backup             = "ADM001";
+            public const string RestaurarAuditoria = "ADM002";
+
+            // Compuestos del sistema
             public const string Operador      = "GE010";
             public const string Traductor     = "GE020";
             public const string Auditor       = "GE030";
             public const string Administrador = "GE040";
+        }
+
+
+        // Perfil activo
+        public void CargarPerfilDeUsuario(int idUsuario)
+        {
+            PermisoBase raiz = _dal.GetPermisosDeUsuario(idUsuario);
+            PerfilActivo = new Perfil
+            {
+                Nombre = "Perfil de usuario",
+                Permiso = raiz
+            };
+        }
+
+        public void LimpiarPerfil()
+        {
+            PerfilActivo = null;
+        }
+
+        public bool TienePermiso(string codigo)
+            => PerfilActivo?.TienePermiso(codigo) ?? false;
+
+
+        // ABM de conjuntos (sin cambios respecto de la versión anterior)
+        public List<PermisoAtomico> GetPermisosAtomicos()
+            => _dal.GetPermisosAtomicos();
+
+        public List<PermisoBase> GetConjuntos()
+            => _dal.GetConjuntos();
+
+        public bool EsProtegido(string codigo)
+        {
+            return codigo == Permisos.Operador
+                || codigo == Permisos.Traductor
+                || codigo == Permisos.Auditor
+                || codigo == Permisos.Administrador;
+        }
+
+        public void CrearConjunto(string nombre, List<string> codigosHijos)
+        {
+            if (string.IsNullOrWhiteSpace(nombre))
+                throw new Exception("El conjunto debe tener un nombre.");
+            if (codigosHijos == null || codigosHijos.Count == 0)
+                throw new Exception("Debe seleccionar al menos un permiso.");
+
+            _dal.CrearConjunto(nombre.Trim(), codigosHijos);
+            BitacoraBLL.Instancia.RegistrarCreacionConjunto(
+                nombre.Trim(),
+                string.Join(", ", codigosHijos));
+            NotificarConjuntos();
+        }
+
+        public void ActualizarConjunto(string codigo, string nombre, List<string> codigosHijos)
+        {
+            if (EsProtegido(codigo))
+                throw new Exception("Los perfiles del sistema no pueden modificarse.");
+            if (string.IsNullOrWhiteSpace(nombre))
+                throw new Exception("El conjunto debe tener un nombre.");
+            if (codigosHijos == null || codigosHijos.Count == 0)
+                throw new Exception("Debe seleccionar al menos un permiso.");
+
+            _dal.ActualizarConjunto(codigo, nombre.Trim(), codigosHijos);
+            NotificarConjuntos();
+        }
+
+        public void EliminarConjunto(string codigo, string nombre)
+        {
+            if (EsProtegido(codigo))
+                throw new Exception("Los perfiles del sistema no pueden eliminarse.");
+
+            _dal.EliminarConjunto(codigo);
+            NotificarConjuntos();
+        }
+
+
+        // v2.7 — Asignación de permisos con snapshot y transacción única
+
+        // Reemplaza TODOS los permisos de un usuario en una sola operación:
+        //   1) Toma snapshot del estado ACTUAL (nombre + permisos actuales).
+        //   2) Reemplaza los permisos en transacción (delete + inserts).
+        //   3) Registra UNA sola entrada de auditoría con el snapshot,
+        //      para que el rollback pueda volver al estado anterior completo.
+        //
+        // Este método reemplaza al ciclo "asignar permiso 1, asignar permiso 2..."
+        // que había en frmPerfil, que generaba múltiples entradas sin snapshot.
+        public void ReemplazarPermisosDeUsuario(
+            int idUsuario, string nombreUsuario, List<string> codigosNuevos)
+        {
+            if (codigosNuevos == null) codigosNuevos = new List<string>();
+
+            var usuarioDAL = new UsuarioDAL();
+
+            // 1) Snapshot del estado ACTUAL
+            var snapshot = new UsuarioSnapshot
+            {
+                Id = idUsuario,
+                Nombre = nombreUsuario,
+                Permisos = usuarioDAL.GetPermisosCodigos(idUsuario)
+            };
+
+            // 2) Reemplazar los permisos usando UsuarioDAL.Restaurar
+            //    (misma primitiva transaccional que usa el rollback).
+            //    Para no cambiar el nombre del usuario, le pasamos su nombre actual.
+            usuarioDAL.Restaurar(idUsuario, nombreUsuario, codigosNuevos);
+
+            // 3) Registrar la asignación en auditoría, con snapshot del estado
+            //    ANTERIOR al cambio.
+            string descAnterior = snapshot.Permisos.Count == 0
+                ? "Sin permisos"
+                : string.Join(", ", snapshot.Permisos);
+            string descNuevo = codigosNuevos.Count == 0
+                ? "Sin permisos"
+                : string.Join(", ", codigosNuevos);
+
+            BitacoraBLL.Instancia.RegistrarAsignacionPerfil(
+                nombreUsuario, idUsuario, descAnterior, descNuevo, snapshot);
+
+            // 4) Recalcular dígitos verificadores
+            IntegridadBLL.Instancia.RecalcularDVHDeUsuario(idUsuario, nombreUsuario);
+            IntegridadBLL.Instancia.RecalcularDVVUsuarios();
         }
     }
 }

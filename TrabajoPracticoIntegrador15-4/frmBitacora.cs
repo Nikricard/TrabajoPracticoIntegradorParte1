@@ -12,6 +12,26 @@ namespace TrabajoPracticoIntegrador15_4
     {
         private readonly GestorIdioma gestor = GestorIdioma.Instancia;
 
+        // Lista fija de actividades registradas por BitacoraBLL. Se muestra en
+        // el ComboBox de filtro. La primera entrada "Todas" desactiva el filtro.
+        private static readonly List<string> ActividadesDelSistema = new List<string>
+        {
+            "Todas",
+            "Inicio de sesión",
+            "Cierre de sesión",
+            "Alta de usuario",
+            "Modificación de usuario",
+            "Baja de usuario",
+            "Rollback de usuario",
+            "Asignación de perfil",
+            "Alta de conjunto",
+            "Alta de idioma",
+            "Baja de idioma",
+            "Modificación de traducción",
+            "Backup de base de datos",
+            "Restore de base de datos"
+        };
+
         public void ActualizarIdioma(Idioma idioma)
             => TraductorUI.Traducir(this.Controls, idioma);
 
@@ -22,7 +42,6 @@ namespace TrabajoPracticoIntegrador15_4
 
         private void frmBitacora_Load(object sender, EventArgs e)
         {
-            // ComboBox de tipo de evento
             cmbTipoEvento.Items.Clear();
             cmbTipoEvento.Items.Add("Todos");
             cmbTipoEvento.Items.Add("Exito");
@@ -30,57 +49,59 @@ namespace TrabajoPracticoIntegrador15_4
             cmbTipoEvento.Items.Add("Excepcion");
             cmbTipoEvento.SelectedIndex = 0;
 
-            // ComboBox de usuarios — opción "Todos" + todos los usuarios
+            // Cargar ComboBox de actividades (reemplaza al TextBox anterior).
+            cmbActividad.Items.Clear();
+            foreach (string a in ActividadesDelSistema)
+                cmbActividad.Items.Add(a);
+            cmbActividad.SelectedIndex = 0;
+
             CargarComboUsuarios();
 
-            // Fechas por defecto: última semana
             dtpDesde.Value = DateTime.Today.AddDays(-7);
             dtpHasta.Value = DateTime.Today;
 
             ConfigurarGrillas();
+            AplicarPermisos();
 
             Buscar();
             CargarAuditorias();
 
             gestor.Suscribir(this);
-            BitacoraBLL.Instancia.Suscribir(this);  // escucha nuevos eventos
+            BitacoraBLL.Instancia.Suscribir(this);
 
             if (gestor.IdiomaActivo != null)
                 ActualizarIdioma(gestor.IdiomaActivo);
         }
 
-        // Observer de bitácora: lo dispara cualquier BLL cuando registra un evento.
-        // Refresca respetando los filtros actuales que tenga el usuario aplicados.
         public void ActualizarBitacora()
         {
-            // Si el form se cerró pero quedó algún observer huérfano, no hacer nada.
             if (IsDisposed || !IsHandleCreated) return;
-
-            // Las llamadas pueden venir de otro thread? Aseguro UI thread con Invoke.
             if (InvokeRequired)
             {
                 BeginInvoke(new Action(ActualizarBitacora));
                 return;
             }
-
             Buscar();
-            // Si está en una pestaña de auditoría, también la refresco.
             if (tabControl.SelectedTab == tabUsuario ||
                 tabControl.SelectedTab == tabIdioma)
                 CargarAuditorias();
         }
 
-
-        // Llena el ComboBox con "Todos" + los nombres de todos los usuarios.
         private void CargarComboUsuarios()
         {
             cmbUsuario.Items.Clear();
             cmbUsuario.Items.Add("Todos");
-
             foreach (Usuario u in UsuarioBLL.Instancia.GetAll())
                 cmbUsuario.Items.Add(u.Nombre);
+            cmbUsuario.SelectedIndex = 0;
+        }
 
-            cmbUsuario.SelectedIndex = 0;  // por defecto "Todos"
+        private void AplicarPermisos()
+        {
+            bool puedeRestaurar = PerfilBLL.Instancia.TienePermiso(
+                PerfilBLL.Permisos.RestaurarAuditoria);
+            btnRestaurar.Enabled = puedeRestaurar;
+            btnRestaurar.Visible = puedeRestaurar;
         }
 
         private void ConfigurarGrillas()
@@ -97,15 +118,38 @@ namespace TrabajoPracticoIntegrador15_4
             dgvBitacora.Columns.Add(ColTexto("ValorAnterior", "Valor anterior", 160));
             dgvBitacora.Columns.Add(ColTexto("ValorNuevo", "Valor nuevo", 160));
 
-            // Auditoría usuarios
+            // Auditoría usuarios — usamos "Valor anterior / Valor nuevo" en
+            // lugar de "Nombre anterior / Nombre nuevo" porque los cambios
+            // de permisos también viajan por estas columnas (el "valor"
+            // puede ser un nombre o una lista de códigos de permiso).
             dgvAudUsuario.AutoGenerateColumns = false;
             dgvAudUsuario.Columns.Clear();
             dgvAudUsuario.Columns.Add(ColTexto("Fecha", "Fecha", 120));
             dgvAudUsuario.Columns.Add(ColTexto("UsuarioAccion", "Quién", 100));
             dgvAudUsuario.Columns.Add(ColTexto("Operacion", "Operación", 140));
             dgvAudUsuario.Columns.Add(ColTexto("IdUsuario", "ID usuario", 80));
-            dgvAudUsuario.Columns.Add(ColTexto("NombreAnterior", "Nombre anterior", 140));
-            dgvAudUsuario.Columns.Add(ColTexto("NombreNuevo", "Nombre nuevo", 140));
+
+            // Columnas anchas con wrap para leer permisos concatenados.
+            var colAnt = ColTexto("NombreAnterior", "Valor anterior", 260);
+            colAnt.DefaultCellStyle.WrapMode = DataGridViewTriState.True;
+            dgvAudUsuario.Columns.Add(colAnt);
+
+            var colNue = ColTexto("NombreNuevo", "Valor nuevo", 260);
+            colNue.DefaultCellStyle.WrapMode = DataGridViewTriState.True;
+            dgvAudUsuario.Columns.Add(colNue);
+
+            // Columna virtual que indica si la fila tiene snapshot (restaurable).
+            var colRestaurable = new DataGridViewTextBoxColumn
+            {
+                HeaderText = "Restaurable",
+                Width = 90,
+                ReadOnly = true,
+                Name = "colRestaurable"
+            };
+            dgvAudUsuario.Columns.Add(colRestaurable);
+
+            // Las filas se ajustan en altura para mostrar el contenido completo.
+            dgvAudUsuario.AutoSizeRowsMode = DataGridViewAutoSizeRowsMode.AllCells;
 
             // Auditoría idiomas
             dgvAudIdioma.AutoGenerateColumns = false;
@@ -135,21 +179,15 @@ namespace TrabajoPracticoIntegrador15_4
         private void Buscar()
         {
             string tipoEvento = cmbTipoEvento.SelectedItem?.ToString() == "Todos"
-                ? null
-                : cmbTipoEvento.SelectedItem?.ToString();
-
-            // Si el usuario seleccionado es "Todos", no filtramos por usuario
+                ? null : cmbTipoEvento.SelectedItem?.ToString();
             string usuario = cmbUsuario.SelectedItem?.ToString() == "Todos"
-                ? null
-                : cmbUsuario.SelectedItem?.ToString();
+                ? null : cmbUsuario.SelectedItem?.ToString();
+            string actividad = cmbActividad.SelectedItem?.ToString() == "Todas"
+                ? null : cmbActividad.SelectedItem?.ToString();
 
             List<RegistroBitacora> resultados = BitacoraBLL.Instancia.Buscar(
-                dtpDesde.Value.Date,
-                dtpHasta.Value.Date,
-                usuario,
-                txtActividad.Text.Trim(),
-                tipoEvento
-            );
+                dtpDesde.Value.Date, dtpHasta.Value.Date,
+                usuario, actividad, tipoEvento);
 
             dgvBitacora.DataSource = null;
             dgvBitacora.DataSource = resultados;
@@ -170,24 +208,96 @@ namespace TrabajoPracticoIntegrador15_4
 
         private void CargarAuditorias()
         {
+            var audUsuarios = BitacoraBLL.Instancia.GetAuditoriaUsuario();
             dgvAudUsuario.DataSource = null;
-            dgvAudUsuario.DataSource = BitacoraBLL.Instancia.GetAuditoriaUsuario();
+            dgvAudUsuario.DataSource = audUsuarios;
+
+            // Marcar la columna "Restaurable" y setear tooltip con el snapshot.
+            foreach (DataGridViewRow row in dgvAudUsuario.Rows)
+            {
+                if (row.DataBoundItem is AuditoriaUsuario a)
+                {
+                    bool tieneSnapshot = !string.IsNullOrEmpty(a.SnapshotJson);
+                    row.Cells["colRestaurable"].Value = tieneSnapshot ? "Sí" : "—";
+                    if (tieneSnapshot)
+                    {
+                        row.Cells["colRestaurable"].Style.ForeColor =
+                            System.Drawing.Color.DarkGreen;
+                        // Tooltip con el JSON del snapshot al pasar el mouse
+                        row.Cells["colRestaurable"].ToolTipText = a.SnapshotJson;
+                    }
+                }
+            }
 
             dgvAudIdioma.DataSource = null;
             dgvAudIdioma.DataSource = BitacoraBLL.Instancia.GetAuditoriaIdioma();
         }
 
-        private void button1_Click(object sender, EventArgs e)
+        private void btnRestaurar_Click(object sender, EventArgs e)
         {
-            Buscar();
+            if (dgvAudUsuario.SelectedRows.Count != 1)
+            {
+                MessageBox.Show("Seleccione una fila de la auditoría para restaurar.",
+                    "Atención", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
+            var fila = dgvAudUsuario.SelectedRows[0].DataBoundItem as AuditoriaUsuario;
+            if (fila == null) return;
+
+            if (string.IsNullOrEmpty(fila.SnapshotJson))
+            {
+                MessageBox.Show(
+                    "Esta entrada no tiene un snapshot asociado (es anterior a la " +
+                    "versión con control de cambios completo). Solo se pueden " +
+                    "restaurar entradas con la columna 'Restaurable' en Sí.",
+                    "Atención", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
+            UsuarioSnapshot snapshot;
+            try { snapshot = UsuarioSnapshot.FromJson(fila.SnapshotJson); }
+            catch (Exception ex)
+            {
+                MessageBox.Show("El snapshot está corrupto: " + ex.Message,
+                    "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
+
+            var resp = MessageBox.Show(
+                $"¿Restaurar el usuario Id {snapshot.Id} al estado del " +
+                $"{fila.Fecha:g}?\n\n" +
+                snapshot.DescripcionCorta() + "\n\n" +
+                "La contraseña actual NO se modificará.\n" +
+                "Esta operación quedará registrada como un rollback en la auditoría.",
+                "Confirmar restauración",
+                MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+            if (resp != DialogResult.Yes) return;
+
+            try
+            {
+                UsuarioBLL.Instancia.Rollback(snapshot, fila.Fecha);
+                MessageBox.Show(
+                    "Rollback aplicado correctamente.\n" +
+                    "El usuario fue restaurado al estado seleccionado.",
+                    "Éxito", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                CargarAuditorias();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("No se pudo aplicar el rollback:\n" + ex.Message,
+                    "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
         }
+
+        private void button1_Click(object sender, EventArgs e) => Buscar();
 
         private void button2_Click(object sender, EventArgs e)
         {
             dtpDesde.Value = DateTime.Today.AddDays(-7);
             dtpHasta.Value = DateTime.Today;
-            cmbUsuario.SelectedIndex    = 0;   // vuelve a "Todos"
-            txtActividad.Text           = string.Empty;
+            cmbUsuario.SelectedIndex = 0;
+            cmbActividad.SelectedIndex = 0;
             cmbTipoEvento.SelectedIndex = 0;
             Buscar();
         }

@@ -1,13 +1,21 @@
+-- ============================================================================
 --  03 — Bitácora y Auditoría (control de cambios)
+-- ============================================================================
 --  Crea las tablas Bitacora (log general de eventos: login, logout, errores,
 --  excepciones y operaciones de negocio) y las dos tablas de auditoría:
 --  AuditoriaUsuario y AuditoriaIdioma.
 --
 --  Las tablas de auditoría guardan IdUsuario/IdIdioma como dato (referencia
---  lógica), SIN clave foránea. Si existiera la FK, no se podrían eliminar usuarios ni idiomas con historial. 
---  Sin FK, el historial sobrevive a las bajas.
+--  lógica), SIN clave foránea. Es una decisión deliberada: si existiera la FK,
+--  no se podrían eliminar usuarios ni idiomas con historial. Sin FK, el
+--  historial sobrevive a las bajas.
 --
---  ORDEN DE EJECUCIÓN: 3°
+--  Nota v2.7: la columna Operacion es VARCHAR(50) para poder guardar los
+--  nombres legibles largos como "Modificación de traducción" o
+--  "Asignación de perfil", que superan los 20 caracteres.
+--
+--  ORDEN DE EJECUCIÓN: 3° (después de 02, antes de 05).
+-- ============================================================================
 
 USE Usuarios;
 GO
@@ -31,10 +39,10 @@ CREATE TABLE AuditoriaUsuario (
     IdAuditoria    INT          PRIMARY KEY IDENTITY(1,1),
     Fecha          DATETIME     NOT NULL DEFAULT GETDATE(),
     UsuarioAccion  VARCHAR(100) NOT NULL,
-    Operacion      VARCHAR(20)  NOT NULL,   -- 'ADD' / 'MODIFY' / 'DELETE' / 'ASIGNAR_PERFIL'
+    Operacion      VARCHAR(50)  NOT NULL,   -- 'Alta' / 'Modificación' / 'Baja' / 'Asignación de perfil' / 'Rollback'
     IdUsuario      INT          NOT NULL,
-    NombreAnterior VARCHAR(100) NULL,
-    NombreNuevo    VARCHAR(100) NULL
+    NombreAnterior VARCHAR(500) NULL,       -- puede contener lista de códigos de permiso
+    NombreNuevo    VARCHAR(500) NULL
 );
 GO
 
@@ -43,7 +51,7 @@ CREATE TABLE AuditoriaIdioma (
     IdAuditoria     INT          PRIMARY KEY IDENTITY(1,1),
     Fecha           DATETIME     NOT NULL DEFAULT GETDATE(),
     UsuarioAccion   VARCHAR(100) NOT NULL,
-    Operacion       VARCHAR(20)  NOT NULL,
+    Operacion       VARCHAR(50)  NOT NULL,   -- 'Alta' / 'Baja' / 'Modificación de traducción'
     IdIdioma        INT          NOT NULL,
     NombreAnterior  VARCHAR(100) NULL,
     NombreNuevo     VARCHAR(100) NULL,

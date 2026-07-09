@@ -1,6 +1,6 @@
+using ABS;
 using BE;
 using BLL;
-using ABS;
 using BLL_;
 using System;
 using System.Collections.Generic;
@@ -21,15 +21,25 @@ namespace TrabajoPracticoIntegrador15_4
         public void ActualizarIdioma(Idioma idioma)
             => TraductorUI.Traducir(this.Controls, idioma);
 
+        // El observador de conjuntos: cuando desde frmPermiso se crea, actualiza
+        // o elimina un conjunto, frmPerfil se refresca automáticamente.
+        public void ActualizarConjuntos()
+        {
+            CargarSeleccionables();
+            if (usuarioSeleccionado != null)
+                MarcarPermisosDelUsuario(usuarioSeleccionado.Id);
+        }
+
         private void frmPerfil_Load(object sender, EventArgs e)
         {
             gestor.Suscribir(this);
-            PerfilBLL.Instancia.SuscribirConjuntos(this);   // escucha cambios de conjuntos
+            PerfilBLL.Instancia.SuscribirConjuntos(this);
+
             if (gestor.IdiomaActivo != null)
                 ActualizarIdioma(gestor.IdiomaActivo);
 
-            CargarListas();
-            CargarGrillaUsuarios();
+            CargarUsuarios();
+            CargarSeleccionables();
         }
 
         private void frmPerfil_FormClosed(object sender, FormClosedEventArgs e)
@@ -38,21 +48,13 @@ namespace TrabajoPracticoIntegrador15_4
             PerfilBLL.Instancia.DesuscribirConjuntos(this);
         }
 
-        // Observer de conjuntos: lo dispara frmPermiso al crear/modificar/eliminar un conjunto.
-        // Refresca las listas y, si hay un usuario seleccionado, reaplica sus marcas y el árbol.
-        public void ActualizarConjuntos()
+        private void CargarUsuarios()
         {
-            CargarListas();
-            if (usuarioSeleccionado != null)
-            {
-                MarcarPermisosDelUsuario(usuarioSeleccionado.Id);
-                MostrarArbolDelUsuario(usuarioSeleccionado.Id);
-            }
+            dgvUsuarios.DataSource = null;
+            dgvUsuarios.DataSource = UsuarioBLL.Instancia.GetAll();
         }
 
-        // Carga inicial
-
-        private void CargarListas()
+        private void CargarSeleccionables()
         {
             // Atómicos
             clbAtomicos.Items.Clear();
@@ -60,69 +62,66 @@ namespace TrabajoPracticoIntegrador15_4
             foreach (PermisoAtomico p in PerfilBLL.Instancia.GetPermisosAtomicos())
                 clbAtomicos.Items.Add(p);
 
-            // Compuestos (conjuntos)
+            // Compuestos (conjuntos disponibles)
             clbCompuestos.Items.Clear();
             clbCompuestos.DisplayMember = "Nombre";
             foreach (PermisoBase p in PerfilBLL.Instancia.GetConjuntos())
                 clbCompuestos.Items.Add(p);
         }
 
-        private void CargarGrillaUsuarios()
-        {
-            dgvUsuarios.DataSource = null;
-            dgvUsuarios.DataSource = UsuarioBLL.Instancia.GetAll();
-            if (dgvUsuarios.Columns["Contraseña"] != null)
-                dgvUsuarios.Columns["Contraseña"].Visible = false;
-        }
-
-        // Selección de usuario 
-
         private void dgvUsuarios_SelectionChanged(object sender, EventArgs e)
         {
-            if (dgvUsuarios.SelectedRows.Count != 1) return;
-
-            usuarioSeleccionado = (Usuario)dgvUsuarios.SelectedRows[0].DataBoundItem;
-            txtNombre.Text      = usuarioSeleccionado.Nombre;
-
-            MarcarPermisosDelUsuario(usuarioSeleccionado.Id);
-            MostrarArbolDelUsuario(usuarioSeleccionado.Id);
+            if (dgvUsuarios.SelectedRows.Count == 1)
+            {
+                usuarioSeleccionado = (Usuario)dgvUsuarios.SelectedRows[0].DataBoundItem;
+                if (usuarioSeleccionado != null)
+                    MarcarPermisosDelUsuario(usuarioSeleccionado.Id);
+            }
         }
 
-        //Tilda en ambas listas los permisos que tiene el usuario
+        // Marca en las dos listas los permisos que el usuario ya tiene
+        // asignados directamente, y dibuja el árbol completo (con recursión
+        // en los compuestos) en el TreeView.
         private void MarcarPermisosDelUsuario(int idUsuario)
         {
-            // obtiene los códigos de permisos del usuario y tilda los que correspondan en las listas
-            List<string> codigos = PerfilBLL.Instancia.GetCodigosDeUsuario(idUsuario);
-            
-            // recorre ambas listas y marca los permisos que el usuario tiene según los códigos obtenidos
+            var codigosDirectos = new HashSet<string>(
+                new DAL.UsuarioDAL().GetPermisosCodigos(idUsuario));
+
             for (int i = 0; i < clbAtomicos.Items.Count; i++)
             {
-                PermisoBase p = (PermisoBase)clbAtomicos.Items[i];
-                clbAtomicos.SetItemChecked(i, codigos.Contains(p.Codigo));
+                var p = (PermisoBase)clbAtomicos.Items[i];
+                clbAtomicos.SetItemChecked(i, codigosDirectos.Contains(p.Codigo));
             }
-            // lo mismo pero para compuestos
+
             for (int i = 0; i < clbCompuestos.Items.Count; i++)
             {
-                PermisoBase p = (PermisoBase)clbCompuestos.Items[i];
-                clbCompuestos.SetItemChecked(i, codigos.Contains(p.Codigo));
+                var p = (PermisoBase)clbCompuestos.Items[i];
+                clbCompuestos.SetItemChecked(i, codigosDirectos.Contains(p.Codigo));
             }
+
+            MostrarArbolDelUsuario(idUsuario);
         }
 
-        //Dibuja el árbol con los permisos efectivos del usuario
         private void MostrarArbolDelUsuario(int idUsuario)
         {
             treePermisos.Nodes.Clear();
-            PermisoCompuesto raiz = PerfilBLL.Instancia.GetPermisosDeUsuario(idUsuario);
 
-            if (raiz.Hijos.Count == 0) return;
+            var usuarioDAL = new DAL.UsuarioDAL();
+            var codigos = usuarioDAL.GetPermisosCodigos(idUsuario);
+            var atomicos = PerfilBLL.Instancia.GetPermisosAtomicos();
+            var compuestos = PerfilBLL.Instancia.GetConjuntos();
 
-            foreach (PermisoBase permiso in raiz.Hijos)
+            foreach (string codigo in codigos)
             {
-                TreeNode nodo = new TreeNode($"[{permiso.Codigo}] {permiso.Nombre}");
-                nodo.ForeColor = permiso is PermisoCompuesto
+                PermisoBase p = atomicos.Find(a => a.Codigo == codigo);
+                if (p == null) p = compuestos.Find(c => c.Codigo == codigo);
+                if (p == null) continue;
+
+                TreeNode nodo = new TreeNode($"[{p.Codigo}] {p.Nombre}");
+                nodo.ForeColor = p is PermisoCompuesto
                     ? System.Drawing.Color.DarkBlue
                     : System.Drawing.Color.DarkGreen;
-                AgregarNodosRecursivo(nodo, permiso);
+                AgregarNodosRecursivo(nodo, p);
                 treePermisos.Nodes.Add(nodo);
             }
             treePermisos.ExpandAll();
@@ -132,26 +131,20 @@ namespace TrabajoPracticoIntegrador15_4
         {
             if (permiso is PermisoCompuesto compuesto)
             {
-                // Si el permiso es un compuesto, recorre sus hijos y los agrega como nodos hijos del nodo actual.
                 foreach (PermisoBase hijo in compuesto.Hijos)
                 {
-                    // Crea un nodo para el hijo y lo agrega al nodo actual,
-                    // luego llama recursivamente para agregar los hijos del hijo.
                     TreeNode nodoHijo = new TreeNode($"[{hijo.Codigo}] {hijo.Nombre}");
-                    //los compuestos en azul oscuro y los atómicos en verde oscuro
                     nodoHijo.ForeColor = hijo is PermisoCompuesto
                         ? System.Drawing.Color.DarkBlue
                         : System.Drawing.Color.DarkGreen;
-                    // Agrega el nodo hijo al nodo actual
                     nodo.Nodes.Add(nodoHijo);
-                    // Llama recursivamente para agregar los hijos del hijo
                     AgregarNodosRecursivo(nodoHijo, hijo);
                 }
             }
         }
 
-        // Guardar permisos del usuario
-
+        // Guardar: reemplaza TODOS los permisos del usuario en una sola
+        // operación con snapshot para poder hacer rollback después.
         private void btnGuardar_Click(object sender, EventArgs e)
         {
             if (usuarioSeleccionado == null)
@@ -163,28 +156,39 @@ namespace TrabajoPracticoIntegrador15_4
 
             try
             {
-                // junta los códigos tildados en las 2 listas
+                // Recoger los códigos marcados en las dos listas.
                 var codigos = new List<string>();
-                //lista de atomicos
                 foreach (PermisoBase p in clbAtomicos.CheckedItems)
                     codigos.Add(p.Codigo);
-                //lista de compuestos
                 foreach (PermisoBase p in clbCompuestos.CheckedItems)
                     codigos.Add(p.Codigo);
 
-                PerfilBLL.Instancia.GuardarPermisosDeUsuario(
-                    usuarioSeleccionado.Id, usuarioSeleccionado.Nombre, codigos);
+                // Una sola llamada: toma snapshot, reemplaza, audita, recalcula DVH.
+                PerfilBLL.Instancia.ReemplazarPermisosDeUsuario(
+                    usuarioSeleccionado.Id,
+                    usuarioSeleccionado.Nombre,
+                    codigos);
 
-                MessageBox.Show($"Permisos actualizados para '{usuarioSeleccionado.Nombre}'.", "Éxito", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                // refresca las marcas y el árbol con los datos guardados
-                MostrarArbolDelUsuario(usuarioSeleccionado.Id);
+                MessageBox.Show(
+                    "Permisos actualizados correctamente.",
+                    "Éxito", MessageBoxButtons.OK, MessageBoxIcon.Information);
+
+                MarcarPermisosDelUsuario(usuarioSeleccionado.Id);
             }
             catch (Exception ex)
             {
-                //mensaje personalizado
                 MessageBox.Show(ex.Message, "Error",
                     MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
+        }
+
+        private void btnLimpiar_Click(object sender, EventArgs e)
+        {
+            for (int i = 0; i < clbAtomicos.Items.Count; i++)
+                clbAtomicos.SetItemChecked(i, false);
+            for (int i = 0; i < clbCompuestos.Items.Count; i++)
+                clbCompuestos.SetItemChecked(i, false);
+            treePermisos.Nodes.Clear();
         }
 
         private void btnSalir_Click(object sender, EventArgs e)

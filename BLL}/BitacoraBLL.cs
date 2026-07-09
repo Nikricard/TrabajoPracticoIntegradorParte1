@@ -20,16 +20,11 @@ namespace BLL
             }
         }
 
-        private BitacoraBLL() 
-        { 
-            _dal = new BitacoraDAL(); 
-        }
-        
+        private BitacoraBLL() { _dal = new BitacoraDAL(); }
         private readonly BitacoraDAL _dal;
 
 
         // Observer de bitácora
-        // Lista de formularios que escuchan los registros y se refrescan solos.
         private readonly List<IObservadorBitacora> _observadores
             = new List<IObservadorBitacora>();
 
@@ -52,8 +47,6 @@ namespace BLL
         private string UsuarioActual =>
             UsuarioBLL.Instancia.UsuarioActivo?.Nombre ?? "Sistema";
 
-        // Método central: persiste y notifica.
-        // Todos los métodos públicos de registro pasan por acá.
         private void Registrar(string actividad, TipoEvento tipo,
             string descripcion = null, string entidad = null,
             string anterior = null, string nuevo = null)
@@ -69,40 +62,28 @@ namespace BLL
                 ValorAnterior = anterior,
                 ValorNuevo    = nuevo
             });
-
-            // Avisar a los formularios suscriptos para que se refresquen
             Notificar();
         }
 
-        
 
         public void RegistrarLogin(string nombreUsuario)
-        {
-            Registrar("Inicio de sesión", TipoEvento.Exito,
+            => Registrar("Inicio de sesión", TipoEvento.Exito,
                 $"El usuario '{nombreUsuario}' inició sesión.");
-        }
 
         public void RegistrarLogout(string nombreUsuario)
-        {
-            Registrar("Cierre de sesión", TipoEvento.Exito,
+            => Registrar("Cierre de sesión", TipoEvento.Exito,
                 $"El usuario '{nombreUsuario}' cerró sesión.");
-        }
 
         public void RegistrarError(string actividad, Exception ex)
-        {
-            Registrar(actividad, TipoEvento.Error,
-                $"Error: {ex.Message}",
-                entidad: ex.GetType().Name);
-        }
+            => Registrar(actividad, TipoEvento.Error,
+                $"Error: {ex.Message}", entidad: ex.GetType().Name);
 
         public void RegistrarExcepcion(string actividad, Exception ex)
-        {
-            Registrar(actividad, TipoEvento.Excepcion,
-                $"Excepción: {ex.Message}\n{ex.StackTrace}",
-                entidad: ex.GetType().Name);
-        }
+            => Registrar(actividad, TipoEvento.Excepcion,
+                $"Excepción: {ex.Message}\n{ex.StackTrace}", entidad: ex.GetType().Name);
 
-        //Usuarios
+
+        // Usuarios — snapshotAnterior opcional para el control de cambios v2.7
 
         public void RegistrarAddUsuario(Usuario u)
         {
@@ -117,13 +98,17 @@ namespace BLL
                 Operacion      = "Alta",
                 IdUsuario      = u.Id,
                 NombreAnterior = null,
-                NombreNuevo    = u.Nombre
+                NombreNuevo    = u.Nombre,
+                SnapshotJson   = null   // Alta: no hay estado anterior
             });
-
             Notificar();
         }
 
-        public void RegistrarModifyUsuario(Usuario anterior, Usuario nuevo)
+        // Registra la modificación de un usuario. snapshotAnterior es
+        // el estado del usuario ANTES de la operación, para poder
+        // hacer rollback a este punto.
+        public void RegistrarModifyUsuario(Usuario anterior, Usuario nuevo,
+            UsuarioSnapshot snapshotAnterior = null)
         {
             Registrar("Modificación de usuario", TipoEvento.Exito,
                 $"Usuario Id:{nuevo.Id} modificado.", "Usuario",
@@ -137,13 +122,13 @@ namespace BLL
                 Operacion      = "Modificación",
                 IdUsuario      = nuevo.Id,
                 NombreAnterior = anterior.Nombre,
-                NombreNuevo    = nuevo.Nombre
+                NombreNuevo    = nuevo.Nombre,
+                SnapshotJson   = snapshotAnterior?.ToJson()
             });
-
             Notificar();
         }
 
-        public void RegistrarDeleteUsuario(Usuario u)
+        public void RegistrarDeleteUsuario(Usuario u, UsuarioSnapshot snapshotAnterior = null)
         {
             Registrar("Baja de usuario", TipoEvento.Exito,
                 $"Usuario '{u.Nombre}' eliminado.", "Usuario",
@@ -156,29 +141,55 @@ namespace BLL
                 Operacion      = "Baja",
                 IdUsuario      = u.Id,
                 NombreAnterior = u.Nombre,
-                NombreNuevo    = null
+                NombreNuevo    = null,
+                SnapshotJson   = snapshotAnterior?.ToJson()
             });
-
             Notificar();
         }
 
-        //Idiomas
+        // Registra un rollback como una entrada de auditoría propia,
+        // con snapshot del estado anterior al rollback. Así el rollback
+        // en sí queda auditado y puede revertirse si hace falta.
+        public void RegistrarRollbackUsuario(int idUsuario,
+            UsuarioSnapshot snapshotAntesDelRollback,
+            UsuarioSnapshot snapshotDestino,
+            DateTime fechaSnapshotDestino)
+        {
+            string desc = $"Rollback del usuario Id {idUsuario} " +
+                          $"al estado del {fechaSnapshotDestino:g}.";
+
+            Registrar("Rollback de usuario", TipoEvento.Exito,
+                desc, "Usuario",
+                $"Nombre:{snapshotAntesDelRollback?.Nombre}",
+                $"Nombre:{snapshotDestino?.Nombre}");
+
+            _dal.RegistrarAuditoriaUsuario(new AuditoriaUsuario
+            {
+                Fecha          = DateTime.Now,
+                UsuarioAccion  = UsuarioActual,
+                Operacion      = "Rollback",
+                IdUsuario      = idUsuario,
+                NombreAnterior = snapshotAntesDelRollback?.Nombre,
+                NombreNuevo    = snapshotDestino?.Nombre,
+                // Guarda el estado ANTES del rollback para poder deshacerlo.
+                SnapshotJson   = snapshotAntesDelRollback?.ToJson()
+            });
+            Notificar();
+        }
+
+
+        // Idiomas — sin cambios
 
         public void RegistrarAddIdioma(int idIdioma, string nombre)
         {
             Registrar("Alta de idioma", TipoEvento.Exito,
                 $"Nuevo idioma: '{nombre}'", "Idioma",
                 null, $"Id:{idIdioma} Nombre:{nombre}");
-
             _dal.RegistrarAuditoriaIdioma(new AuditoriaIdioma
             {
-                Fecha         = DateTime.Now,
-                UsuarioAccion = UsuarioActual,
-                Operacion     = "Alta",
-                IdIdioma      = idIdioma,
-                NombreNuevo   = nombre
+                Fecha = DateTime.Now, UsuarioAccion = UsuarioActual,
+                Operacion = "Alta", IdIdioma = idIdioma, NombreNuevo = nombre
             });
-
             Notificar();
         }
 
@@ -187,16 +198,11 @@ namespace BLL
             Registrar("Baja de idioma", TipoEvento.Exito,
                 $"Idioma '{nombre}' eliminado.", "Idioma",
                 $"Id:{idIdioma} Nombre:{nombre}", null);
-
             _dal.RegistrarAuditoriaIdioma(new AuditoriaIdioma
             {
-                Fecha          = DateTime.Now,
-                UsuarioAccion  = UsuarioActual,
-                Operacion      = "Baja",
-                IdIdioma       = idIdioma,
-                NombreAnterior = nombre
+                Fecha = DateTime.Now, UsuarioAccion = UsuarioActual,
+                Operacion = "Baja", IdIdioma = idIdioma, NombreAnterior = nombre
             });
-
             Notificar();
         }
 
@@ -206,23 +212,20 @@ namespace BLL
             Registrar("Modificación de traducción", TipoEvento.Exito,
                 $"Traducción '{clave}' modificada.", "Idioma",
                 valorAnterior, valorNuevo);
-
             _dal.RegistrarAuditoriaIdioma(new AuditoriaIdioma
             {
-                Fecha           = DateTime.Now,
-                UsuarioAccion   = UsuarioActual,
-                Operacion       = "Modificación de traducción",
-                IdIdioma        = idIdioma,
-                ClaveTraduccion = clave,
-                ValorAnterior   = valorAnterior,
-                ValorNuevo      = valorNuevo
+                Fecha = DateTime.Now, UsuarioAccion = UsuarioActual,
+                Operacion = "Modificación de traducción",
+                IdIdioma = idIdioma, ClaveTraduccion = clave,
+                ValorAnterior = valorAnterior, ValorNuevo = valorNuevo
             });
-
             Notificar();
         }
 
-        public void RegistrarAsignacionPerfil(string nombreUsuarioAfectado, int idUsuarioAfectado,
-            string perfilAnterior, string perfilNuevo)
+        public void RegistrarAsignacionPerfil(
+            string nombreUsuarioAfectado, int idUsuarioAfectado,
+            string perfilAnterior, string perfilNuevo,
+            UsuarioSnapshot snapshotAnterior = null)
         {
             Registrar(
                 actividad: "Asignación de perfil",
@@ -238,55 +241,35 @@ namespace BLL
 
             _dal.RegistrarAuditoriaUsuario(new AuditoriaUsuario
             {
-                Fecha = DateTime.Now,
-                UsuarioAccion = UsuarioActual,
+                Fecha = DateTime.Now, UsuarioAccion = UsuarioActual,
                 Operacion = "Asignación de perfil",
                 IdUsuario = idUsuarioAfectado,
                 NombreAnterior = perfilAnterior ?? "Sin perfil",
-                NombreNuevo = perfilNuevo
+                NombreNuevo = perfilNuevo,
+                SnapshotJson = snapshotAnterior?.ToJson()
             });
-
             Notificar();
         }
 
         public void RegistrarCreacionConjunto(string nombreConjunto, string permisosIncluidos)
         {
-            Registrar(
-                actividad: "Alta de conjunto",
-                tipo: TipoEvento.Exito,
-                descripcion: $"Conjunto de permisos '{nombreConjunto}' creado.",
-                entidad: "Perfil",
-                anterior: null,
-                nuevo: $"Permisos: {permisosIncluidos}"
-            );
+            Registrar("Alta de conjunto", TipoEvento.Exito,
+                $"Conjunto de permisos '{nombreConjunto}' creado.", "Perfil",
+                null, $"Permisos: {permisosIncluidos}");
         }
 
         public void RegistrarBackup(string rutaArchivo)
-        {
-            Registrar(
-                actividad: "Backup de base de datos",
-                tipo: TipoEvento.Exito,
-                descripcion: $"Backup de la base ejecutado por {UsuarioActual}.",
-                entidad: "Base de datos",
-                anterior: null,
-                nuevo: rutaArchivo
-            );
-        }
+            => Registrar("Backup de base de datos", TipoEvento.Exito,
+                $"Backup de la base ejecutado por {UsuarioActual}.",
+                "Base de datos", null, rutaArchivo);
 
         public void RegistrarRestore(string rutaArchivo)
-        {
-            Registrar(
-                actividad: "Restore de base de datos",
-                tipo: TipoEvento.Exito,
-                descripcion: $"Restore de la base ejecutado por {UsuarioActual}.",
-                entidad: "Base de datos",
-                anterior: null,
-                nuevo: rutaArchivo
-            );
-        }
+            => Registrar("Restore de base de datos", TipoEvento.Exito,
+                $"Restore de la base ejecutado por {UsuarioActual}.",
+                "Base de datos", null, rutaArchivo);
 
-        //Consultas
 
+        // Consultas
         public List<RegistroBitacora> Buscar(
             DateTime? desde, DateTime? hasta,
             string usuario, string actividad, string tipoEvento)
