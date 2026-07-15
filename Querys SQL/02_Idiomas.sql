@@ -1,27 +1,18 @@
---  02 — Idiomas, Palabras y Traducciones
---  Crea las tablas de Idioma, Palabra y Traduccion (M:N entre idioma y palabra).
---  Las "palabras" son las tags que se usan en la propiedad Tag de los controles
---  WinForms — el TraductorUI reemplaza el Text por la traducción correspondiente.
---
---  Inserta los dos idiomas por defecto (Español defecto=1, Inglés defecto=0),
---  las 32 tags iniciales del sistema y sus traducciones
+-- 02 · Idiomas — estructura, idiomas ES/EN y todas las traducciones de la UI.
 
 USE Usuarios;
 GO
 
--- Estructura
 CREATE TABLE Idioma (
-    IdIdioma INT          PRIMARY KEY IDENTITY(1,1),
-    Nombre   VARCHAR(50)  NOT NULL UNIQUE,
-    defecto  BIT          NOT NULL DEFAULT 0
+    IdIdioma INT         PRIMARY KEY IDENTITY(1,1),
+    Nombre   VARCHAR(50) NOT NULL UNIQUE,
+    defecto  BIT         NOT NULL DEFAULT 0
 );
-GO
 
 CREATE TABLE Palabra (
     IdPalabra INT          PRIMARY KEY IDENTITY(1,1),
     Texto     VARCHAR(100) NOT NULL UNIQUE
 );
-GO
 
 CREATE TABLE Traduccion (
     IdIdioma   INT          NOT NULL REFERENCES Idioma(IdIdioma),
@@ -31,119 +22,62 @@ CREATE TABLE Traduccion (
 );
 GO
 
--- Idiomas iniciales
-INSERT INTO Idioma (Nombre, defecto) VALUES ('Español', 1);  -- IdIdioma = 1
-INSERT INTO Idioma (Nombre, defecto) VALUES ('Inglés',  0);  -- IdIdioma = 2
+INSERT INTO Idioma (Nombre, defecto) VALUES ('Español', 1), ('Inglés', 0);
 GO
 
--- Palabras (claves = Tag de cada control)
--- El orden define el IdPalabra (1..N). Ejecutar de corrido.
-INSERT INTO Palabra (Texto) VALUES
-('btnIngresar'),     -- 1
-('btnRegistrar'),    -- 2
-('btnSalir'),        -- 3
-('btnModificar'),    -- 4
-('btnEliminar'),     -- 5
-('btnBuscar'),       -- 6
-('btnLimpiar'),      -- 7
-('btnAsignar'),      -- 8
-('btnCrear'),        -- 9
-('lblNombre'),       -- 10
-('lblContrasena'),   -- 11
-('lblId'),           -- 12
-('lblActividad'),    -- 13
-('lblTipoDeEvento'), -- 14
-('lblDesde'),        -- 15
-('lblHasta'),        -- 16
-('lblUsuario'),      -- 17
-('lblPerfil'),       -- 18
-('lblPermisos'),     -- 19
-('lblConjuntos'),    -- 20
-('lblPermisosDisp'), -- 21
-('lblClave'),        -- 22
-('lblValor'),        -- 23
-('lblLogeado'),      -- 24
-('menuGestionar'),   -- 25
-('menuListar'),      -- 26
-('menuIdioma'),      -- 27
-('menuAgregar'),     -- 28
-('menuBitacora'),    -- 29
-('menuPerfiles'),    -- 30
-('menuPermisos'),    -- 31
-('menuCerrar');      -- 32
-GO
+-- Fuente única: cada tag con su traducción ES e EN.
+CREATE TABLE #T (Tag VARCHAR(100), Es VARCHAR(200), En VARCHAR(200));
+INSERT INTO #T (Tag, Es, En) VALUES
+('btnIngresar',       'Ingresar',                          'Login'),
+('btnRegistrar',      'Registrar',                         'Register'),
+('btnSalir',          'Salir',                             'Exit'),
+('btnModificar',      'Modificar',                         'Modify'),
+('btnEliminar',       'Eliminar',                          'Delete'),
+('btnBuscar',         'Buscar',                            'Search'),
+('btnLimpiar',        'Limpiar Filtros',                   'Clean Filters'),
+('btnAsignar',        'Asignar',                           'Assign'),
+('btnCrear',          'Crear',                             'Create'),
+('btnActualizar',     'Actualizar',                        'Update'),
+('btnRestaurar',      'Restaurar a este estado',           'Restore to this state'),
+('lblNombre',         'Nombre',                            'Name'),
+('lblContrasena',     'Contraseña',                        'Password'),
+('lblId',             'ID',                                'ID'),
+('lblActividad',      'Actividad',                         'Activity'),
+('lblTipoDeEvento',   'Tipo de Evento',                    'Event Type'),
+('lblDesde',          'Desde',                             'Since'),
+('lblHasta',          'Hasta',                             'To'),
+('lblUsuario',        'Usuario',                           'User'),
+('lblPerfil',         'Perfil',                            'Profile'),
+('lblPermisos',       'Permisos',                          'Permissions'),
+('lblConjuntos',      'Conjuntos',                         'Sets'),
+('lblConjuntosDisp',  'Conjuntos disponibles',             'Available sets'),
+('lblPermisosDisp',   'Permisos disponibles',              'Available permissions'),
+('lblAtomicos',       'Permisos atómicos',                 'Atomic permissions'),
+('lblArbolConjunto',  'Detalle del conjunto',              'Set details'),
+('lblGestionPermisos','Gestión de conjuntos de permisos',  'Permission sets management'),
+('lblClave',          'Clave',                             'Key'),
+('lblValor',          'Valor',                             'Value'),
+('lblLogeado',        'Usted se logeó como:',              'Logged in as:'),
+('menuGestionar',     'Gestionar Usuarios',                'User Management'),
+('menuListar',        'Listar',                            'List'),
+('menuIdioma',        'Idioma',                            'Language'),
+('menuAgregar',       'Agregar idioma...',                 'Add language...'),
+('menuBitacora',      'Bitácora',                          'Logbook'),
+('menuPerfiles',      'Perfiles',                          'Profiles'),
+('menuPermisos',      'Permisos',                          'Permissions'),
+('menuCerrar',        'Cerrar Sesión',                     'Logout'),
+('menuBaseDatos',     'Base de datos',                     'Database'),
+('menuBackup',        'Hacer backup...',                   'Create backup...'),
+('menuRestore',       'Restaurar backup...',               'Restore backup...'),
+('menuRecalcularDV',  'Recalcular dígitos verificadores',  'Recalculate check digits');
 
--- Traducciones Español (IdIdioma = 1)
-INSERT INTO Traduccion (IdIdioma, IdPalabra, Traduccion) VALUES
-(1, 1,  'Ingresar'),
-(1, 2,  'Registrar'),
-(1, 3,  'Salir'),
-(1, 4,  'Modificar'),
-(1, 5,  'Eliminar'),
-(1, 6,  'Buscar'),
-(1, 7,  'Limpiar Filtros'),
-(1, 8,  'Asignar'),
-(1, 9,  'Crear'),
-(1, 10, 'Nombre'),
-(1, 11, 'Contraseña'),
-(1, 12, 'ID'),
-(1, 13, 'Actividad'),
-(1, 14, 'Tipo de Evento'),
-(1, 15, 'Desde'),
-(1, 16, 'Hasta'),
-(1, 17, 'Usuario'),
-(1, 18, 'Perfil'),
-(1, 19, 'Permisos'),
-(1, 20, 'Conjuntos'),
-(1, 21, 'Permisos disponibles'),
-(1, 22, 'Clave'),
-(1, 23, 'Valor'),
-(1, 24, 'Usted se logeó como:'),
-(1, 25, 'Gestionar Usuarios'),
-(1, 26, 'Listar'),
-(1, 27, 'Idioma'),
-(1, 28, 'Agregar idioma...'),
-(1, 29, 'Bitácora'),
-(1, 30, 'Perfiles'),
-(1, 31, 'Permisos'),
-(1, 32, 'Cerrar Sesión');
-GO
+INSERT INTO Palabra (Texto) SELECT Tag FROM #T;
 
--- Traducciones Inglés (IdIdioma = 2)
-INSERT INTO Traduccion (IdIdioma, IdPalabra, Traduccion) VALUES
-(2, 1,  'Login'),
-(2, 2,  'Register'),
-(2, 3,  'Exit'),
-(2, 4,  'Modify'),
-(2, 5,  'Delete'),
-(2, 6,  'Search'),
-(2, 7,  'Clean Filters'),
-(2, 8,  'Assign'),
-(2, 9,  'Create'),
-(2, 10, 'Name'),
-(2, 11, 'Password'),
-(2, 12, 'ID'),
-(2, 13, 'Activity'),
-(2, 14, 'Event Type'),
-(2, 15, 'Since'),
-(2, 16, 'To'),
-(2, 17, 'User'),
-(2, 18, 'Profile'),
-(2, 19, 'Permissions'),
-(2, 20, 'Sets'),
-(2, 21, 'Available permissions'),
-(2, 22, 'Key'),
-(2, 23, 'Value'),
-(2, 24, 'Logged in as:'),
-(2, 25, 'User Management'),
-(2, 26, 'List'),
-(2, 27, 'Language'),
-(2, 28, 'Add language...'),
-(2, 29, 'Logbook'),
-(2, 30, 'Profiles'),
-(2, 31, 'Permissions'),
-(2, 32, 'Logout');
-GO
+INSERT INTO Traduccion (IdIdioma, IdPalabra, Traduccion)
+SELECT 1, P.IdPalabra, T.Es FROM Palabra P JOIN #T T ON P.Texto = T.Tag;
 
-PRINT '02 OK — Idiomas, palabras y traducciones creados.';
+INSERT INTO Traduccion (IdIdioma, IdPalabra, Traduccion)
+SELECT 2, P.IdPalabra, T.En FROM Palabra P JOIN #T T ON P.Texto = T.Tag;
+
+DROP TABLE #T;
 GO
