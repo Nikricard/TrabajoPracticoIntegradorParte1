@@ -6,19 +6,16 @@ namespace BE
     // Snapshot del estado de un Usuario en un momento determinado.
     // Se usa para el control de cambios (auditoría) y el rollback:
     // cada entrada de AuditoriaUsuario guarda un snapshot serializado
-    // con el estado ANTERIOR al cambio, para poder restaurarlo después.
+    // con el estado anterior al cambio, para poder restaurarlo después.
     //
-    // NOTA: la contraseña NO se incluye porque el enunciado la define
-    // como inalterable a lo largo del programa. El rollback restaura
-    // solo Nombre y Permisos.
+    //El rollback restaura solo Nombre y Permisos.
     public class UsuarioSnapshot
     {
         public int Id { get; set; }
         public string Nombre { get; set; }
         public List<string> Permisos { get; set; } = new List<string>();
 
-        // Serializa a JSON con formato indentado (más legible en la BD
-        // si alguien lo consulta directo desde SSMS).
+        // Serializa a JSON con formato indentado (más legible en la BD si alguien lo consulta directo)
         public string ToJson()
         {
             var opts = new JsonSerializerOptions { WriteIndented = true };

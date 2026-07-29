@@ -82,7 +82,6 @@ C:\Users\Navegador\Desktop\TrabajoPractico\TrabajoPracticoIntegradorParte1\Traba
 C:\Users\Navegador\Desktop\TrabajoPractico\TrabajoPracticoIntegradorParte1\TrabajoPracticoIntegrador15-4\obj\Debug\net8.0-windows\UI.genruntimeconfig.cache
 C:\Users\Navegador\Desktop\TrabajoPractico\TrabajoPracticoIntegradorParte1\TrabajoPracticoIntegrador15-4\obj\Debug\net8.0-windows\ref\UI.dll
 C:\Users\alcal\OneDrive\Escritorio\TpGitHub\TrabajoPracticoIntegradorParte1\TrabajoPracticoIntegrador15-4\obj\Debug\net8.0-windows\TrabajoPracticoIntegrador15_4.frmBitacora.resources
-C:\Users\alcal\OneDrive\Escritorio\TpGitHub\TrabajoPracticoIntegradorParte1\TrabajoPracticoIntegrador15-4\obj\Debug\net8.0-windows\TrabajoPracticoIntegrador15_4.frmPerfil.resources
 C:\Users\alcal\OneDrive\Escritorio\TrabajoPracticoIntegradorParte1\TrabajoPracticoIntegrador15-4\bin\Debug\net8.0-windows\UI.exe
 C:\Users\alcal\OneDrive\Escritorio\TrabajoPracticoIntegradorParte1\TrabajoPracticoIntegrador15-4\bin\Debug\net8.0-windows\UI.deps.json
 C:\Users\alcal\OneDrive\Escritorio\TrabajoPracticoIntegradorParte1\TrabajoPracticoIntegrador15-4\bin\Debug\net8.0-windows\UI.runtimeconfig.json
@@ -171,3 +170,4 @@ C:\Users\Navegador\Desktop\trabajo\TrabajoPracticoIntegradorParte1\TrabajoPracti
 C:\Users\Navegador\Desktop\trabajo\TrabajoPracticoIntegradorParte1\TrabajoPracticoIntegrador15-4\obj\Debug\net8.0-windows\UI.pdb
 C:\Users\Navegador\Desktop\trabajo\TrabajoPracticoIntegradorParte1\TrabajoPracticoIntegrador15-4\obj\Debug\net8.0-windows\UI.genruntimeconfig.cache
 C:\Users\Navegador\Desktop\trabajo\TrabajoPracticoIntegradorParte1\TrabajoPracticoIntegrador15-4\obj\Debug\net8.0-windows\ref\UI.dll
+C:\Users\alcal\OneDrive\Escritorio\TpGitHub\TrabajoPracticoIntegradorParte1\TrabajoPracticoIntegrador15-4\obj\Debug\net8.0-windows\TrabajoPracticoIntegrador15_4.Perfiles.resources

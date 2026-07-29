@@ -44,6 +44,7 @@
             btnLimpiarSeleccion = new Button();
             groupBox1 = new GroupBox();
             groupBox2 = new GroupBox();
+            btnActualizar = new Button();
             groupBox3 = new GroupBox();
             btnEliminarTag = new Button();
             txtTag = new TextBox();
@@ -91,7 +92,7 @@
             // 
             // btnAgregar
             // 
-            btnAgregar.Location = new Point(105, 115);
+            btnAgregar.Location = new Point(130, 115);
             btnAgregar.Name = "btnAgregar";
             btnAgregar.Size = new Size(75, 23);
             btnAgregar.TabIndex = 3;
@@ -102,7 +103,7 @@
             // 
             // btnEliminar
             // 
-            btnEliminar.Location = new Point(186, 115);
+            btnEliminar.Location = new Point(130, 149);
             btnEliminar.Name = "btnEliminar";
             btnEliminar.Size = new Size(75, 23);
             btnEliminar.TabIndex = 4;
@@ -193,7 +194,7 @@
             // 
             // btnLimpiarSeleccion
             // 
-            btnLimpiarSeleccion.Location = new Point(24, 115);
+            btnLimpiarSeleccion.Location = new Point(41, 115);
             btnLimpiarSeleccion.Name = "btnLimpiarSeleccion";
             btnLimpiarSeleccion.Size = new Size(75, 23);
             btnLimpiarSeleccion.TabIndex = 13;
@@ -220,6 +221,7 @@
             // 
             // groupBox2
             // 
+            groupBox2.Controls.Add(btnActualizar);
             groupBox2.Controls.Add(dgvIdiomas);
             groupBox2.Controls.Add(chkDefecto);
             groupBox2.Controls.Add(btnLimpiarSeleccion);
@@ -234,6 +236,17 @@
             groupBox2.TabStop = false;
             groupBox2.Tag = "boxIdioma";
             groupBox2.Text = "Gestion de Idioma";
+            // 
+            // btnActualizar
+            // 
+            btnActualizar.Location = new Point(41, 149);
+            btnActualizar.Name = "btnActualizar";
+            btnActualizar.Size = new Size(75, 23);
+            btnActualizar.TabIndex = 14;
+            btnActualizar.Tag = "btnActualizar";
+            btnActualizar.Text = "Actualizar";
+            btnActualizar.UseVisualStyleBackColor = true;
+            btnActualizar.Click += btnActualizar_Click;
             // 
             // groupBox3
             // 
@@ -311,7 +324,7 @@
             Controls.Add(groupBox1);
             Controls.Add(btnSalir);
             Name = "frmIdioma";
-            Text = "frmIdioma";
+            Text = "Formulario Idiomas";
             Load += frmIdioma_Load;
             ((System.ComponentModel.ISupportInitialize)dgvIdiomas).EndInit();
             ((System.ComponentModel.ISupportInitialize)dgvTraducciones).EndInit();
@@ -349,5 +362,6 @@
         private Button btnAgregarTag;
         private Label label5;
         private Button btnEliminarTag;
+        private Button btnActualizar;
     }
 }

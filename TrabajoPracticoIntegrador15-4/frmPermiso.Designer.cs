@@ -228,7 +228,8 @@ namespace TrabajoPracticoIntegrador15_4
             ClientSize = new Size(870, 340);
             Controls.Add(groupBox1);
             Name = "frmPermiso";
-            Text = "frmPermiso";
+            Tag = "frmPermiso";
+            Text = "Formulario Permiso";
             FormClosed += frmPermiso_FormClosed;
             Load += frmPermiso_Load;
             ((System.ComponentModel.ISupportInitialize)dgvConjuntos).EndInit();

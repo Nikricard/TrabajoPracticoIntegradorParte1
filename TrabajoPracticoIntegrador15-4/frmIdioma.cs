@@ -28,18 +28,6 @@ namespace TrabajoPracticoIntegrador15_4
             InitializeComponent();
         }
 
-        /*public void ActualizarIdioma(Idioma idioma)
-        {
-            // Este formulario también se traduce si cambia el idioma
-            foreach (Control c in this.Controls)
-            {
-                if (c.Tag != null)
-                {
-                    c.Text = idioma.Traducir(c.Tag.ToString());
-                }
-            }
-        }*/
-
         public void ActualizarIdioma(Idioma idioma)
             => TraductorUI.Traducir(this.Controls, idioma);
 
@@ -64,7 +52,7 @@ namespace TrabajoPracticoIntegrador15_4
 
             if (gestor.IdiomaActivo != null)
                 ActualizarIdioma(gestor.IdiomaActivo);
-            
+
         }
 
         // Seccion Tags
@@ -108,15 +96,20 @@ namespace TrabajoPracticoIntegrador15_4
                 txtTag.Text = string.Empty;
                 CargarGrillaTags();
 
-                // Refrescar traducciones si hay un idioma seleccionado
-                if (idiomaSeleccionado != null) CargarGrillaTraducciones();
+                // Reapunta al idioma fresco para que la nueva tag aparezca al instante
+                if (idiomaSeleccionado != null)
+                {
+                    int idActual = idiomaSeleccionado.IdIdioma;
+                    CargarGrillaIdiomas();
+                    idiomaSeleccionado = gestor.IdiomasDisponibles.Find(i => i.IdIdioma == idActual);
+                    CargarGrillaTraducciones();
+                }
             }
             catch (Exception ex)
             {
                 MessageBox.Show(ex.Message, "Error",
                     MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
-
         }
 
         private void btnEliminarTag_Click(object sender, EventArgs e)
@@ -139,18 +132,24 @@ namespace TrabajoPracticoIntegrador15_4
                 tagSeleccionada = null;
                 txtTag.Text = string.Empty;
                 CargarGrillaTags();
-                if (idiomaSeleccionado != null) CargarGrillaTraducciones();
+
+                // Reapunta al idioma fresco para que la baja de la tag se refleje al instante
+                if (idiomaSeleccionado != null)
+                {
+                    int idActual = idiomaSeleccionado.IdIdioma;
+                    CargarGrillaIdiomas();
+                    idiomaSeleccionado = gestor.IdiomasDisponibles.Find(i => i.IdIdioma == idActual);
+                    CargarGrillaTraducciones();
+                }
             }
             catch (Exception ex)
             {
                 MessageBox.Show(ex.Message, "Error",
                     MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
-
         }
 
         // Seccion Idiomas
-
 
         private void CargarGrillaIdiomas()
         {
@@ -247,7 +246,7 @@ namespace TrabajoPracticoIntegrador15_4
             chkDefecto.Checked = false;
             idiomaSeleccionado = null;
         }
-        
+
         // Seccion Traducciones
 
         private void CargarGrillaTraducciones()
@@ -293,23 +292,26 @@ namespace TrabajoPracticoIntegrador15_4
 
             try
             {
-                gestor.GuardarTraduccion(idiomaSeleccionado.IdIdioma, clave, valor);
-                MessageBox.Show("Traducción guardada.", "Éxito",
-                    MessageBoxButtons.OK, MessageBoxIcon.Information);
+                int idActual = idiomaSeleccionado.IdIdioma;
+                gestor.GuardarTraduccion(idActual, clave, valor);
 
-                idiomaSeleccionado = gestor.IdiomasDisponibles
-                    .Find(i => i.IdIdioma == idiomaSeleccionado.IdIdioma);
+                // Reapunta al objeto Idioma recién recargado desde la base (por Id),
+                // así la grilla se llena del diccionario ya actualizado y aparece al instante.
+                CargarGrillaIdiomas();
+                idiomaSeleccionado = gestor.IdiomasDisponibles.Find(i => i.IdIdioma == idActual);
                 CargarGrillaTraducciones();
+
                 txtClave.Text = string.Empty;
                 txtValor.Text = string.Empty;
+
+                MessageBox.Show("Traducción guardada.", "Éxito",
+                    MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
             catch (Exception ex)
             {
                 MessageBox.Show(ex.Message, "Error",
                     MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
-
-
         }
 
         private void btnSalir_Click(object sender, EventArgs e)
@@ -318,5 +320,40 @@ namespace TrabajoPracticoIntegrador15_4
             this.Close();
         }
 
+        private void btnActualizar_Click(object sender, EventArgs e)
+        {
+            if (idiomaSeleccionado == null)
+            {
+                MessageBox.Show("Seleccione un idioma para actualizar.", "Atención",
+                    MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
+            string nombre = txtNombre.Text.Trim();
+            if (string.IsNullOrEmpty(nombre))
+            {
+                MessageBox.Show("Ingrese un nombre para el idioma.", "Atención",
+                    MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
+            try
+            {
+                int idActual = idiomaSeleccionado.IdIdioma;
+                gestor.ModificarIdioma(idActual, nombre, chkDefecto.Checked);
+
+                MessageBox.Show("Idioma actualizado.", "Éxito",
+                    MessageBoxButtons.OK, MessageBoxIcon.Information);
+
+                // Reapunta al objeto fresco y refresca la grilla (mismo patrón que ya usamos)
+                CargarGrillaIdiomas();
+                idiomaSeleccionado = gestor.IdiomasDisponibles.Find(i => i.IdIdioma == idActual);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message, "Error",
+                    MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
     }
 }

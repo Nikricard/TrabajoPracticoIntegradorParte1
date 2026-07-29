@@ -299,7 +299,7 @@ namespace TrabajoPracticoIntegrador15_4
 
         private void perfilesToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            frmPerfil frmPerfil = new frmPerfil();
+            Perfiles frmPerfil = new Perfiles();
             frmPerfil.MdiParent = this;
             frmPerfil.Show();
         }

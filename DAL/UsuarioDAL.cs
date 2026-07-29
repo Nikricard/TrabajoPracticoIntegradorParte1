@@ -154,7 +154,7 @@ namespace DAL
             return codigos;
         }
 
-        // Verifica que el usuario del snapshot todavía exista en la base.
+        // Verifica que el usuario exista en la base de datos. Se usa para validar que un snapshot pueda aplicarse.
         public bool Existe(int idUsuario)
         {
             using (var con = new SqlConnection(conexion))
@@ -163,6 +163,18 @@ namespace DAL
                 var cmd = new SqlCommand(
                     "SELECT COUNT(1) FROM Usuarios WHERE Id = @Id", con);
                 cmd.Parameters.AddWithValue("@Id", idUsuario);
+                return Convert.ToInt32(cmd.ExecuteScalar()) > 0;
+            }
+        }
+        // Verifica que el usuario exista en la base de datos por nombre.
+        public bool ExisteNombre(string nombre)
+        {
+            using (var con = new SqlConnection(conexion))
+            {
+                con.Open();
+                var cmd = new SqlCommand(
+                    "SELECT COUNT(1) FROM Usuarios WHERE Nombre = @Nombre", con);
+                cmd.Parameters.AddWithValue("@Nombre", nombre);
                 return Convert.ToInt32(cmd.ExecuteScalar()) > 0;
             }
         }

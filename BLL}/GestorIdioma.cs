@@ -110,6 +110,27 @@ namespace BLL_
 
         }
 
+        public void ModificarIdioma(int idIdioma, string nombre, bool defecto)
+        {
+            if (string.IsNullOrEmpty(nombre))
+                throw new Exception("El idioma debe tener un nombre.");
+
+            try
+            {
+                _dal.UpdateIdioma(idIdioma, nombre, defecto);
+
+                // Registro en bitácora
+                BitacoraBLL.Instancia.RegistrarModifyIdioma(idIdioma, nombre, defecto);
+
+                CargarIdiomas();
+                Notificar();
+            }
+            catch (Exception ex)
+            {
+                BitacoraBLL.Instancia.RegistrarError("MODIFY_IDIOMA", ex);
+                throw;
+            }
+        }
         public void EliminarIdioma(int idIdioma)
         {
             try

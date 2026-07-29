@@ -1,9 +1,10 @@
+using ABS;
 using BE;
-using DAL;
-using System.Text;
-using System.Security.Cryptography;
 using BLL_;
+using DAL;
 using SE;
+using System.Security.Cryptography;
+using System.Text;
 namespace BLL
 {
     public class UsuarioBLL
@@ -21,6 +22,9 @@ namespace BLL
             }
         }
         //termina singleton
+
+        //admin es usuario del sistema y no puede eliminarse o modificarse
+        private const string UsuarioAdmin = "admin";
 
         public Usuario? UsuarioActivo { get; private set; } = null;
 
@@ -54,6 +58,8 @@ namespace BLL
                     throw new Exception(mensaje);
                 if (string.IsNullOrEmpty(contraseñaPlana))
                     throw new Exception("El usuario debe tener una contraseña");
+                if (usuarioDAL.ExisteNombre(usuario.Nombre))
+                    throw new Exception("El usuario ya existe en la base de datos");
 
                 usuario.Contraseña = Encriptado.HashContrasena(contraseñaPlana);
                 usuario = usuarioDAL.Add(usuario);
@@ -81,6 +87,10 @@ namespace BLL
                     throw new Exception("El usuario no puede ser nulo");
                 if (!nuevo.EsValido(out string mensaje))
                     throw new Exception(mensaje);
+                if (usuarioDAL.ExisteNombre(nuevo.Nombre))
+                    throw new Exception("Ya existe un usuario con este nombre");
+                if (anterior.Nombre == UsuarioAdmin)
+                    throw new Exception("No se puede modificar al usuario administrador");
 
                 // Toma snapshot ANTES de aplicar el cambio
                 var snapshot = TomarSnapshot(anterior.Id, anterior.Nombre);
@@ -132,6 +142,10 @@ namespace BLL
                     throw new Exception("El usuario no puede ser nulo");
                 if (!usuario.EsValido(out string mensaje))
                     throw new Exception(mensaje);
+                if (usuario.Nombre == UsuarioAdmin)
+                    throw new Exception("No se puede eliminar al usuario administrador");
+                if (UsuarioActivo != null && usuario.Id == UsuarioActivo.Id)
+                    throw new Exception("No puede eliminar el usuario activo");
 
                 // Toma snapshot ANTES de borrar
                 var snapshot = TomarSnapshot(usuario.Id, usuario.Nombre);

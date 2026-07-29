@@ -121,7 +121,7 @@
             Controls.Add(label1);
             Controls.Add(dgvUsuarios);
             Name = "frmModificar";
-            Text = "frmModificar";
+            Text = "Formulario Modificación";
             Load += frmModificar_Load;
             ((System.ComponentModel.ISupportInitialize)dgvUsuarios).EndInit();
             ResumeLayout(false);

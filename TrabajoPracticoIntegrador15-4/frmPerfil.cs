@@ -8,12 +8,12 @@ using System.Windows.Forms;
 
 namespace TrabajoPracticoIntegrador15_4
 {
-    public partial class frmPerfil : Form, IObservadorIdioma, IObservadorConjuntos
+    public partial class Perfiles : Form, IObservadorIdioma, IObservadorConjuntos
     {
         private readonly GestorIdioma gestor = GestorIdioma.Instancia;
         private Usuario usuarioSeleccionado = null;
 
-        public frmPerfil()
+        public Perfiles()
         {
             InitializeComponent();
         }

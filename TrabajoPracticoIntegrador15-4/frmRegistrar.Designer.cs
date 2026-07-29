@@ -104,7 +104,8 @@
             Controls.Add(txtNombre);
             Controls.Add(label1);
             Name = "frmRegistrar";
-            Text = "Form1";
+            Tag = "frmRegistrar";
+            Text = "Formulario Registro";
             Load += frmRegistrar_Load;
             ResumeLayout(false);
             PerformLayout();

@@ -83,7 +83,7 @@ namespace BLL
                 $"Excepción: {ex.Message}\n{ex.StackTrace}", entidad: ex.GetType().Name);
 
 
-        // Usuarios — snapshotAnterior opcional para el control de cambios v2.7
+        // Usuarios 
 
         public void RegistrarAddUsuario(Usuario u)
         {
@@ -105,10 +105,9 @@ namespace BLL
         }
 
         // Registra la modificación de un usuario. snapshotAnterior es
-        // el estado del usuario ANTES de la operación, para poder
+        // el estado del usuario antes de la operación, para poder
         // hacer rollback a este punto.
-        public void RegistrarModifyUsuario(Usuario anterior, Usuario nuevo,
-            UsuarioSnapshot snapshotAnterior = null)
+        public void RegistrarModifyUsuario(Usuario anterior, Usuario nuevo, UsuarioSnapshot snapshotAnterior = null)
         {
             Registrar("Modificación de usuario", TipoEvento.Exito,
                 $"Usuario Id:{nuevo.Id} modificado.", "Usuario",
@@ -178,7 +177,7 @@ namespace BLL
         }
 
 
-        // Idiomas — sin cambios
+        // Idiomas
 
         public void RegistrarAddIdioma(int idIdioma, string nombre)
         {
@@ -193,6 +192,13 @@ namespace BLL
             Notificar();
         }
 
+        public void RegistrarModifyIdioma(int idIdioma, string nombre, bool defecto)
+        {
+            Registrar("Modificación de idioma", TipoEvento.Exito,
+                $"Idioma Id:{idIdioma} ('{nombre}') actualizado. Por defecto: {defecto}.",
+                "Idioma");
+            Notificar();
+        }
         public void RegistrarDeleteIdioma(int idIdioma, string nombre)
         {
             Registrar("Baja de idioma", TipoEvento.Exito,

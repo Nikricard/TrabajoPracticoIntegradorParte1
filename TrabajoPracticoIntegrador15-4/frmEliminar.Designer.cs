@@ -122,7 +122,7 @@
             Controls.Add(label1);
             Controls.Add(dgvUsuarios);
             Name = "frmEliminar";
-            Text = "frmEliminar";
+            Text = "Formulario Eliminar";
             Load += frmEliminar_Load;
             ((System.ComponentModel.ISupportInitialize)dgvUsuarios).EndInit();
             ResumeLayout(false);

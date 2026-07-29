@@ -54,7 +54,6 @@ namespace DAL
         }
 
         //Inserta un nuevo idioma. Devuelve el IdIdioma asignado.
-
         public int AddIdioma(string nombre, bool defecto)
         {
             using (var con = new SqlConnection(cs))
@@ -78,6 +77,50 @@ namespace DAL
                         int id = Convert.ToInt32(cmd.ExecuteScalar());
                         tr.Commit();
                         return id;
+                    }
+                    catch { tr.Rollback(); throw; }
+                }
+            }
+        }
+
+        // Actualiza nombre y flag "por defecto" de un idioma.
+        // Si se marca como defecto, quita el defecto de todos los demás (regla: uno solo).
+        public void UpdateIdioma(int idIdioma, string nombre, bool defecto)
+        {
+            using (var con = new SqlConnection(cs))
+            {
+                con.Open();
+
+                // Verificar duplicado de nombre en OTRO idioma
+                var check = new SqlCommand(
+                    "SELECT COUNT(1) FROM Idioma WHERE Nombre = @Nombre AND IdIdioma <> @Id", con);
+                check.Parameters.AddWithValue("@Nombre", nombre);
+                check.Parameters.AddWithValue("@Id", idIdioma);
+                if (Convert.ToInt32(check.ExecuteScalar()) > 0)
+                    throw new Exception($"El idioma '{nombre}' ya existe.");
+
+                using (var tr = con.BeginTransaction())
+                {
+                    try
+                    {
+                        // Si este pasa a ser el por defecto, los demás dejan de serlo
+                        if (defecto)
+                        {
+                            var clear = new SqlCommand(
+                                "UPDATE Idioma SET defecto = 0 WHERE IdIdioma <> @Id", con, tr);
+                            clear.Parameters.AddWithValue("@Id", idIdioma);
+                            clear.ExecuteNonQuery();
+                        }
+
+                        var cmd = new SqlCommand(
+                            "UPDATE Idioma SET Nombre = @Nombre, defecto = @Defecto WHERE IdIdioma = @Id",
+                            con, tr);
+                        cmd.Parameters.AddWithValue("@Nombre", nombre);
+                        cmd.Parameters.AddWithValue("@Defecto", defecto ? 1 : 0);
+                        cmd.Parameters.AddWithValue("@Id", idIdioma);
+                        cmd.ExecuteNonQuery();
+
+                        tr.Commit();
                     }
                     catch { tr.Rollback(); throw; }
                 }

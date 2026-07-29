@@ -119,7 +119,7 @@
             Controls.Add(label1);
             FormBorderStyle = FormBorderStyle.Fixed3D;
             Name = "frmLogin";
-            Text = "frmLogin";
+            Text = "LogIn";
             Load += frmLogin_Load;
             ResumeLayout(false);
             PerformLayout();

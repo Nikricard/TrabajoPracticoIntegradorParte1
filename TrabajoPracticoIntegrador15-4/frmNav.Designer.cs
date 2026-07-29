@@ -35,6 +35,7 @@ namespace TrabajoPracticoIntegrador15_4
             modificarToolStripMenuItem = new ToolStripMenuItem();
             eliminarToolStripMenuItem = new ToolStripMenuItem();
             listarToolStripMenuItem = new ToolStripMenuItem();
+            permisosToolStripMenuItem = new ToolStripMenuItem();
             perfilesToolStripMenuItem = new ToolStripMenuItem();
             IdiomaMenuItem = new ToolStripMenuItem();
             bitacoraToolStripMenuItem = new ToolStripMenuItem();
@@ -47,7 +48,6 @@ namespace TrabajoPracticoIntegrador15_4
             statusStrip1 = new StatusStrip();
             toolStripStatusLabel1 = new ToolStripStatusLabel();
             lblstatusUser = new ToolStripStatusLabel();
-            permisosToolStripMenuItem = new ToolStripMenuItem();
             menuStrip2.SuspendLayout();
             statusStrip1.SuspendLayout();
             SuspendLayout();
@@ -102,6 +102,13 @@ namespace TrabajoPracticoIntegrador15_4
             listarToolStripMenuItem.Text = "Listar";
             listarToolStripMenuItem.Click += listarToolStripMenuItem_Click;
             // 
+            // permisosToolStripMenuItem
+            // 
+            permisosToolStripMenuItem.Name = "permisosToolStripMenuItem";
+            permisosToolStripMenuItem.Size = new Size(67, 20);
+            permisosToolStripMenuItem.Text = "Permisos";
+            permisosToolStripMenuItem.Click += permisosToolStripMenuItem_Click;
+            // 
             // perfilesToolStripMenuItem
             // 
             perfilesToolStripMenuItem.Name = "perfilesToolStripMenuItem";
@@ -129,14 +136,14 @@ namespace TrabajoPracticoIntegrador15_4
             // 
             baseDeDatosToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { backupToolStripMenuItem, restaurarToolStripMenuItem, recalcularDVToolStripMenuItem });
             baseDeDatosToolStripMenuItem.Name = "baseDeDatosToolStripMenuItem";
-            baseDeDatosToolStripMenuItem.Size = new Size(96, 20);
+            baseDeDatosToolStripMenuItem.Size = new Size(91, 20);
             baseDeDatosToolStripMenuItem.Tag = "menuBaseDatos";
             baseDeDatosToolStripMenuItem.Text = "Base de datos";
             // 
             // backupToolStripMenuItem
             // 
             backupToolStripMenuItem.Name = "backupToolStripMenuItem";
-            backupToolStripMenuItem.Size = new Size(220, 22);
+            backupToolStripMenuItem.Size = new Size(237, 22);
             backupToolStripMenuItem.Tag = "menuBackup";
             backupToolStripMenuItem.Text = "Hacer backup...";
             backupToolStripMenuItem.Click += backupToolStripMenuItem_Click;
@@ -144,7 +151,7 @@ namespace TrabajoPracticoIntegrador15_4
             // restaurarToolStripMenuItem
             // 
             restaurarToolStripMenuItem.Name = "restaurarToolStripMenuItem";
-            restaurarToolStripMenuItem.Size = new Size(220, 22);
+            restaurarToolStripMenuItem.Size = new Size(237, 22);
             restaurarToolStripMenuItem.Tag = "menuRestore";
             restaurarToolStripMenuItem.Text = "Restaurar backup...";
             restaurarToolStripMenuItem.Click += restaurarToolStripMenuItem_Click;
@@ -152,7 +159,7 @@ namespace TrabajoPracticoIntegrador15_4
             // recalcularDVToolStripMenuItem
             // 
             recalcularDVToolStripMenuItem.Name = "recalcularDVToolStripMenuItem";
-            recalcularDVToolStripMenuItem.Size = new Size(220, 22);
+            recalcularDVToolStripMenuItem.Size = new Size(237, 22);
             recalcularDVToolStripMenuItem.Tag = "menuRecalcularDV";
             recalcularDVToolStripMenuItem.Text = "Recalcular dígitos verificadores";
             recalcularDVToolStripMenuItem.Click += recalcularDVToolStripMenuItem_Click;
@@ -192,13 +199,6 @@ namespace TrabajoPracticoIntegrador15_4
             lblstatusUser.Size = new Size(118, 17);
             lblstatusUser.Text = "toolStripStatusLabel2";
             // 
-            // permisosToolStripMenuItem
-            // 
-            permisosToolStripMenuItem.Name = "permisosToolStripMenuItem";
-            permisosToolStripMenuItem.Size = new Size(67, 20);
-            permisosToolStripMenuItem.Text = "Permisos";
-            permisosToolStripMenuItem.Click += permisosToolStripMenuItem_Click;
-            // 
             // frmNav
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
@@ -208,7 +208,8 @@ namespace TrabajoPracticoIntegrador15_4
             Controls.Add(menuStrip2);
             IsMdiContainer = true;
             Name = "frmNav";
-            Text = "frmNav";
+            Tag = "frmNav";
+            Text = "Formulario Navegacion";
             Load += frmNav_Load;
             menuStrip2.ResumeLayout(false);
             menuStrip2.PerformLayout();

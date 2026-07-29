@@ -64,7 +64,7 @@
             Controls.Add(btnSalir);
             Controls.Add(dgvUsuarios);
             Name = "frmListar";
-            Text = "frmListar";
+            Text = "Formulario Listar";
             Load += frmListar_Load;
             ((System.ComponentModel.ISupportInitialize)dgvUsuarios).EndInit();
             ResumeLayout(false);

@@ -1,6 +1,6 @@
 namespace TrabajoPracticoIntegrador15_4
 {
-    partial class frmPerfil
+    partial class Perfiles
     {
         private System.ComponentModel.IContainer components = null;
 
@@ -16,13 +16,11 @@ namespace TrabajoPracticoIntegrador15_4
         private void InitializeComponent()
         {
             dgvUsuarios = new DataGridView();
-            txtNombre = new TextBox();
             clbAtomicos = new CheckedListBox();
             clbCompuestos = new CheckedListBox();
             btnGuardar = new Button();
             treePermisos = new TreeView();
             btnSalir = new Button();
-            label1 = new Label();
             label2 = new Label();
             label3 = new Label();
             label4 = new Label();
@@ -44,13 +42,6 @@ namespace TrabajoPracticoIntegrador15_4
             dgvUsuarios.TabIndex = 2;
             dgvUsuarios.SelectionChanged += dgvUsuarios_SelectionChanged;
             // 
-            // txtNombre
-            // 
-            txtNombre.Location = new Point(71, 313);
-            txtNombre.Name = "txtNombre";
-            txtNombre.Size = new Size(120, 23);
-            txtNombre.TabIndex = 5;
-            // 
             // clbAtomicos
             // 
             clbAtomicos.CheckOnClick = true;
@@ -71,7 +62,7 @@ namespace TrabajoPracticoIntegrador15_4
             // 
             // btnGuardar
             // 
-            btnGuardar.Location = new Point(197, 312);
+            btnGuardar.Location = new Point(270, 314);
             btnGuardar.Name = "btnGuardar";
             btnGuardar.Size = new Size(100, 23);
             btnGuardar.TabIndex = 6;
@@ -89,7 +80,7 @@ namespace TrabajoPracticoIntegrador15_4
             // 
             // btnSalir
             // 
-            btnSalir.Location = new Point(303, 313);
+            btnSalir.Location = new Point(376, 314);
             btnSalir.Name = "btnSalir";
             btnSalir.Size = new Size(100, 23);
             btnSalir.TabIndex = 7;
@@ -97,16 +88,6 @@ namespace TrabajoPracticoIntegrador15_4
             btnSalir.Text = "Salir";
             btnSalir.UseVisualStyleBackColor = true;
             btnSalir.Click += btnSalir_Click;
-            // 
-            // label1
-            // 
-            label1.AutoSize = true;
-            label1.Location = new Point(17, 317);
-            label1.Name = "label1";
-            label1.Size = new Size(51, 15);
-            label1.TabIndex = 7;
-            label1.Tag = "lblNombre";
-            label1.Text = "Nombre";
             // 
             // label2
             // 
@@ -141,13 +122,11 @@ namespace TrabajoPracticoIntegrador15_4
             // groupBox1
             // 
             groupBox1.Controls.Add(treePermisos);
-            groupBox1.Controls.Add(label1);
             groupBox1.Controls.Add(label4);
             groupBox1.Controls.Add(btnSalir);
             groupBox1.Controls.Add(dgvUsuarios);
             groupBox1.Controls.Add(btnGuardar);
             groupBox1.Controls.Add(label3);
-            groupBox1.Controls.Add(txtNombre);
             groupBox1.Controls.Add(clbAtomicos);
             groupBox1.Controls.Add(label2);
             groupBox1.Controls.Add(clbCompuestos);
@@ -159,14 +138,15 @@ namespace TrabajoPracticoIntegrador15_4
             groupBox1.Tag = "lblGestionPerfiles";
             groupBox1.Text = "Gestion de Perfiles";
             // 
-            // frmPerfil
+            // Perfiles
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(1090, 446);
             Controls.Add(groupBox1);
-            Name = "frmPerfil";
-            Text = "frmPerfil";
+            Name = "Perfiles";
+            Tag = "frmPerfil";
+            Text = "Formulario Perfiles";
             FormClosed += frmPerfil_FormClosed;
             Load += frmPerfil_Load;
             ((System.ComponentModel.ISupportInitialize)dgvUsuarios).EndInit();
@@ -178,13 +158,11 @@ namespace TrabajoPracticoIntegrador15_4
         #endregion
 
         private DataGridView dgvUsuarios;
-        private TextBox txtNombre;
         private CheckedListBox clbAtomicos;
         private CheckedListBox clbCompuestos;
         private Button btnGuardar;
         private TreeView treePermisos;
         private Button btnSalir;
-        private Label label1;
         private Label label2;
         private Label label3;
         private Label label4;

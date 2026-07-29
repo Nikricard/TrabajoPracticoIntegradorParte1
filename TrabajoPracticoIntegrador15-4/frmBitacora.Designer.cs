@@ -244,6 +244,7 @@ namespace TrabajoPracticoIntegrador15_4
             dgvBitacora.Dock = DockStyle.Fill;
             dgvBitacora.Location = new Point(3, 3);
             dgvBitacora.Name = "dgvBitacora";
+            dgvBitacora.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
             dgvBitacora.Size = new Size(643, 351);
             dgvBitacora.TabIndex = 0;
             // 
@@ -264,6 +265,7 @@ namespace TrabajoPracticoIntegrador15_4
             dgvAudUsuario.Dock = DockStyle.Fill;
             dgvAudUsuario.Location = new Point(3, 3);
             dgvAudUsuario.Name = "dgvAudUsuario";
+            dgvAudUsuario.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
             dgvAudUsuario.Size = new Size(643, 351);
             dgvAudUsuario.TabIndex = 0;
             // 
@@ -284,6 +286,7 @@ namespace TrabajoPracticoIntegrador15_4
             dgvAudIdioma.Dock = DockStyle.Fill;
             dgvAudIdioma.Location = new Point(3, 3);
             dgvAudIdioma.Name = "dgvAudIdioma";
+            dgvAudIdioma.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
             dgvAudIdioma.Size = new Size(643, 351);
             dgvAudIdioma.TabIndex = 0;
             // 
@@ -295,7 +298,7 @@ namespace TrabajoPracticoIntegrador15_4
             Controls.Add(tabControl);
             Controls.Add(groupBox1);
             Name = "frmBitacora";
-            Text = "frmBitacora";
+            Text = "Bitacora";
             Load += frmBitacora_Load;
             groupBox1.ResumeLayout(false);
             groupBox1.PerformLayout();
